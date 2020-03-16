@@ -2,6 +2,9 @@
 .DS_Store
 */.DS_Store
 
+# get ur own api keys bro
+server/db-config.js
+
 # Logs
 logs
 *.log
