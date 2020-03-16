@@ -1,3 +1,7 @@
+# the bane of my existence
+.DS_Store
+*/.DS_Store
+
 # Logs
 logs
 *.log
@@ -39,6 +43,7 @@ build/Release
 
 # Dependency directories
 node_modules/
+*/node_modules/
 jspm_packages/
 
 # TypeScript v1 declaration files
@@ -49,6 +54,7 @@ typings/
 
 # Optional npm cache directory
 .npm
+*/.npm
 
 # Optional eslint cache
 .eslintcache
