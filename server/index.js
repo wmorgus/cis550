@@ -14,32 +14,31 @@ app.use(bodyParser.urlencoded({extended: false}));
 /* ---------------------------------------------------------------- */
 
 
+app.get('/login', function(req, res) {
+	var scopes = 'user-read-private user-read-email playlist-read-private user-library-read streaming';
+	var redirect_uri = "http%3A%2F%2Flocalhost:3000%2F"; //replace with address
+	res.redirect('https://accounts.spotify.com/authorize' +
+		'?response_type=code' +
+		'&client_id=' + my_client_id +
+		(scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
+		'&redirect_uri=' + encodeURIComponent(redirect_uri));
+});
 
+app.get('/storeCode', function(req, res) { //parameter state is userID
+	var scopes = 'user-read-private user-read-email playlist-read-private user-library-read streaming';
+	var redirect_uri = "http%3A%2F%2Flocalhost:3000%2F"; //replace with address
+	res.redirect('https://accounts.spotify.com/authorize' +
+		'?response_type=code' +
+		'&client_id=' + my_client_id +
+		(scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
+		'&redirect_uri=' + encodeURIComponent(redirect_uri));
+});
 
-/* ---- (Dashboard) ---- */
-// The route localhost:8081/genres is registered to the function
-// routes.getAllGenres, specified in routes.js.
 app.get('/genres', routes.getAllGenres);
-
-
-/* ---- Q1b (Dashboard) ---- */
-app.get('/genres/:genre', routes.getTopInGenre); // Hint: Replace () => {} with the appropriate route handler.
-
-
-/* ---- Q2 (Recommendations) ---- */
-
-app.get('/recs/:title', routes.getRecs); // Hint: Replace () => {} with the appropriate route handler.
-
-
-
-
-/* ---- (Best Genre) ---- */
+app.get('/genres/:genre', routes.getTopInGenre);
+app.get('/recs/:title', routes.getRecs);
 app.get('/decades', routes.getDecades);
-
-/* ---- Q3b (Best Genre) ---- */
 app.get('/decades/:decade', routes.bestGenresPerDecade);
-
-
 app.get('/posters', routes.posters);
 
 
