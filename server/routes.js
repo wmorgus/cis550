@@ -1,5 +1,6 @@
 var config = require('./db-config.js');
 var mysql = require('mysql');
+var config = require('./db-config');
 const request = require('request');
 
 config.connectionLimit = 10;
@@ -8,6 +9,95 @@ var connection = mysql.createPool(config);
 /* -------------------------------------------------- */
 /* ------------------- Route Handlers --------------- */
 /* -------------------------------------------------- */
+
+function login(req, res) {
+  var scopes = 'user-read-private user-read-email playlist-read-private user-library-read streaming';
+	var redirect_uri = "http://localhost:8081/storeCode"; //replace with address
+	res.redirect('https://accounts.spotify.com/authorize' +
+		'?response_type=code' +
+		'&client_id=' + encodeURIComponent(config.spotifyClientID) +
+		(scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
+		'&redirect_uri=' + encodeURIComponent(redirect_uri));
+}
+
+function storeCode(req, res) {
+  if (req.query.code) {
+		var redirect_uri = "http://localhost:8081/storeCode";
+		var formBody = 'grant_type=authorization_code&code=' + encodeURIComponent(req.query.code) + '&redirect_uri=' + encodeURIComponent(redirect_uri);
+		formBody = formBody + '&client_id=' + encodeURIComponent(config.spotifyClientID) + '&client_secret=' + encodeURIComponent(config.spotifyClientSecret);
+		var reqOps = {
+			uri: 'https://accounts.spotify.com/api/token',
+			body: formBody,
+			method: 'POST',
+			headers: {
+					'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+			}
+		}
+		request(reqOps, function (error, response){
+			if (response.body) {
+				var res2 = JSON.parse(response.body);
+				if (res2.access_token) {
+					var token = res2.access_token;
+					var expires = res2.expires_in;
+					var refresh = res2.refresh_token;
+					//here, set cookie for client with api token
+					console.log(token)
+					console.log(expires)
+          console.log(refresh)
+          res.cookie('access_token', token)
+          res.cookie('expires', expires)
+          res.cookie('refresh_token', refresh)
+					res.redirect('http://localhost:3000/dashboard')
+				} else {
+					console.log("error with accessing token")
+					console.log(res2.error_description)
+				}
+			} else {
+				console.log("error with token request")
+			}});
+	} else {
+		console.log(req.query.error)
+		res.redirect('http://localhost:3000/login')
+	}
+}
+
+function getAllPlaylists(req, res) {
+  var reqOps = {
+    uri: 'https://api.spotify.com/v1/me/playlists',
+    method: 'GET',
+    headers: {
+        'Authorization': 'Bearer ' + req.cookies.access_token
+    }
+  }
+  request(reqOps, function (error, response){
+    if (error) {
+      console.log(error)
+    } else {
+      console.log(response);
+    }
+    res.redirect('http://localhost:3000/dashboard')
+    if (response.items) {
+      var res2 = JSON.parse(response.body);
+      if (res2.access_token) {
+        var token = res2.access_token;
+        var expires = res2.expires_in;
+        var refresh = res2.refresh_token;
+        //here, set cookie for client with api token
+        console.log(token)
+        console.log(expires)
+        console.log(refresh)
+        res.cookie('access_token', token)
+        res.cookie('expires', expires)
+        res.cookie('refresh_token', refresh)
+        res.redirect('http://localhost:3000/dashboard')
+      } else {
+        console.log("error with accessing playlists")
+        console.log(res2.error_description)
+      }
+    } else {
+      console.log("error with playlists request")
+    }});
+}
 
 
 /* ---- Q1a (Dashboard) ---- */
@@ -23,7 +113,6 @@ function getAllGenres(req, res) {
     }
   });
 };
-
 
 /* ---- Q1b (Dashboard) ---- */
 function getTopInGenre(req, res) {
@@ -147,6 +236,9 @@ function posters(req, res) {
 
 // The exported functions, which can be accessed in index.js.
 module.exports = {
+  login: login,
+  storeCode: storeCode,
+  getAllPlaylists: getAllPlaylists,
 	getAllGenres: getAllGenres,
 	getTopInGenre: getTopInGenre,
 	getRecs: getRecs,

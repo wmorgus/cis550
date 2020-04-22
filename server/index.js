@@ -1,49 +1,21 @@
 const bodyParser = require('body-parser');
 const express = require('express');
-var routes = require("./routes.js");
 const cors = require('cors');
+var cookieParser = require('cookie-parser');
+var routes = require("./routes.js");
+
 
 const app = express();
 
 app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
+app.use(cookieParser());
 
-/* ---------------------------------------------------------------- */
-/* ------------------- Route handler registration ----------------- */
-/* ---------------------------------------------------------------- */
+app.get('/login', routes.login);
+app.get('/storeCode', routes.storeCode);
 
-
-app.get('/login', function(req, res) {
-	var scopes = 'user-read-private user-read-email playlist-read-private user-library-read streaming';
-	var redirect_uri = "http%3A%2F%2Flocalhost:3000%2F"; //replace with address
-	res.redirect('https://accounts.spotify.com/authorize' +
-		'?response_type=code' +
-		'&client_id=' + my_client_id +
-		(scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
-		'&redirect_uri=' + encodeURIComponent(redirect_uri));
-});
-
-app.get('/storeCode', function(req, res) { //parameter state is userID
-	var scopes = 'user-read-private user-read-email playlist-read-private user-library-read streaming';
-	var redirect_uri = "http%3A%2F%2Flocalhost:3000%2F"; //replace with address
-	res.redirect('https://accounts.spotify.com/authorize' +
-		'?response_type=code' +
-		'&client_id=' + my_client_id +
-		(scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
-		'&redirect_uri=' + encodeURIComponent(redirect_uri));
-});
-
-app.get('/genres', routes.getAllGenres);
-app.get('/genres/:genre', routes.getTopInGenre);
-app.get('/recs/:title', routes.getRecs);
-app.get('/decades', routes.getDecades);
-app.get('/decades/:decade', routes.bestGenresPerDecade);
-app.get('/posters', routes.posters);
-
-
-
-
+app.get('/getPlaylists', routes.getAllPlaylists);
 
 
 app.listen(8081, () => {
