@@ -103,7 +103,7 @@ export default class Dashboard extends React.Component {
                 <div className="header"><strong>Vote Count</strong></div>
               </div>
               <div className="results-container" id="results">
-                {this.state.movies}
+                "{this.state.movies}"
               </div>
             </div>
           </div>

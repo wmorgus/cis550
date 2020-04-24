@@ -5,26 +5,12 @@ import {
 	Switch
 } from 'react-router-dom';
 import Dashboard from './Dashboard';
+import YourPlaylists from './YourPlaylists';
+import FollowPlaylists from './FollowPlaylists';
 import Recommendations from './Recommendations';
-import BestGenres from './BestGenres';
-import Posters from './Posters';
-
-
-
+import Time from './Time';
 
 export default class App extends React.Component {
-
-	loggedIn() {
-		
-	}
-
-	requireAuth(nextState, replace) {
-		if (!loggedIn()) {
-			replace({
-				pathname: '/login'
-			})
-		}
-	}
 
 	render() {
 		return (
@@ -32,24 +18,19 @@ export default class App extends React.Component {
 				<Router>
 					<Switch>
 						<Route exact path="/" render={() => (
-								<Dashboard />
+								<YourPlaylists />
 							)}
 						/>
-						<Route exact path="/login" render={() => (
-								<Dashboard />
+						<Route exact path="/followPlaylists" render={() => (
+								<FollowPlaylists />
 							)}
-							onEnter={requireAuth}
 						/>
-						<Route path="/recommendations" render={() => (
+						<Route exact path="/recommendations" render={() => (
 								<Recommendations />
 							)}
 						/>
-						<Route path="/bestgenres" render={() => (
-								<BestGenres />
-							)}
-						/>
-						<Route path="/posters" render={() => (
-								<Posters />
+						<Route exact path="/time" render={() => (
+								<Time />
 							)}
 						/>
 					</Switch>
