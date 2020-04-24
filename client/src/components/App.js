@@ -9,42 +9,46 @@ import Recommendations from './Recommendations';
 import BestGenres from './BestGenres';
 import Posters from './Posters';
 
+
+
+
 export default class App extends React.Component {
+
+	loggedIn() {
+		
+	}
+
+	requireAuth(nextState, replace) {
+		if (!loggedIn()) {
+			replace({
+				pathname: '/login'
+			})
+		}
+	}
 
 	render() {
 		return (
 			<div className="App">
 				<Router>
 					<Switch>
-						<Route
-							exact
-							path="/"
-							render={() => (
+						<Route exact path="/" render={() => (
 								<Dashboard />
 							)}
 						/>
-						<Route
-							exact
-							path="/dashboard"
-							render={() => (
+						<Route exact path="/login" render={() => (
 								<Dashboard />
 							)}
+							onEnter={requireAuth}
 						/>
-						<Route
-							path="/recommendations"
-							render={() => (
+						<Route path="/recommendations" render={() => (
 								<Recommendations />
 							)}
 						/>
-						<Route
-							path="/bestgenres"
-							render={() => (
+						<Route path="/bestgenres" render={() => (
 								<BestGenres />
 							)}
 						/>
-						<Route
-							path="/posters"
-							render={() => (
+						<Route path="/posters" render={() => (
 								<Posters />
 							)}
 						/>

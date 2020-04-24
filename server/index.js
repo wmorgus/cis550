@@ -15,9 +15,10 @@ app.use(cookieParser());
 app.get('/login', routes.login);
 app.get('/storeCode', routes.storeCode);
 
-app.get('/getPlaylists', routes.getAllPlaylists);
-
+app.get('/spotify/getPlaylists', routes.getAllPlaylists);
+app.get('/spotify/getPlaylist', routes.getPlaylist);
+app.get('/spotify/getSong', routes.getSong);
 
 app.listen(8081, () => {
-	console.log(`Server listening on PORT 8081`);
+	console.log('Server listening on PORT 8081');
 });

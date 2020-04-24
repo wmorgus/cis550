@@ -62,34 +62,24 @@ function storeCode(req, res) {
 }
 
 function getAllPlaylists(req, res) {
+  var offset = 0
+  if (req.body.offset) {
+    offset = req.body.offset
+  }
   var reqOps = {
-    uri: 'https://api.spotify.com/v1/me/playlists',
+    uri: 'https://api.spotify.com/v1/me/playlists?offset=' + offset,
     method: 'GET',
     headers: {
         'Authorization': 'Bearer ' + req.cookies.access_token
     }
   }
   request(reqOps, function (error, response){
-    if (error) {
-      console.log(error)
-    } else {
-      console.log(response);
-    }
-    res.redirect('http://localhost:3000/dashboard')
-    if (response.items) {
+    if (response.body) {
       var res2 = JSON.parse(response.body);
-      if (res2.access_token) {
-        var token = res2.access_token;
-        var expires = res2.expires_in;
-        var refresh = res2.refresh_token;
-        //here, set cookie for client with api token
-        console.log(token)
-        console.log(expires)
-        console.log(refresh)
-        res.cookie('access_token', token)
-        res.cookie('expires', expires)
-        res.cookie('refresh_token', refresh)
-        res.redirect('http://localhost:3000/dashboard')
+      if (res2.items) {
+        var playlists = res2.items
+        console.log(items)
+        res.send(JSON.stringify(items))
       } else {
         console.log("error with accessing playlists")
         console.log(res2.error_description)
@@ -99,6 +89,57 @@ function getAllPlaylists(req, res) {
     }});
 }
 
+function getPlaylist(req, res) {
+  var offset = 0
+  if (req.body.offset) {
+    offset = req.body.offset
+  }
+  var reqOps = {
+    uri: 'https://api.spotify.com/v1/playlists/' + req.body.playlistID,
+    method: 'GET',
+    headers: {
+        'Authorization': 'Bearer ' + req.cookies.access_token
+    }
+  }
+  request(reqOps, function (error, response){
+    if (response.body) {
+      var res2 = JSON.parse(response.body);
+      if (res2.items) {
+        var playlist = res2.items
+        console.log(items)
+        res.send(JSON.stringify(items))
+      } else {
+        console.log("error with accessing playlist")
+        console.log(res2.error_description)
+      }
+    } else {
+      console.log("error with playlist request")
+    }});
+}
+
+function getSong(req, res) {
+  var reqOps = {
+    uri: 'https://api.spotify.com/v1/track/' + req.body.songID,
+    method: 'GET',
+    headers: {
+        'Authorization': 'Bearer ' + req.cookies.access_token
+    }
+  }
+  request(reqOps, function (error, response){
+    if (response.body) {
+      var res2 = JSON.parse(response.body);
+      if (res2.items) {
+        var playlists = res2.items
+        console.log(items)
+        res.send(JSON.stringify(items))
+      } else {
+        console.log("error with accessing song")
+        console.log(res2.error_description)
+      }
+    } else {
+      console.log("error with song request")
+    }});
+}
 
 /* ---- Q1a (Dashboard) ---- */
 function getAllGenres(req, res) {
@@ -239,6 +280,8 @@ module.exports = {
   login: login,
   storeCode: storeCode,
   getAllPlaylists: getAllPlaylists,
+  getPlaylist: getPlaylist,
+  getSong: getSong,
 	getAllGenres: getAllGenres,
 	getTopInGenre: getTopInGenre,
 	getRecs: getRecs,
