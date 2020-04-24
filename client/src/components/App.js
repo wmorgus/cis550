@@ -14,18 +14,6 @@ import Posters from './Posters';
 
 export default class App extends React.Component {
 
-	loggedIn() {
-		
-	}
-
-	requireAuth(nextState, replace) {
-		if (!loggedIn()) {
-			replace({
-				pathname: '/login'
-			})
-		}
-	}
-
 	render() {
 		return (
 			<div className="App">
