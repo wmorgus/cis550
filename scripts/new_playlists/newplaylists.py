@@ -39,4 +39,15 @@ def main():
 
       
 
-main()
+# main()
+
+def alt():
+  outDF = pd.DataFrame(columns=['uid', 'pid'])
+  for i in range(0, 4000):
+    curr_play = str(i) + 'milplay'
+    temp = {'uid': 'MillionPlaylists', 'pid': curr_play}
+    outDF = outDF.append(temp, ignore_index=True)
+  outDF.to_csv('playlistowners.csv', index=False)
+
+
+alt()
