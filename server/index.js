@@ -19,6 +19,11 @@ app.get('/spotify/getPlaylists', routes.getAllPlaylists);
 app.get('/spotify/getPlaylist', routes.getPlaylist);
 app.get('/spotify/getSong', routes.getSong);
 
+app.get('/yourplaylists', routes.getYourPlaylists);
+app.get('/followPlaylists', routes.getFollowPlaylists);
+app.get('/recommendations', routes.getRecommendations);
+app.get('/time', routes.getTime);
+
 app.listen(8081, () => {
 	console.log('Server listening on PORT 8081');
 });

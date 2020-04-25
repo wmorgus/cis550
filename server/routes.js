@@ -275,6 +275,46 @@ function posters(req, res) {
   });
 };
 
+function getYourPlaylists(req, res) {
+  connection.query(query, function(err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+};
+
+function getFollowPlaylists(req, res) {
+  connection.query(query, function(err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+};
+
+function getRecommendations(req, res) {
+  connection.query(query, function(err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+};
+
+function getTime(req, res) {
+  connection.query(query, function(err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+}
+
+
+
+
+
 // The exported functions, which can be accessed in index.js.
 module.exports = {
   login: login,
@@ -287,5 +327,9 @@ module.exports = {
 	getRecs: getRecs,
 	getDecades: getDecades,
   bestGenresPerDecade: bestGenresPerDecade,
-  posters: posters
+  posters: posters,
+  getYourPlaylists: getYourPlaylists,
+  getFollowPlaylists: getFollowPlaylists,
+  getRecommendations: getRecommendations,
+  getTime: getTime
 }

@@ -3,7 +3,7 @@ import '../style/Dashboard.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import PageNavbar from './PageNavbar';
 
-export default class Recommendations extends React.Component {
+export default class FollowPlaylists extends React.Component {
     constructor(props) {
         super(props);
       }
@@ -13,9 +13,9 @@ export default class Recommendations extends React.Component {
 
       render() {    
         return (
-          <div className="Recommendations">
+          <div className="FollowPlaylists">
     
-            <PageNavbar active="recommendations" />
+            <PageNavbar active="followPlaylists" />
     
             <br></br>
         
