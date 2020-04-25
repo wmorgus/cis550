@@ -34,6 +34,8 @@ def main():
   allDF.to_csv('millionplaylists.csv', index=False)
   
 
+  #create CSV of millionplaylist jerns with uid = 'x'
+
 
       
 

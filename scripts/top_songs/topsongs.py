@@ -8,7 +8,7 @@ client_credentials_manager = SpotifyClientCredentials()
 sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
 def main():
-  outDF = pd.DataFrame(columns=['sid', 'title', 'artist', 'album', 'duration_ms', 'key', 'mode', 'time_signature', 'acousticness', 'danceability', 'energy', 'instrumentalness', 'liveness', 'loudness', 'speechiness', 'valence', 'tempo'])
+  outDF = pd.DataFrame(columns=['sid', 'day', 'month', 'year', 'streams'])
   countDict = {}
   url_uriDict = {}
   uris = set()
