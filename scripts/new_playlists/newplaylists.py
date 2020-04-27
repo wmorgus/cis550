@@ -23,14 +23,18 @@ def main():
   dirName = '/Users/willmorgus/Desktop/550_proj/scripts/new_playlists'
   listOfFiles = getListOfFiles(dirName)
   file1 = ''
-  allDF = pd.DataFrame(columns=['sid', 'pid'])
+  allDF = pd.DataFrame(columns=['pid', 'sid'])
 
   for file1 in listOfFiles:
-    if ('.csv' in file1):
+    print(file1)
+    if ('-' in file1):
       currDF = pd.read_csv(file1)
-      currDF['sid'] = currDF['trackid'].apply(lambda x: x.split(':', )[2])
       currDF['pid'] = currDF['pid'].apply(lambda x: str(x) + 'milplay')
-      allDF = allDF.append(currDF[['sid', 'pid']])
+      currDF['sid'] = currDF['trackid'].apply(lambda x: x.split(':', )[2])
+      print(currDF)
+      print(allDF)
+      allDF = allDF.append(currDF[['pid', 'sid']])
+      print(allDF)
   allDF.to_csv('millionplaylists.csv', index=False)
   
 
@@ -39,7 +43,7 @@ def main():
 
       
 
-# main()
+main()
 
 def alt():
   outDF = pd.DataFrame(columns=['uid', 'pid'])
@@ -50,4 +54,4 @@ def alt():
   outDF.to_csv('playlistowners.csv', index=False)
 
 
-alt()
+# alt()
