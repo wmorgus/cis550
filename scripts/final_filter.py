@@ -21,6 +21,7 @@ def main():
 
   ownerDF = pd.DataFrame(columns=['pid', 'oid'])
   ownerDF['pid'] = millionDF['pid']
+  ownerDF = ownerDF.drop_duplicates(['pid'])
   ownerDF['oid'] = ownerDF['oid'].apply(lambda x: 'million_playlist')
   print(ownerDF)
 
