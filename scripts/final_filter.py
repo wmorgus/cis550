@@ -10,8 +10,8 @@ def main():
   problems = []
   with open("./all_songs/problems.txt") as file_in:
     for uri in file_in:
-      problems.append(uri)
-  print(len(problems))
+      problems.append(uri.strip())
+  print(problems)
 
   millionDF = pd.read_csv('/Users/willmorgus/Desktop/550_proj/scripts/new_playlists/millionplaylists.csv')
   print(millionDF.shape[0])
