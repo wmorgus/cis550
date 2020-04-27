@@ -17,7 +17,9 @@ def main():
   print(millionDF.shape[0])
   print(millionDF[millionDF['sid'].isin(problems)].index)
   millionDF = millionDF.drop(millionDF[millionDF['sid'].isin(problems)].index)
+  millionDF = millionDF.drop_duplicates(['pid', 'sid'])
   print(millionDF.shape[0])
+
 
   ownerDF = pd.DataFrame(columns=['pid', 'oid'])
   ownerDF['pid'] = millionDF['pid']
@@ -33,7 +35,7 @@ def main():
 
 
 
-  millionDF.to_csv('new_millionplaylists.csv', index=False, encoding = 'utf-8')
+  millionDF.to_csv('new_new_millionplaylists.csv', index=False, encoding = 'utf-8')
   topDF.to_csv('new_topsongs.csv', index=False, encoding = 'utf-8')
   ownerDF.to_csv('million_owners.csv', index=False, encoding = 'utf-8')
 
