@@ -35,10 +35,6 @@ class App extends React.Component {
 				<div className="App">
 					<Router>
 						<Switch>
-							<Route path="/" render={() => (
-									<YourPlaylists />
-								)}
-							/>
 							<Route exact path="/followPlaylists" render={() => (
 									<FollowPlaylists />
 								)}
@@ -49,6 +45,10 @@ class App extends React.Component {
 							/>
 							<Route exact path="/time" render={() => (
 									<Time />
+								)}
+							/>
+							<Route path="/" render={() => (
+									<YourPlaylists />
 								)}
 							/>
 						</Switch>

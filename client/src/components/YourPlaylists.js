@@ -13,9 +13,9 @@ export default class YourPlaylists extends React.Component {
 
       render() {    
         return (
-          <div className="YourPlaylists">
+          <div className="yourPlaylists">
     
-            <PageNavbar active="yourplaylists" />
+            <PageNavbar active="yourPlaylists" />
     
             <br></br>
         

@@ -12,9 +12,8 @@ export default class PageNavbar extends React.Component {
 	}
 
 	componentDidMount() {
-		const domainNames = ['Your Playlists', 'Playlists You Follow', 'Recommendations', 'Songs Throughout Time'];
-		const pageList=['yourplaylists', 'followPlaylists', 'recommendations', 'time']
-
+		const pageList=['yourPlaylists', 'followPlaylists', 'recommendations', 'time']
+		console.log(this.props.active)
 		let navbarDivs = pageList.map((page, i) => {
 			if (i === 0) {
 				if (this.props.active === page) {

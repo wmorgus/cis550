@@ -51,7 +51,7 @@ export default class Recommendations extends React.Component {
 
             <p> helo </p>
 
-            <div className="container recommendations-container">
+            {/* <div className="container recommendations-container">
 			    	<div className="jumbotron">
 			    		<div className="h5">Recommendations</div>
 			    		<br></br>
@@ -72,7 +72,7 @@ export default class Recommendations extends React.Component {
 			    			{this.state.recMovies}
 			    		</div>
 			    	</div>
-			    </div>
+			    </div> */}
 
         </div>
 
