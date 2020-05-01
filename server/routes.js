@@ -141,6 +141,14 @@ function getSong(req, res) {
     }});
 }
 
+
+/* ---- Playlist Rec Routes ---- */
+
+
+
+
+
+
 /* ---- Q1a (Dashboard) ---- */
 function getAllGenres(req, res) {
   var query = `
