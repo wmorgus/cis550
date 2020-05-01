@@ -38,7 +38,9 @@ def main():
   client_credentials_manager = SpotifyClientCredentials(client_id='66dd6c23e0cc482689cd472448f27a4c', client_secret='87d64cdd7a1f40ac935443e69711e2d7')
   sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
-  ihatethis = ['3omXshBamrREltcf24gYDC', '2kQ4zlRlNatwhsNsJYCC99']
+  ihatethis = ['2MDV2w1rdUPT4Qxm5L2Wzv', '6Cza1elxtAGP6bwGO4ZveJ', ]
+  #0
+  #1
   toAdd = []
   trax = sp.tracks(ihatethis)
   ind = -1
