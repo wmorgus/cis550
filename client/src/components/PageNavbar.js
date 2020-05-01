@@ -50,7 +50,7 @@ export default class PageNavbar extends React.Component {
 			        <div className="navbar-nav">
 								{this.state.navDivs}
 								<NavDropdown title="Profile" id="basic-nav-dropdown">
-									<NavDropdown.Item href="#action/3.1">Logout</NavDropdown.Item>
+									<NavDropdown.Item href="http://localhost:8081/logout">Logout</NavDropdown.Item>
 								</NavDropdown>
 			        </div>
 			      </div>

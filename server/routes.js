@@ -12,7 +12,7 @@ async function initDB() {
 
 async function closeDB(cb) {
   conn.close(function(err) {
-    cb()
+    cb();
   })
 }
 
@@ -22,14 +22,45 @@ async function closeDB(cb) {
 /* -------------------------------------------------- */
 
 function login(req, res) {
-  console.log(config.spotifyConfig.spotifyClientID)
-  var scopes = 'user-read-private user-read-email playlist-read-private user-library-read streaming';
-	var redirect_uri = "http://localhost:8081/storeCode"; //replace with address
-	res.redirect('https://accounts.spotify.com/authorize' +
-		'?response_type=code' +
-		'&client_id=' + encodeURIComponent(config.spotifyConfig.spotifyClientID) +
-		(scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
-		'&redirect_uri=' + encodeURIComponent(redirect_uri));
+  if (req.cookies.refresh_token) {
+    //https://accounts.spotify.com/api/token
+    var formBody = 'grant_type=refresh_token&refresh_token=' + encodeURIComponent(req.cookies.refresh_token);
+    var b = new Buffer(config.spotifyConfig.spotifyClientID + ':' + config.spotifyConfig.spotifyClientSecret);
+    var authStr = b.toString('base64');
+		var reqOps = {
+			uri: 'https://accounts.spotify.com/api/token',
+			body: formBody,
+			method: 'POST',
+			headers: {
+          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+          'Authorization': 'Basic ' +  authStr
+			}
+		}
+		request(reqOps, function (error, response){
+			if (response.body) {
+				var res2 = JSON.parse(response.body);
+				if (res2.access_token) {
+					var token = res2.access_token;
+					var expires = res2.expires_in;
+					//here, set cookie for client with api token
+          res.cookie('access_token', token, {maxAge: expires * 1000});
+					res.redirect('http://localhost:3000/')
+				} else {
+					console.log("error with accessing token")
+					console.log(res2.error_description)
+				}
+			} else {
+				console.log("error with refresh request")
+			}});
+  } else {
+    var scopes = 'user-read-private user-read-email playlist-read-private user-library-read streaming';
+    var redirect_uri = "http://localhost:8081/storeCode"; //replace with address
+    res.redirect('https://accounts.spotify.com/authorize' +
+      '?response_type=code' +
+      '&client_id=' + encodeURIComponent(config.spotifyConfig.spotifyClientID) +
+      (scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
+      '&redirect_uri=' + encodeURIComponent(redirect_uri));
+  }
 }
 
 function storeCode(req, res) {
@@ -56,10 +87,9 @@ function storeCode(req, res) {
 					console.log(token)
 					console.log(expires)
           console.log(refresh)
-          res.cookie('access_token', token)
-          res.cookie('expires', expires)
+          res.cookie('access_token', token, {maxAge: expires * 1000});
           res.cookie('refresh_token', refresh)
-					res.redirect('http://localhost:3000/dashboard')
+					res.redirect('http://localhost:3000/')
 				} else {
 					console.log("error with accessing token")
 					console.log(res2.error_description)
@@ -71,6 +101,11 @@ function storeCode(req, res) {
 		console.log(req.query.error)
 		res.redirect('http://localhost:3000/login')
 	}
+}
+
+function logout(req, res) {
+  res.clearCookie('access_token');
+  res.redirect('http://localhost:3000/landing')
 }
 
 function getAllPlaylists(req, res) {
@@ -333,7 +368,7 @@ function getTime(req, res) {
 
 
 
-function getYoMama(req, res) {
+function getDBTest(req, res) {
   console.log('reqqing')
   var query = 'SELECT COUNT(*) FROM ALL_SONGS'
   conn.execute(query, function(err, result) {
@@ -347,22 +382,17 @@ function getYoMama(req, res) {
 
 // The exported functions, which can be accessed in index.js.
 module.exports = {
-  initDB: initDB,
-  closeDB: closeDB,
-  login: login,
-  storeCode: storeCode,
-  getAllPlaylists: getAllPlaylists,
-  getPlaylist: getPlaylist,
-  getSong: getSong,
-	getAllGenres: getAllGenres,
-	getTopInGenre: getTopInGenre,
-	getRecs: getRecs,
-	getDecades: getDecades,
-  bestGenresPerDecade: bestGenresPerDecade,
-  posters: posters,
-  getYourPlaylists: getYourPlaylists,
-  getFollowPlaylists: getFollowPlaylists,
-  getRecommendations: getRecommendations,
-  getTime: getTime,
-  getYoMama: getYoMama
+  login, 
+  logout,
+  initDB,
+  closeDB,
+  storeCode,
+  getAllPlaylists,
+  getPlaylist,
+  getSong,
+  getYourPlaylists,
+  getFollowPlaylists,
+  getRecommendations,
+  getTime,
+  getDBTest
 }
