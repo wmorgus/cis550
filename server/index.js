@@ -5,6 +5,8 @@ var cookieParser = require('cookie-parser');
 var routes = require("./routes.js");
 
 
+
+
 const app = express();
 
 app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
@@ -24,6 +26,9 @@ app.get('/followPlaylists', routes.getFollowPlaylists);
 app.get('/recommendations', routes.getRecommendations);
 app.get('/time', routes.getTime);
 
+app.get('/testdb', routes.getYoMama);
+
 app.listen(8081, () => {
+	routes.initDB()
 	console.log('Server listening on PORT 8081');
 });
