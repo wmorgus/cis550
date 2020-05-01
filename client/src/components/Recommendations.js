@@ -9,9 +9,39 @@ export default class Recommendations extends React.Component {
       }
 
       componentDidMount() {
+            // Send an HTTP request to the server.
+        fetch("http://localhost:8081/recommendations",
+        {
+          method: 'GET' // The type of HTTP request.
+        }).then(res => {
+          // Convert the response data to a JSON.
+          return res.json();
+        }, err => {
+          // Print the error if there is one.
+          console.log(err);
+        }).then(genreList => {
+          if (!genreList) return;
+          // Map each genreObj in genreList to an HTML element:
+          // A button which triggers the showMovies function for each genre.
+          /*
+          let genreDivs = genreList.map((genreObj, i) =>
+          <GenreButton id={"button-" + genreObj.genre} onClick={() => this.showMovies(genreObj.genre)} genre={genreObj.genre} />
+          );
+
+          // Set the state of the genres list to the value returned by the HTTP response from the server.
+          this.setState({
+            genres: genreDivs
+          });
+          */
+        }, err => {
+          // Print the error if there is one.
+          console.log(err);
+        });
+
       }
 
-      render() {    
+      render() { 
+        console.log('test');   
         return (
           <div className="Recommendations">
     
@@ -45,12 +75,6 @@ export default class Recommendations extends React.Component {
 			    </div>
 
         </div>
-
-
-        
-
-
-
 
         )};
 }
