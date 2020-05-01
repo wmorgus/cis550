@@ -17,11 +17,12 @@ async function initDB() {
 /* -------------------------------------------------- */
 
 function login(req, res) {
+  console.log(config.spotifyConfig.spotifyClientID)
   var scopes = 'user-read-private user-read-email playlist-read-private user-library-read streaming';
 	var redirect_uri = "http://localhost:8081/storeCode"; //replace with address
 	res.redirect('https://accounts.spotify.com/authorize' +
 		'?response_type=code' +
-		'&client_id=' + encodeURIComponent(config.spotifyClientID) +
+		'&client_id=' + encodeURIComponent(config.spotifyConfig.spotifyClientID) +
 		(scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
 		'&redirect_uri=' + encodeURIComponent(redirect_uri));
 }
@@ -30,7 +31,7 @@ function storeCode(req, res) {
   if (req.query.code) {
 		var redirect_uri = "http://localhost:8081/storeCode";
 		var formBody = 'grant_type=authorization_code&code=' + encodeURIComponent(req.query.code) + '&redirect_uri=' + encodeURIComponent(redirect_uri);
-		formBody = formBody + '&client_id=' + encodeURIComponent(config.spotifyClientID) + '&client_secret=' + encodeURIComponent(config.spotifyClientSecret);
+		formBody = formBody + '&client_id=' + encodeURIComponent(config.spotifyConfig.spotifyClientID) + '&client_secret=' + encodeURIComponent(config.spotifyConfig.spotifyClientSecret);
 		var reqOps = {
 			uri: 'https://accounts.spotify.com/api/token',
 			body: formBody,
