@@ -35,10 +35,6 @@ class App extends React.Component {
 				<div className="App">
 					<Router>
 						<Switch>
-							<Route exact path="/followPlaylists" render={() => (
-									<FollowPlaylists />
-								)}
-							/>
 							<Route exact path="/recommendations" render={() => (
 									<Recommendations />
 								)}

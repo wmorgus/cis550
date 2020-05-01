@@ -12,7 +12,7 @@ export default class PageNavbar extends React.Component {
 	}
 
 	componentDidMount() {
-		const pageList=['yourPlaylists', 'followPlaylists', 'recommendations', 'time']
+		const pageList=['yourPlaylists', 'recommendations', 'time']
 		console.log(this.props.active)
 		let navbarDivs = pageList.map((page, i) => {
 			if (i === 0) {
@@ -23,17 +23,11 @@ export default class PageNavbar extends React.Component {
 				}
 			} else if (i === 1) {
 				if (this.props.active === page) {
-					return <a className="nav-item nav-link active" key={i} href="/followPlaylists">Playlists You Follow</a>
-				} else {
-					return <a className="nav-item nav-link" key={i} href="/followPlaylists">Playlists You Follow</a>
-				}
-			} else if (i === 2) {
-				if (this.props.active === page) {
 					return <a className="nav-item nav-link active" key={i} href="/recommendations">Recommendations</a>
 				} else {
 					return <a className="nav-item nav-link" key={i} href="/recommendations">Recommendations</a>
 				}
-			} else if (i === 3) {
+			} else if (i === 2) {
 				if (this.props.active === page) {
 					return <a className="nav-item nav-link active" key={i} href="/time">Songs Throughout Time</a>
 				} else {
