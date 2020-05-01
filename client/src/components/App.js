@@ -27,7 +27,6 @@ class App extends React.Component {
 
 	render() {
 		const {cookies} = this.props;
-		console.log('aw man')
 		console.log(cookies.get('access_token'))
 		if (cookies.get('access_token') == '') {
 			 //login

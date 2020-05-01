@@ -1,10 +1,16 @@
 var config = require('./db-config.js');
-var mysql = require('mysql');
-var config = require('./db-config');
 const request = require('request');
+var oracle = require('oracledb');
 
-config.connectionLimit = 10;
-var connection = mysql.createPool(config);
+var pool;
+var conn;
+
+async function initDB() {
+  console.log('initingdb')
+  conn = await oracle.getConnection(config.dbpool);
+  console.log('initdone')
+}
+
 
 /* -------------------------------------------------- */
 /* ------------------- Route Handlers --------------- */
@@ -313,10 +319,21 @@ function getTime(req, res) {
 
 
 
-
+function getYoMama(req, res) {
+  console.log('reqqing')
+  var query = 'SELECT COUNT(*) FROM ALL_SONGS'
+  conn.execute(query, function(err, result) {
+    if (err) {
+      console.error(err.message);
+      return;
+    }
+    console.log(result.rows);
+  });
+};
 
 // The exported functions, which can be accessed in index.js.
 module.exports = {
+  initDB, initDB,
   login: login,
   storeCode: storeCode,
   getAllPlaylists: getAllPlaylists,
@@ -331,5 +348,6 @@ module.exports = {
   getYourPlaylists: getYourPlaylists,
   getFollowPlaylists: getFollowPlaylists,
   getRecommendations: getRecommendations,
-  getTime: getTime
+  getTime: getTime,
+  getYoMama: getYoMama
 }
