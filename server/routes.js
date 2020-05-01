@@ -1,14 +1,21 @@
 var config = require('./db-config.js');
-var mysql = require('mysql');
+var oracledb = require('oracledb');
+// var mysql = require('mysql');
 var config = require('./db-config');
 const request = require('request');
 
 config.connectionLimit = 10;
-var connection = mysql.createPool(config);
+var connection = oracledb.createPool(config);
 
 /* -------------------------------------------------- */
 /* ------------------- Route Handlers --------------- */
 /* -------------------------------------------------- */
+oracledb.getConnection(
+  {
+    user          : "admin",
+    password      : "adminpassword",
+    connectString : "testdb.cermx6hbzhhw.us-east-1.rds.amazonaws.com"
+}
 
 function login(req, res) {
   var scopes = 'user-read-private user-read-email playlist-read-private user-library-read streaming';

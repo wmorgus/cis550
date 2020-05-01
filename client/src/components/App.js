@@ -4,7 +4,7 @@ import {
 	Route,
 	Switch
 } from 'react-router-dom';
-import Dashboard from './Dashboard';
+
 import YourPlaylists from './YourPlaylists';
 import FollowPlaylists from './FollowPlaylists';
 import Recommendations from './Recommendations';
