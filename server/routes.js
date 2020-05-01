@@ -1,28 +1,28 @@
 var config = require('./db-config.js');
-var oracledb = require('oracledb');
-// var mysql = require('mysql');
-var config = require('./db-config');
 const request = require('request');
+var oracle = require('oracledb');
 
-config.connectionLimit = 10;
-var connection = oracledb.createPool(config);
+var pool;
+var conn;
+
+async function initDB() {
+  console.log('initingdb')
+  conn = await oracle.getConnection(config.dbpool);
+  console.log('initdone')
+}
+
 
 /* -------------------------------------------------- */
 /* ------------------- Route Handlers --------------- */
 /* -------------------------------------------------- */
-oracledb.getConnection(
-  {
-    user          : "admin",
-    password      : "adminpassword",
-    connectString : "testdb.cermx6hbzhhw.us-east-1.rds.amazonaws.com"
-}
 
 function login(req, res) {
+  console.log(config.spotifyConfig.spotifyClientID)
   var scopes = 'user-read-private user-read-email playlist-read-private user-library-read streaming';
 	var redirect_uri = "http://localhost:8081/storeCode"; //replace with address
 	res.redirect('https://accounts.spotify.com/authorize' +
 		'?response_type=code' +
-		'&client_id=' + encodeURIComponent(config.spotifyClientID) +
+		'&client_id=' + encodeURIComponent(config.spotifyConfig.spotifyClientID) +
 		(scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
 		'&redirect_uri=' + encodeURIComponent(redirect_uri));
 }
@@ -31,7 +31,7 @@ function storeCode(req, res) {
   if (req.query.code) {
 		var redirect_uri = "http://localhost:8081/storeCode";
 		var formBody = 'grant_type=authorization_code&code=' + encodeURIComponent(req.query.code) + '&redirect_uri=' + encodeURIComponent(redirect_uri);
-		formBody = formBody + '&client_id=' + encodeURIComponent(config.spotifyClientID) + '&client_secret=' + encodeURIComponent(config.spotifyClientSecret);
+		formBody = formBody + '&client_id=' + encodeURIComponent(config.spotifyConfig.spotifyClientID) + '&client_secret=' + encodeURIComponent(config.spotifyConfig.spotifyClientSecret);
 		var reqOps = {
 			uri: 'https://accounts.spotify.com/api/token',
 			body: formBody,
@@ -147,6 +147,14 @@ function getSong(req, res) {
       console.log("error with song request")
     }});
 }
+
+
+/* ---- Playlist Rec Routes ---- */
+
+
+
+
+
 
 /* ---- Q1a (Dashboard) ---- */
 function getAllGenres(req, res) {
@@ -320,10 +328,21 @@ function getTime(req, res) {
 
 
 
-
+function getYoMama(req, res) {
+  console.log('reqqing')
+  var query = 'SELECT COUNT(*) FROM ALL_SONGS'
+  conn.execute(query, function(err, result) {
+    if (err) {
+      console.error(err.message);
+      return;
+    }
+    console.log(result.rows);
+  });
+};
 
 // The exported functions, which can be accessed in index.js.
 module.exports = {
+  initDB, initDB,
   login: login,
   storeCode: storeCode,
   getAllPlaylists: getAllPlaylists,
@@ -338,5 +357,6 @@ module.exports = {
   getYourPlaylists: getYourPlaylists,
   getFollowPlaylists: getFollowPlaylists,
   getRecommendations: getRecommendations,
-  getTime: getTime
+  getTime: getTime,
+  getYoMama: getYoMama
 }

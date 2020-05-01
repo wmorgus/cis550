@@ -23,18 +23,35 @@ def main():
   dirName = '/Users/willmorgus/Desktop/550_proj/scripts/new_playlists'
   listOfFiles = getListOfFiles(dirName)
   file1 = ''
-  allDF = pd.DataFrame(columns=['sid', 'pid'])
+  allDF = pd.DataFrame(columns=['pid', 'sid'])
 
   for file1 in listOfFiles:
-    if ('.csv' in file1):
+    print(file1)
+    if ('-' in file1):
       currDF = pd.read_csv(file1)
-      currDF['sid'] = currDF['trackid'].apply(lambda x: x.split(':', )[2])
       currDF['pid'] = currDF['pid'].apply(lambda x: str(x) + 'milplay')
-      allDF = allDF.append(currDF[['sid', 'pid']])
+      currDF['sid'] = currDF['trackid'].apply(lambda x: x.split(':', )[2])
+      print(currDF)
+      print(allDF)
+      allDF = allDF.append(currDF[['pid', 'sid']])
+      print(allDF)
   allDF.to_csv('millionplaylists.csv', index=False)
   
+
+  #create CSV of millionplaylist jerns with uid = 'x'
 
 
       
 
 main()
+
+def alt():
+  outDF = pd.DataFrame(columns=['uid', 'pid'])
+  for i in range(0, 4000):
+    curr_play = str(i) + 'milplay'
+    temp = {'uid': 'MillionPlaylists', 'pid': curr_play}
+    outDF = outDF.append(temp, ignore_index=True)
+  outDF.to_csv('playlistowners.csv', index=False)
+
+
+# alt()

@@ -55,10 +55,10 @@ export default class PageNavbar extends React.Component {
 			      <span className="navbar-brand center">Music App</span>
 			      <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
 			        <div className="navbar-nav">
-			        {this.state.navDivs}
-					<NavDropdown title="Login" id="basic-nav-dropdown">
-					<NavDropdown.Item href="#action/3.1">Logout</NavDropdown.Item>
-					</NavDropdown>
+								{this.state.navDivs}
+								<NavDropdown title="Profile" id="basic-nav-dropdown">
+									<NavDropdown.Item href="#action/3.1">Logout</NavDropdown.Item>
+								</NavDropdown>
 			        </div>
 			      </div>
 			    </nav>
