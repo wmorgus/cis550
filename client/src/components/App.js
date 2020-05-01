@@ -9,49 +9,70 @@ import YourPlaylists from './YourPlaylists';
 import FollowPlaylists from './FollowPlaylists';
 import Recommendations from './Recommendations';
 import Time from './Time';
+import Landing from './Landing';
 import {withCookies} from 'react-cookie';
 
-const fakeAuth = {
-	isAuthenticated: false,
-	authenticate(cb) {
-		this.isAuthenticated = true
-		setTimeout(cb, 100) // fake async
+const authUtil = {
+	needsRefresh: true,
+	setRefresh(bool) {
+		if (bool) {
+			this.needsRefresh = true;
+		} else {
+			this.needsRefresh = false;
+		}
 	},
-	signout(cb) {
-		this.isAuthenticated = false
-		setTimeout(cb, 100) // fake async
+	checkAuth(cookies) {
+		if (cookies.get('access_token') && !this.needsRefresh) {
+			return true
+		} else {
+			return false
+		}
+	},
+	getAuth() {
+		fetch("http://localhost:8081/ugh this",
+        {
+          method: 'GET' // The type of HTTP request.
+        }).then(res => {
+					// Convert the response data to a JSON.
+					setTimeout(setRefresh(true), 3600)
+          return res.json();
+        }, err => {
+          // Print the error if there is one.
+          console.log(err);
+        })
+		
+	},
+	signout() {
+		this.needsRefresh = true
 	}
 }
+
+const PrivateRoute = ({ component: Component, ...rest }) => (
+  <Route {...rest} render={(props) => (
+    authUtil.checkAuth(props)
+      ? <Component {...props} />
+      : <Redirect to='/' />
+  )} />
+)
 
 class App extends React.Component {
 
 	render() {
-		const {cookies} = this.props;
+		authUtil.checkAuth(this.props)
 		console.log(cookies.get('access_token'))
-		if (cookies.get('access_token') == '') {
-			 //login
-		} else {
-			return (
-				<div className="App">
-					<Router>
-						<Switch>
-							<Route exact path="/recommendations" render={() => (
-									<Recommendations />
-								)}
-							/>
-							<Route exact path="/time" render={() => (
-									<Time />
-								)}
-							/>
-							<Route path="/" render={() => (
-									<YourPlaylists />
-								)}
-							/>
-						</Switch>
-					</Router>
-				</div>
-			);
-		}
+		return (
+			<div className="App">
+				<Router>
+					<Switch>
+						<PrivateRoute path='/recommendations' component={Recommendations} />
+						<PrivateRoute path='/time' component={Time} />
+						<PrivateRoute path='/playlists' component={YourPlaylists} />
+						<Route path="/" render={() => (<Landing />)}/>
+						<Route path="/logout" />
+					</Switch>
+				</Router>
+			</div>
+		);
 	}
 }
 

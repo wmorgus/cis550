@@ -28,7 +28,14 @@ app.get('/time', routes.getTime);
 
 app.get('/testdb', routes.getYoMama);
 
-app.listen(8081, () => {
+var server = app.listen(8081, () => {
 	routes.initDB()
 	console.log('Server listening on PORT 8081');
+});
+
+process.on('SIGINT', function() {
+	console.log('die please')
+  server.close(function() {
+		routes.closeDB(() => {process.exit(0);});
+  });
 });

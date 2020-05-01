@@ -2,13 +2,18 @@ var config = require('./db-config.js');
 const request = require('request');
 var oracle = require('oracledb');
 
-var pool;
 var conn;
 
 async function initDB() {
   console.log('initingdb')
   conn = await oracle.getConnection(config.dbpool);
   console.log('initdone')
+}
+
+async function closeDB(cb) {
+  conn.close(function(err) {
+    cb()
+  })
 }
 
 
@@ -342,7 +347,8 @@ function getYoMama(req, res) {
 
 // The exported functions, which can be accessed in index.js.
 module.exports = {
-  initDB, initDB,
+  initDB: initDB,
+  closeDB: closeDB,
   login: login,
   storeCode: storeCode,
   getAllPlaylists: getAllPlaylists,
