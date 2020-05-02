@@ -61,7 +61,7 @@ export default class PageNavbar extends React.Component {
 		return (
 			<div className="PageNavbar">
 				<Navbar bg="light" expand="lg">
-			      <Navbar.Brand><b>Spotify.Smarter</b></Navbar.Brand>
+			      <Navbar.Brand><b>Spotify.<span style={{color: "#22c3dd"}}>Smarter</span></b></Navbar.Brand>
 						<Navbar.Toggle aria-controls="basic-navbar-nav" />
 			      <Navbar.Collapse id="basic-navbar-nav">
 			        <Nav className="mr-auto">
