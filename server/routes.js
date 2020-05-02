@@ -307,7 +307,17 @@ function getDBTest(req, res) {
   });
 };
 
-
+function getStreakSids(req, res) {
+  query = "SELECT a.SID as SID, title, artists FROM (SELECT DISTINCT SID FROM top_songs) a JOIN all_songs ON a.sid = all_songs.SID";
+  console.log(query);
+  conn.execute(query, function(err, result) {
+    if (err) {
+      console.error(err.message);
+      return;
+    } 
+    res.send(JSON.stringify(result));
+  });
+};
 
 // The exported functions, which can be accessed in index.js.
 module.exports = {
@@ -327,4 +337,5 @@ module.exports = {
   getTopSongsFrom,
   getDBTest,
   getMonthlyArtists,
+  getStreakSids,
 }

@@ -2,21 +2,43 @@ import React from 'react';
 import '../style/Time.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Button} from 'react-bootstrap';
+import {Dropdown} from 'react-bootstrap';
 import PageNavbar from './PageNavbar';
+import TopSidRow from './TopSidRow';
 import TopSongRow from './TopSongRow';
+import { MDBForm, MDBSelectInput, MDBSelect, MDBSelectOptions, MDBSelectOption } from "mdbreact";
 
 export default class LongestStreak extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      day: 1,
-      month: 1,
-      year: 2017,
+      song: "",
+      songs: [],
+      sids: [],
+      sidc: [],
       table: []
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
   }
+
+  componentDidMount() {
+    // Send an HTTP request to the server.
+    fetch("http://localhost:8081/streaksids",
+    {
+        method: 'GET' // The type of HTTP request.
+    }).then(response => response.json()).then((data) => {
+  console.log(data.rows)
+  var result = data.rows;
+  console.log(result[0]);
+  let sidDivs = result.map((songObj, i) =>
+    <option value={songObj.title}>{songObj.title}</option>
+          );
+          this.setState({
+        sids: sidDivs
+          });
+  });
+}
 
   handleInputChange = (event) => {
     const value = event.target.value;
@@ -30,7 +52,7 @@ export default class LongestStreak extends React.Component {
     handleSubmit = (event) => {
       event.preventDefault();
 
-		fetch("http://localhost:8081/topsongsfrom/" + this.state.month + "_" + this.state.day + "_" + this.state.year,
+		fetch("http://localhost:8081/longeststreak/",
 		{
 		  method: 'GET' // The type of HTTP request.
 		}).then(response => response.json()).then((data) => {
@@ -51,44 +73,23 @@ export default class LongestStreak extends React.Component {
     return (
       <div className="container songtable-container">
         <PageNavbar active="time" apikey={this.props.apikey}/>
-        <div className="Home">
+        <div className="Jumbotron">
           <div className="lander">
-            <h1>Songs Throughout Time</h1>
-            <p>Different analyses of top songs from 2017-2018</p>
-            <form>
-              <Button variant="btn btn-success" href="http://localhost:3000/time">Back</Button>
-            </form>
+          <div className="h5">Longest Song Streaks</div>
+            <p>How Many Consecutive Days a Song Has Stayed on the Charts</p>
+                
           </div>
         </div>
         <form onSubmit = {this.handleSubmit} className="inputForm">
-          <br />
-          <label>
-            Day:
-            <input
-              name="day"
-              type="number"
-              value={this.state.day}
-              onChange={this.handleInputChange} />
-          </label>
-          <br />
-          <label>
-            Month:
-            <input
-              name="month"
-              type="number"
-              value={this.state.month}
-              onChange={this.handleInputChange} />
-          </label>
-          <br />
-          <label>
-            Year:
-            <input
-              name="year"
-              type="number"
-              value={this.state.year}
-              onChange={this.handleInputChange} />
-          </label>
-          <input type="submit" value="Submit" />
+        <Dropdown>
+            <Dropdown.Toggle variant="success" id="dropdown-basic">
+                Dropdown Button
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu value={this.state.song} onChange={this.handleInputChange} >
+                    {this.state.sidc}
+            </Dropdown.Menu>
+            </Dropdown>
         </form>
         
         <div className="jumbotron">
