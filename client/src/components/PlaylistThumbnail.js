@@ -13,18 +13,17 @@ export default class GenreButton extends React.Component {
 
 	render() {
 		var cursedButton = {
-      all: 'inherit',
-      cursor: 'pointer'
+      margin: "3px 0px", 
+      padding: "7px 0px", 
+      backgroundColor: "#f3f3f3", 
+      cursor: "pointer"
 		}
 		
-    //playlists.add(<PlaylistThumbnail id={curr.id} name={curr.name} image={curr.images[0]} owner={curr.owner.displayname}/>)
 		return (
-			
-      <button style={cursedButton}>
-      <div className="row" id={this.props.id} style={{margin: "5px 0px", padding: "5px 0px", backgroundColor: "#f3f3f3"}} onClick={this.loadPlaylist} href={'/playlist/' + this.props.id}>
+      <div className="row" id={this.props.id} style={cursedButton} >
         <div className="col">
           <div>
-            <img className="" src={this.props.image} style={{maxHeight: "200px"}}/>
+            <img className="" src={this.props.image} style={{maxHeight: "175px"}}/>
           </div>
         </div>
         <div className="col-9" style={{display: "flex", alignItems: "center"}}>
@@ -34,8 +33,6 @@ export default class GenreButton extends React.Component {
           </div>
         </div>
       </div>
-      </button>
-			
 		);
 	}
 }

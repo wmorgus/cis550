@@ -59,37 +59,34 @@ export default class PageNavbar extends React.Component {
 
 	render() {
 		return (
-			<div className="PageNavbar">
-				<Navbar bg="light" expand="lg">
-			      <Navbar.Brand><b>Spotify.<span style={{color: "#22c3dd"}}>Smarter</span></b></Navbar.Brand>
-						<Navbar.Toggle aria-controls="basic-navbar-nav" />
-			      <Navbar.Collapse id="basic-navbar-nav">
-			        <Nav className="mr-auto">
-								{this.state.navDivs}
-							</Nav>
-							<Nav style={{marginRight: ""}}>
-									
-								<NavDropdown title={
-									<div className="container-flex" style={{height: "80%"}}> 
-										<img className="img-thumbnail" 
-											src={this.state.picUrl} 
-											alt="User pic"
-											width="35"
-											height="35"
-											className="d-inline-block align-center"
-											style={{marginRight: "10px"}}
-										/>
-										<Navbar.Text>
-										Logged in as: {this.state.name}
-										</Navbar.Text>
-									</div>
-									} id="basic-nav-dropdown">
-									<NavDropdown.Item href="http://localhost:8081/logout">Logout</NavDropdown.Item>
-								</NavDropdown>
-							</Nav>
-			      </Navbar.Collapse>
-			    </Navbar>
-			</div>
-        );
+			<Navbar bg="secondary" expand="lg" sticky="top">
+				<Navbar.Brand><b>Spotify.<span style={{color: "#22c3dd"}}>Smarter</span></b></Navbar.Brand>
+				<Navbar.Toggle aria-controls="basic-navbar-nav" />
+				<Navbar.Collapse id="basic-navbar-nav">
+					<Nav className="mr-auto">
+						{this.state.navDivs}
+					</Nav>
+					<Nav>
+						<NavDropdown title={
+							<div className="container-flex" style={{height: "80%"}}> 
+								<img className="img-thumbnail" 
+									src={this.state.picUrl} 
+									alt="User pic"
+									width="35"
+									height="35"
+									className="d-inline-block align-center"
+									style={{marginRight: "10px"}}
+								/>
+								<Navbar.Text>
+								Logged in as: {this.state.name}
+								</Navbar.Text>
+							</div>
+							} id="basic-nav-dropdown">
+							<NavDropdown.Item href="http://localhost:8081/logout">Logout</NavDropdown.Item>
+						</NavDropdown>
+					</Nav>
+				</Navbar.Collapse>
+			</Navbar>
+		);
 	}
 }
