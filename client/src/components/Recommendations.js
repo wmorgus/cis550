@@ -2,7 +2,7 @@ import React from 'react';
 import '../style/Dashboard.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import PageNavbar from './PageNavbar';
-import PlaylistThumbnail from './PlaylistThumbnail';
+import RecPlaylistThumbnail from './RecPlaylistThumbnail';
 
 export default class Recommendations extends React.Component {
     constructor(props) {
@@ -69,12 +69,14 @@ export default class Recommendations extends React.Component {
           //loop through all playlists and display those belonging to current user
           for (var ind in data.items) {
             var curr = data.items[ind];
+            var redirectTo = "http://localhost:3000/recommendations/" + curr.id;
             console.log(curr)
             console.log(curr.images)
             if(curr.owner.id == parsedUser){
-              ownedPlaylists.push(<PlaylistThumbnail id={curr.id} name={curr.name} image={curr.images[0].url} owner={curr.owner.display_name}/>)
+        
+              ownedPlaylists.push(<RecPlaylistThumbnail id={curr.id} name={curr.name} image={curr.images[0].url} owner={curr.owner.display_name} generate = {redirectTo}/>);
             } else {
-              followedPlaylists.push(<PlaylistThumbnail id={curr.id} name={curr.name} image={curr.images[0].url} owner={curr.owner.display_name}/>)
+              followedPlaylists.push(<RecPlaylistThumbnail id={curr.id} name={curr.name} image={curr.images[0].url} owner={curr.owner.display_name} generate = {redirectTo}/>);
             }
             
           }
@@ -86,7 +88,9 @@ export default class Recommendations extends React.Component {
       });
     };
 
-
+    selectPlaylist() {
+      //update state to show which playlist was selected
+    }
     
       render() { 
         console.log('test');   

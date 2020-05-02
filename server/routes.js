@@ -18,6 +18,17 @@ async function closeDB(cb) {
   })
 }
 
+function getDBTest(req, res) {
+  console.log('reqqing')
+  var query = 'SELECT COUNT(*) FROM ALL_SONGS'
+  conn.execute(query, function(err, result) {
+    if (err) {
+      console.error(err.message);
+      return;
+    }
+    console.log(result.rows);
+  });
+};
 
 /****       spotify api key mgmt          ****/
 
@@ -226,6 +237,7 @@ function getUser(req, res) {
 
 function getRecommendations(req, res) {
   
+  //probably won't end up using this one? dont need to query db to get user playlists
   getAllPlaylists(req, res);
 /*
   connection.query(query, function(err, rows, fields) {
@@ -237,7 +249,9 @@ function getRecommendations(req, res) {
   */
 };
 
-function getRecsFromPlaylist(req, res) {
+//use Spotify audio features to generate a new playlist
+//by querying for songs with qualities similar to the selected user playlist
+function getRecsSimilarSongs(req, res) {
   connection.query(query, function(err, rows, fields) {
     if (err) console.log(err);
     else {
@@ -246,8 +260,9 @@ function getRecsFromPlaylist(req, res) {
   });
 };
 
-
-function getFollowPlaylists(req, res) {
+//query for existing playlists that are similar to the selected user playlist
+//that the user isn't already following
+function getRecsSimilarPlaylists(req, res) {
   connection.query(query, function(err, rows, fields) {
     if (err) console.log(err);
     else {
@@ -256,7 +271,18 @@ function getFollowPlaylists(req, res) {
   });
 };
 
+////use Spotify audio features to generate a new playlist
+//by querying for top 100 songs with qualities similar to the selected user playlist
+function getRecsPopular(req, res) {
+  connection.query(query, function(err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+};
 
+/* ---- Songs vs Time Routes ---- */
 
 function getTopSongsFrom(req, res) {
   console.log("params");
@@ -295,17 +321,6 @@ function getMonthlyArtists(req, res) {
   });
 };
 
-function getDBTest(req, res) {
-  console.log('reqqing')
-  var query = 'SELECT COUNT(*) FROM ALL_SONGS'
-  conn.execute(query, function(err, result) {
-    if (err) {
-      console.error(err.message);
-      return;
-    }
-    console.log(result.rows);
-  });
-};
 
 
 
@@ -321,9 +336,10 @@ module.exports = {
   getPlaylist,
   getSong,
   getUser,
-  getFollowPlaylists,
   getRecommendations,
-  getRecsFromPlaylist,
+  getRecsSimilarSongs,
+  getRecsSimilarPlaylists,
+  getRecsPopular,
   getTopSongsFrom,
   getDBTest,
   getMonthlyArtists,
