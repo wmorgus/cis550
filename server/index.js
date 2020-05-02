@@ -17,18 +17,21 @@ app.use(cookieParser());
 app.get('/login', routes.login);
 app.get('/storeCode', routes.storeCode);
 app.get('/logout', routes.logout);
+app.get('/totalRestart', routes.totalRestart);
 
 app.get('/spotify/getPlaylists', routes.getAllPlaylists);
 app.get('/spotify/getPlaylist', routes.getPlaylist);
 app.get('/spotify/getSong', routes.getSong);
+app.get('/spotify/getUser', routes.getUser);
 
-app.get('/yourplaylists', routes.getYourPlaylists);
 app.get('/followPlaylists', routes.getFollowPlaylists);
 app.get('/recommendations', routes.getRecommendations);
+app.get('/recommendations:pid', routes.getRecommendations);
 app.get('/time', routes.getTime);
 app.get('/topsongsfrom/:date', routes.getTopSongsFrom);
 
 app.get('/testdb', routes.getDBTest);
+
 
 var server = app.listen(8081, () => {
 	routes.initDB()

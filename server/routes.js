@@ -4,6 +4,8 @@ var oracle = require('oracledb');
 
 var conn;
 
+/****       oracle helper funcs          ****/
+
 async function initDB() {
   console.log('initingdb')
   conn = await oracle.getConnection(config.dbpool);
@@ -17,9 +19,7 @@ async function closeDB(cb) {
 }
 
 
-/* -------------------------------------------------- */
-/* ------------------- Route Handlers --------------- */
-/* -------------------------------------------------- */
+/****       spotify api key mgmt          ****/
 
 function login(req, res) {
   if (req.cookies.refresh_token) {
@@ -103,30 +103,40 @@ function storeCode(req, res) {
 	}
 }
 
+function totalRestart(req, res) {
+  console.log(req.cookies)
+  res.clearCookie('access_token');
+  res.clearCookie('refresh_token');
+  res.clearCookie('expires')
+  res.redirect('http://localhost:3000/landing');
+}
+
 function logout(req, res) {
   res.clearCookie('access_token');
   res.redirect('http://localhost:3000/landing')
 }
 
+
+/****       spotify api requests          ****/
+
 function getAllPlaylists(req, res) {
   var offset = 0
   if (req.body.offset) {
-    offset = req.body.offset
+    offset = req.query.offset
   }
   var reqOps = {
     uri: 'https://api.spotify.com/v1/me/playlists?offset=' + offset,
     method: 'GET',
     headers: {
-        'Authorization': 'Bearer ' + req.cookies.access_token
+      'Authorization': 'Bearer ' + req.query.apikey
     }
   }
   request(reqOps, function (error, response){
     if (response.body) {
       var res2 = JSON.parse(response.body);
-      if (res2.items) {
-        var playlists = res2.items
-        console.log(items)
-        res.send(JSON.stringify(items))
+      console.log(res2)
+      if (res2) {
+        res.send(JSON.stringify(res2))
       } else {
         console.log("error with accessing playlists")
         console.log(res2.error_description)
@@ -166,7 +176,7 @@ function getPlaylist(req, res) {
 
 function getSong(req, res) {
   var reqOps = {
-    uri: 'https://api.spotify.com/v1/track/' + req.body.songID,
+    uri: 'https://api.spotify.com/v1/track/' + req.query.songID,
     method: 'GET',
     headers: {
         'Authorization': 'Bearer ' + req.cookies.access_token
@@ -188,20 +198,46 @@ function getSong(req, res) {
     }});
 }
 
+function getUser(req, res) {
+  var reqOps = {
+    uri: 'https://api.spotify.com/v1/me/',
+    method: 'GET',
+    headers: {
+        'Authorization': 'Bearer ' + req.query.apikey
+    }
+  }
+  request(reqOps, function (err, response){
+    if (response.body) {
+      var res2 = JSON.parse(response.body);
+      console.log(res2)
+      if (res2) {
+        res.json(res2)
+      } else {
+        console.log("error with accessing user")
+        console.log(res2.error_description)
+      }
+    } else {
+      console.log("error with user request")
+  }});
+}
+
 
 /* ---- Playlist Rec Routes ---- */
 
+function getRecommendations(req, res) {
+  
+  getAllPlaylists(req, res);
+/*
+  connection.query(query, function(err, rows, fields) {
+    if (err) console.log(err);
+    else {
+      res.json(rows);
+    }
+  });
+  */
+};
 
-
-
-
-
-/* ---- Q1a (Dashboard) ---- */
-function getAllGenres(req, res) {
-  var query = `
-    SELECT DISTINCT genre
-    FROM Genres
-  `;
+function getRecsFromPlaylist(req, res) {
   connection.query(query, function(err, rows, fields) {
     if (err) console.log(err);
     else {
@@ -210,134 +246,6 @@ function getAllGenres(req, res) {
   });
 };
 
-/* ---- Q1b (Dashboard) ---- */
-function getTopInGenre(req, res) {
-  var query = `
-    SELECT title, rating, vote_count
-    FROM Genres g JOIN Movies m ON m.id = g.movie_id
-    WHERE g.genre='` + req.params.genre + `'
-    ORDER BY rating DESC, vote_count DESC
-    LIMIT 10
-  `;
-  connection.query(query, function(err, rows, fields) {
-    if (err) console.log(err);
-    else {
-      res.json(rows);
-    }
-  });
-};
-
-
-/* ---- Q2 (Recommendations) ---- */
-function getRecs(req, res) {
-  var query = `
-    WITH q_genres AS (SELECT genre FROM Genres g1 JOIN Movies m1 ON g1.movie_id = m1.id WHERE m1.title = '` + req.params.title + `')
-    SELECT DISTINCT title, id, rating, vote_count
-    FROM Genres g JOIN Movies m ON m.id = g.movie_id
-    WHERE title <> '` + req.params.title + `' AND genre IN (SELECT * FROM q_genres)
-    GROUP BY title, id, rating, vote_count
-    HAVING COUNT(*) > (SELECT COUNT(*) FROM q_genres) -1
-    ORDER BY rating DESC, vote_count DESC
-    LIMIT 5;
-  `;
-  connection.query(query, function(err, rows, fields) {
-    if (err) console.log(err);
-    else {
-      res.json(rows);
-    }
-  });
-};
-
-/* ---- (Best Genres) ---- */
-function getDecades(req, res) {
-	var query = `
-    SELECT DISTINCT (FLOOR(year/10)*10) AS decade
-    FROM (
-      SELECT DISTINCT release_year as year
-      FROM Movies
-      ORDER BY release_year
-    ) y
-  `;
-  connection.query(query, function(err, rows, fields) {
-    if (err) console.log(err);
-    else {
-      res.json(rows);
-    }
-  });
-}
-
-/* ---- Q3 (Best Genres) ---- */
-function bestGenresPerDecade(req, res) {
-  //req.params.decade
-  var query = `
-    WITH 
-    all_genres AS (SELECT DISTINCT genre FROM Genres),
-    decade_genres AS (
-      SELECT g.genre AS d_genre, m.rating FROM Genres g JOIN Movies m ON g.movie_id = m.id WHERE FLOOR(FLOOR(m.release_year/10)*10) = ` + req.params.decade + `
-    )
-    SELECT genre, AVG(rating) AS avg_rating
-    FROM all_genres LEFT JOIN decade_genres ON all_genres.genre = decade_genres.d_genre
-    GROUP BY genre
-    ORDER BY AVG(rating) DESC, genre
-  `;
-  connection.query(query, function(err, rows, fields) {
-    if (err) console.log(err);
-    else {
-      res.json(rows);
-    }
-  });
-};
-
-
-//
-/* ---- Q3 (Best Genres) ---- */
-function posters(req, res) {
-  var query = `
-    SELECT title
-    FROM Movies
-    ORDER BY RAND ()
-    LIMIT 23
-  `;
-  connection.query(query, function(err, rows, fields) {
-    if (err) {
-      console.log(err);
-    } else {
-      var baseURL = 'http://www.omdbapi.com/?apikey=b09d5432&t='
-      var rets = []
-      var i = 0;
-      for (curr in rows) {
-        i++;
-        if (rows[i]) {
-          var title = rows[i].title
-          var temp = baseURL + title.replace(/ /g,"+")
-          request(temp, { json: true }, (err, res2, body) => {
-            if (err) {
-              return console.log(err); 
-            } else {
-              if (res2.body.Response == 'True') {
-                rets.push(res2.body);
-              }
-              if (rets.length == 15) {
-                res.send(rets);
-              }
-            }
-          });
-        }
-      }
-      
-    }
-    
-  });
-};
-
-function getYourPlaylists(req, res) {
-  connection.query(query, function(err, rows, fields) {
-    if (err) console.log(err);
-    else {
-      res.json(rows);
-    }
-  });
-};
 
 function getFollowPlaylists(req, res) {
   connection.query(query, function(err, rows, fields) {
@@ -348,14 +256,7 @@ function getFollowPlaylists(req, res) {
   });
 };
 
-function getRecommendations(req, res) {
-  connection.query(query, function(err, rows, fields) {
-    if (err) console.log(err);
-    else {
-      res.json(rows);
-    }
-  });
-};
+
 
 function getTime(req, res) {
   conn.execute(query, function(err, result) {
@@ -403,17 +304,19 @@ function getDBTest(req, res) {
 
 // The exported functions, which can be accessed in index.js.
 module.exports = {
-  login, 
-  logout,
   initDB,
   closeDB,
+  login, 
+  logout,
+  totalRestart,
   storeCode,
   getAllPlaylists,
   getPlaylist,
   getSong,
-  getYourPlaylists,
+  getUser,
   getFollowPlaylists,
   getRecommendations,
+  getRecsFromPlaylist,
   getTime,
   getTopSongsFrom,
   getDBTest,

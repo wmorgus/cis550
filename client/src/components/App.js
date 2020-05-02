@@ -25,10 +25,13 @@ var checkAuth = function(cookieObj) {
 const PrivateRoute = ({ component: Component, cookies: Cookies, ...rest }) => (
   <Route {...rest} render={(props) => {
 		console.log(Cookies)
-		return (checkAuth(Cookies)
-      ? <Component {...props} />
-      : <Redirect to='/landing' />
-  )}} />
+		if (checkAuth(Cookies)) {
+			props.apikey = Cookies.allCookies.access_token
+			return(<Component {...props} />)
+		} else {
+			return(<Redirect to='/landing' />)
+		}
+  }}/>
 )
 
 class App extends React.Component {

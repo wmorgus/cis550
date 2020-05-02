@@ -44,13 +44,14 @@ export default class Time extends React.Component {
 			  this.setState({
         songs: songDivs
 			  });
-    
-    });
+
+      });
     }
 
   render() {
     return (
       <div className="container songtable-container">
+        <PageNavbar active="time" apikey={this.props.apikey}/>
         <form onSubmit = {this.handleSubmit} className="inputForm">
           <br />
           <label>
@@ -95,9 +96,6 @@ export default class Time extends React.Component {
             </div>
             </div>
       </div>
-
-
-
 
     );
   }
