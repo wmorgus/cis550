@@ -26,6 +26,7 @@ app.get('/spotify/getUser', routes.getUser);
 
 app.get('/followPlaylists', routes.getFollowPlaylists);
 app.get('/recommendations', routes.getRecommendations);
+app.get('/recommendations:pid', routes.getRecommendations);
 app.get('/time', routes.getTime);
 
 app.get('/testdb', routes.getDBTest);
