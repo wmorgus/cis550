@@ -1,12 +1,11 @@
 import React from 'react';
 import '../style/Time.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Button} from 'react-bootstrap';
-import {Dropdown} from 'react-bootstrap';
+import {Button, Dropdown} from 'react-bootstrap';
 import PageNavbar from './PageNavbar';
 import TopSidRow from './TopSidRow';
 import TopSongRow from './TopSongRow';
-import { MDBForm, MDBSelectInput, MDBSelect, MDBSelectOptions, MDBSelectOption } from "mdbreact";
+// import { MDBForm, MDBSelectInput, MDBSelect, MDBSelectOptions, MDBSelectOption } from "mdbreact";
 
 export default class LongestStreak extends React.Component {
   constructor(props) {
@@ -26,19 +25,23 @@ export default class LongestStreak extends React.Component {
     // Send an HTTP request to the server.
     fetch("http://localhost:8081/streaksids",
     {
-        method: 'GET' // The type of HTTP request.
+      method: 'GET' // The type of HTTP request.
     }).then(response => response.json()).then((data) => {
-  console.log(data.rows)
-  var result = data.rows;
-  console.log(result[0]);
-  let sidDivs = result.map((songObj, i) =>
-    <option value={songObj.title}>{songObj.title}</option>
-          );
-          this.setState({
+      console.log(data.rows)
+      var result = data.rows;
+      console.log(result[0]);
+      let sidDivs = result.map((songObj, i) =>{
+        if (i == 1) {
+          console.log(songObj)
+        }
+        return(<option value={songObj[0]}>{songObj[1]}</option>)
+      });
+      console.log('siddivs\n\n\nsiddivs')
+      this.setState({
         sids: sidDivs
-          });
-  });
-}
+      });
+    });
+  }
 
   handleInputChange = (event) => {
     const value = event.target.value;
@@ -46,28 +49,26 @@ export default class LongestStreak extends React.Component {
 
     this.setState({
       [name]: value
-    });
-  }
+      });
+    }
 
     handleSubmit = (event) => {
       event.preventDefault();
 
-		fetch("http://localhost:8081/longeststreak/",
-		{
+		fetch("http://localhost:8081/longeststreak/", {
 		  method: 'GET' // The type of HTTP request.
 		}).then(response => response.json()).then((data) => {
       console.log(data.rows)
       var result = data.rows;
       console.log(result[0]);
       let songDivs = result.map((songObj, i) =>
-			<TopSongRow key={i} title={songObj[0]} artists={songObj[1]} streams={songObj[2]}/>
-			  );
-			  this.setState({
+			  <TopSongRow key={i} title={songObj[0]} artists={songObj[1]} streams={songObj[2]}/>
+      );
+      this.setState({
         songs: songDivs
-			  });
-
       });
-    }
+    });
+  }
 
   render() {
     return (
@@ -77,7 +78,6 @@ export default class LongestStreak extends React.Component {
           <div className="lander">
           <div className="h5">Longest Song Streaks</div>
             <p>How Many Consecutive Days a Song Has Stayed on the Charts</p>
-                
           </div>
         </div>
         <form onSubmit = {this.handleSubmit} className="inputForm">
@@ -85,11 +85,13 @@ export default class LongestStreak extends React.Component {
             <Dropdown.Toggle variant="success" id="dropdown-basic">
                 Dropdown Button
             </Dropdown.Toggle>
-
             <Dropdown.Menu value={this.state.song} onChange={this.handleInputChange} >
-                    {this.state.sidc}
+              
             </Dropdown.Menu>
             </Dropdown>
+            <select>
+              {this.state.sids}
+            </select>
         </form>
         
         <div className="jumbotron">
@@ -100,7 +102,7 @@ export default class LongestStreak extends React.Component {
                   <div className="header"><strong>streams</strong></div>
               </div>
               <div className="movies-container" id="results">
-              {this.state.songs}
+                {this.state.songs}
               </div>
             </div>
             </div>

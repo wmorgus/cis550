@@ -2,7 +2,7 @@ import React from 'react';
 import '../style/Dashboard.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import PageNavbar from './PageNavbar';
-import RecPlaylistThumbnail from './RecPlaylistThumbnail';
+import RecPlaylistThumbnail from './Posters.js';
 
 export default class Recommendations extends React.Component {
     constructor(props) {
