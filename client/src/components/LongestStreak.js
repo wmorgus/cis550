@@ -70,6 +70,9 @@ export default class LongestStreak extends React.Component {
     return (
       <div className="container songtable-container">
         <PageNavbar active="time" apikey={this.props.apikey}/>
+        <form>
+          <Button variant="btn btn-success" href="http://localhost:3000/time">Back</Button>
+        </form>
         <div className="Jumbotron">
           <div className="lander">
           <div className="h5">Longest Song Streaks</div>
@@ -85,9 +88,9 @@ export default class LongestStreak extends React.Component {
         <div className="jumbotron">
         <div className="movies-container">
 			          <div className="movie">
-                  <div className="header"><strong>title</strong></div>
-                  <div className="header"><strong>artists</strong></div>
-                  <div className="header"><strong>streams</strong></div>
+                  <div className="header"><strong>Days</strong></div>
+                  <div className="header"><strong>Start</strong></div>
+                  <div className="header"><strong>End</strong></div>
               </div>
               <div className="movies-container" id="results">
                 {this.state.songs}
