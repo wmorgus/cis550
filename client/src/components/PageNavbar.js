@@ -41,8 +41,10 @@ export default class PageNavbar extends React.Component {
 		fetch('http://localhost:8081/spotify/getUser?apikey=' + this.props.apikey).then(response => response.json()).then((data) => {
 			console.log(data)
 			name = data.display_name
-			if (data.images.length > 0) {
-				picUrl = data.images[data.images.length - 1]
+			if(data.images) {
+				if (data.images.length > 0) {
+					picUrl = data.images[data.images.length - 1]
+				}
 			}
 			console.log(name)
 			console.log(picUrl)
