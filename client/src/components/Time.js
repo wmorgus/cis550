@@ -26,6 +26,8 @@ export default class Time extends React.Component {
               <Button variant="btn btn-success" href="http://localhost:3000/topsongs">Top Songs</Button>
               <p></p>
               <Button variant="btn btn-success" href="http://localhost:3000/longeststreak">Longest Streak</Button>
+              <p></p>
+              <Button variant="btn btn-success" href="http://localhost:3000/graphs">Graphs</Button>
             </form>
           </div>
         </div>
