@@ -24,7 +24,6 @@ app.get('/spotify/getPlaylist', routes.getPlaylist);
 app.get('/spotify/getSong', routes.getSong);
 app.get('/spotify/getUser', routes.getUser);
 
-app.get('/followPlaylists', routes.getFollowPlaylists);
 app.get('/recommendations', routes.getRecommendations);
 app.get('/recommendations/:pid', routes.getRecommendations);
 app.get('/topsongsfrom/:date', routes.getTopSongsFrom);
