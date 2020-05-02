@@ -10,6 +10,18 @@ export default class YourPlaylists extends React.Component {
 
       componentDidMount() {
         console.log(this.props.apikey)
+        var name = 'defaultname'
+        var picUrl = 'https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1-744x744.jpg'
+        
+        fetch('http://localhost:8081/spotify/getPlaylists?apikey=' + this.props.apikey).then(response => response.json()).then((data) => {
+          console.log(data)
+          
+        }).finally(() => {
+          this.setState({
+            name: name
+          });
+        });
+
       }
 
       render() {    
