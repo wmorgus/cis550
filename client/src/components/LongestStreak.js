@@ -12,9 +12,8 @@ export default class LongestStreak extends React.Component {
     super(props);
     this.state = {
       song: "",
-      songs: [],
       sids: [],
-      sidc: [],
+      streak: [],
       table: []
     };
 
@@ -52,20 +51,17 @@ export default class LongestStreak extends React.Component {
       });
     }
 
-    handleSubmit = (event) => {
-      event.preventDefault();
+  handleSubmit = (event) => {
+    event.preventDefault();
 
-		fetch("http://localhost:8081/longeststreak/", {
+		fetch("http://localhost:8081/longeststreak/" + this.state.sid, {
 		  method: 'GET' // The type of HTTP request.
 		}).then(response => response.json()).then((data) => {
       console.log(data.rows)
       var result = data.rows;
       console.log(result[0]);
-      let songDivs = result.map((songObj, i) =>
-			  <TopSongRow key={i} title={songObj[0]} artists={songObj[1]} streams={songObj[2]}/>
-      );
       this.setState({
-        songs: songDivs
+        streak: result[0]
       });
     });
   }
@@ -81,14 +77,6 @@ export default class LongestStreak extends React.Component {
           </div>
         </div>
         <form onSubmit = {this.handleSubmit} className="inputForm">
-        <Dropdown>
-            <Dropdown.Toggle variant="success" id="dropdown-basic">
-                Dropdown Button
-            </Dropdown.Toggle>
-            <Dropdown.Menu value={this.state.song} onChange={this.handleInputChange} >
-              
-            </Dropdown.Menu>
-            </Dropdown>
             <select>
               {this.state.sids}
             </select>

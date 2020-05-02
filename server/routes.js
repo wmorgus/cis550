@@ -334,6 +334,26 @@ function getStreakSids(req, res) {
   });
 };
 
+function getLongestStreak(req, res) {
+  console.log("params");
+  console.log(req.params.sid);
+
+  query = "with g(instance_date) as ( select to_date(to_char(year, 'FM0000') || to_char(month, 'FM00') || to_char(day, 'FM00'), 'YYYYMMDD') as d " +
+    "from top_songs where sid = '" + req.params.sid + "' ), temp(rn, grp, instance_date) as (select row_number() over (order by instance_date), " +
+    "instance_date - row_number() over (order by instance_date) as grp, instance_date from g), temp2 as ( " +
+    "select count(*) as days, min(instance_date), max(instance_date) from temp group by grp order by 1 desc, 2 desc) select * from temp2 where rownum = 1"
+    
+  console.log(query);
+  conn.execute(query, function(err, result) {
+    if (err) {
+      console.error(err.message);
+      return;
+    } 
+    console.log(result);
+    res.send(JSON.stringify(result));
+  });
+};
+
 // The exported functions, which can be accessed in index.js.
 module.exports = {
   initDB,
@@ -354,4 +374,5 @@ module.exports = {
   getDBTest,
   getMonthlyArtists,
   getStreakSids,
+  getLongestStreak,
 }
