@@ -3,9 +3,25 @@ import { Line } from "react-chartjs-2";
 import { MDBContainer } from "mdbreact";
 
 class LineGraph extends React.Component {
+    getAcoustics = (event) => {
+        event.preventDefault();
+    
+            fetch("http://localhost:8081/acoustics/", {
+              method: 'GET' // The type of HTTP request.
+            }).then(response => response.json()).then((data) => {
+          console.log(data.rows)
+          var result = data.rows;
+          console.log(result[0]);
+          this.setState({
+            streak: result[0]
+          });
+        });
+      }
+
   state = {
     dataLine: {
-      labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+      labels: ["01/17", "02/17", "03/17", "04/17", "05/17", "06/17", "07/17", "08/17", "09/17", "10/17", "11/17", "12/17",
+      "01/18", "02/18", "03/18", "04/18", "05/18", "06/18", "07/18", "08/18", "09/18", "10/18", "11/18", "12/18"],
       datasets: [
         {
           label: "Acoustics",
@@ -26,7 +42,7 @@ class LineGraph extends React.Component {
           pointHoverBorderWidth: 2,
           pointRadius: 1,
           pointHitRadius: 10,
-          data: [100, 59, 80, 81, 56, 55, 40, 100, 100, 100, 100, 100]
+          data: []
         },
         {
           label: "My Second dataset",
@@ -47,7 +63,7 @@ class LineGraph extends React.Component {
           pointHoverBorderWidth: 2,
           pointRadius: 1,
           pointHitRadius: 10,
-          data: [28, 48, 40, 19, 86, 27, 90]
+          data: []
         }
       ]
     }

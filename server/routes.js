@@ -354,6 +354,21 @@ function getLongestStreak(req, res) {
   });
 };
 
+function getAcoustics(req, res) {
+
+  query = "";
+    
+  console.log(query);
+  conn.execute(query, function(err, result) {
+    if (err) {
+      console.error(err.message);
+      return;
+    } 
+    console.log(result);
+    res.send(JSON.stringify(result));
+  });
+};
+
 // The exported functions, which can be accessed in index.js.
 module.exports = {
   initDB,
@@ -375,4 +390,5 @@ module.exports = {
   getMonthlyArtists,
   getStreakSids,
   getLongestStreak,
+  getAcoustics,
 }
