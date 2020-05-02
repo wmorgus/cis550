@@ -1,6 +1,7 @@
 import React from 'react';
 import '../style/Time.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import {Button} from 'react-bootstrap';
 import PageNavbar from './PageNavbar';
 import TopSongRow from './TopSongRow';
 
@@ -27,8 +28,6 @@ export default class Time extends React.Component {
   }
 
     handleSubmit = (event) => {
-      console.log("WE OUT HERE");
-      alert("Date: " + this.state.month + "/" + this.state.day + "/" + this.state.year);
       event.preventDefault();
 
 		fetch("http://localhost:8081/topsongsfrom/" + this.state.month + "_" + this.state.day + "_" + this.state.year,
@@ -52,6 +51,15 @@ export default class Time extends React.Component {
     return (
       <div className="container songtable-container">
         <PageNavbar active="time" apikey={this.props.apikey}/>
+        <div className="Home">
+          <div className="lander">
+            <h1>Songs Throughout Time</h1>
+            <p>Different analyses of top songs from 2017-2018</p>
+            <form>
+              <Button variant="btn btn-success" href="http://localhost:3000/monthlyartists">Monthly Top Artists</Button>
+            </form>
+          </div>
+        </div>
         <form onSubmit = {this.handleSubmit} className="inputForm">
           <br />
           <label>

@@ -1,7 +1,7 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-export default class TopSongRow extends React.Component {
+export default class TopArtistRow extends React.Component {
 	constructor(props) {
 		super(props);
 	}
@@ -17,13 +17,13 @@ export default class TopSongRow extends React.Component {
             <div className="row" id={this.props.key} style={{ backgroundColor: "#f3f3f3"}} onClick={this.loadPlaylist}>
                 <div className="col-9" style={{display: "flex", alignItems: "right"}}>
                     <div className="col"style={{display: "flex", alignItems: "center"}}>
-                        <h6>{this.props.title}</h6>
+                        <h6>{this.props.artist}</h6>
                     </div>
                     <div className="col"style={{display: "flex", alignItems: "center"}}>
-                        <h6>{this.props.artists}</h6>
-                    </div>
-                     <div className="col-sm-"style={{display: "flex", alignItems: "center"}}>
                         <h6>{this.props.streams}</h6>
+                    </div>
+                    <div className="col"style={{display: "flex", alignItems: "center"}}>
+                        <h6>{this.props.percent}</h6>
                     </div>
                 </div>
             </div>
