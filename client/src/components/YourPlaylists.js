@@ -9,13 +9,14 @@ export default class YourPlaylists extends React.Component {
       }
 
       componentDidMount() {
+        console.log(this.props.apikey)
       }
 
       render() {    
         return (
           <div className="yourPlaylists">
     
-            <PageNavbar active="yourPlaylists" />
+            <PageNavbar active="yourPlaylists" apikey={this.props.apikey}/>
     
             <br></br>
         

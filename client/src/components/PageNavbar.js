@@ -1,6 +1,6 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {  NavDropdown } from 'react-bootstrap';
+import { Nav, Navbar, NavDropdown} from 'react-bootstrap';
 
 export default class PageNavbar extends React.Component {
 	constructor(props) {
@@ -35,26 +35,58 @@ export default class PageNavbar extends React.Component {
 				}	
 			} 
 		})
-
-		this.setState({
-			navDivs: navbarDivs
+		var name = 'defaultname'
+		var picUrl = 'https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1-744x744.jpg'
+		
+		fetch('http://localhost:8081/spotify/getUser?apikey=' + this.props.apikey).then(response => response.json()).then((data) => {
+			console.log(data)
+			name = data.display_name
+			if (data.images.length > 0) {
+				picUrl = data.images[data.images.length - 1]
+			}
+			console.log(name)
+			console.log(picUrl)
+		}).finally(() => {
+			this.setState({
+				navDivs: navbarDivs,
+				name: name,
+				picUrl: picUrl
+			});
 		});
 	}
 
 	render() {
 		return (
 			<div className="PageNavbar">
-				<nav className="navbar navbar-expand-lg navbar-light bg-light">
-			      <span className="navbar-brand center">Music App</span>
-			      <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
-			        <div className="navbar-nav">
+				<Navbar bg="light" expand="lg">
+			      <Navbar.Brand><b>Spotify.Smarter</b></Navbar.Brand>
+						<Navbar.Toggle aria-controls="basic-navbar-nav" />
+			      <Navbar.Collapse id="basic-navbar-nav">
+			        <Nav className="mr-auto">
 								{this.state.navDivs}
-								<NavDropdown title="Profile" id="basic-nav-dropdown">
+							</Nav>
+							<Nav style={{marginRight: ""}}>
+									
+								<NavDropdown title={
+									<div className="container-flex" style={{height: "80%"}}> 
+										<img className="img-thumbnail" 
+											src={this.state.picUrl} 
+											alt="User pic"
+											width="35"
+											height="35"
+											className="d-inline-block align-center"
+											style={{marginRight: "10px"}}
+										/>
+										<Navbar.Text>
+										Logged in as: {this.state.name}
+										</Navbar.Text>
+									</div>
+									} id="basic-nav-dropdown">
 									<NavDropdown.Item href="http://localhost:8081/logout">Logout</NavDropdown.Item>
 								</NavDropdown>
-			        </div>
-			      </div>
-			    </nav>
+							</Nav>
+			      </Navbar.Collapse>
+			    </Navbar>
 			</div>
         );
 	}

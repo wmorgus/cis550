@@ -15,7 +15,7 @@ export default class Time extends React.Component {
         return (
           <div className="Time">
     
-            <PageNavbar active="time" />
+            <PageNavbar active="time" apikey={this.props.apikey}/>
     
             <br></br>
         

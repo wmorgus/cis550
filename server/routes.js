@@ -4,6 +4,8 @@ var oracle = require('oracledb');
 
 var conn;
 
+/****       oracle helper funcs          ****/
+
 async function initDB() {
   console.log('initingdb')
   conn = await oracle.getConnection(config.dbpool);
@@ -17,9 +19,7 @@ async function closeDB(cb) {
 }
 
 
-/* -------------------------------------------------- */
-/* ------------------- Route Handlers --------------- */
-/* -------------------------------------------------- */
+/****       spotify api key mgmt          ****/
 
 function login(req, res) {
   if (req.cookies.refresh_token) {
@@ -103,10 +103,21 @@ function storeCode(req, res) {
 	}
 }
 
+function totalRestart(req, res) {
+  console.log(req.cookies)
+  res.clearCookie('access_token');
+  res.clearCookie('refresh_token');
+  res.clearCookie('expires')
+  res.redirect('http://localhost:3000/landing');
+}
+
 function logout(req, res) {
   res.clearCookie('access_token');
   res.redirect('http://localhost:3000/landing')
 }
+
+
+/****       spotify api requests          ****/
 
 function getAllPlaylists(req, res) {
   var offset = 0
@@ -186,6 +197,29 @@ function getSong(req, res) {
     } else {
       console.log("error with song request")
     }});
+}
+
+function getUser(req, res) {
+  var reqOps = {
+    uri: 'https://api.spotify.com/v1/me/',
+    method: 'GET',
+    headers: {
+        'Authorization': 'Bearer ' + req.query.apikey
+    }
+  }
+  request(reqOps, function (err, response){
+    if (response.body) {
+      var res2 = JSON.parse(response.body);
+      console.log(res2)
+      if (res2) {
+        res.json(res2)
+      } else {
+        console.log("error with accessing user")
+        console.log(res2.error_description)
+      }
+    } else {
+      console.log("error with user request")
+  }});
 }
 
 
@@ -324,17 +358,6 @@ function posters(req, res) {
           });
         }
       }
-      
-    }
-    
-  });
-};
-
-function getYourPlaylists(req, res) {
-  connection.query(query, function(err, rows, fields) {
-    if (err) console.log(err);
-    else {
-      res.json(rows);
     }
   });
 };
@@ -382,15 +405,16 @@ function getDBTest(req, res) {
 
 // The exported functions, which can be accessed in index.js.
 module.exports = {
-  login, 
-  logout,
   initDB,
   closeDB,
+  login, 
+  logout,
+  totalRestart,
   storeCode,
   getAllPlaylists,
   getPlaylist,
   getSong,
-  getYourPlaylists,
+  getUser,
   getFollowPlaylists,
   getRecommendations,
   getTime,

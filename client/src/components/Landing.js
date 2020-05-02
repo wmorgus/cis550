@@ -11,7 +11,8 @@ export default class Landing extends React.Component {
     return (
       <div className="Landing">
         <p>landing page</p>
-        <a href="http://localhost:8081/login">login button</a>
+        <a href="http://localhost:8081/login">login button</a><br></br>
+        <a href="http://localhost:8081/totalRestart">nuke</a>
       </div>
     );
   }
