@@ -1,0 +1,17 @@
+.movies-container {
+    display: flex;
+    flex-flow: column wrap;
+    margin-top: 10px;
+  }
+  
+  .movies-container .movie, .movies-container .movieResults {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: left;
+    height: 40px;
+    padding: 0 100px;
+  }
+  
+  .movie .header, .movieResults .title, .movieResults .artists, .movieResults .streams {
+    flex: .5 0 25%;
+  }
