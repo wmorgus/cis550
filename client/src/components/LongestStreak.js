@@ -47,6 +47,10 @@ export default class LongestStreak extends React.Component {
       dropdownjerns = result.map((songObj, i) =>{
         return(<Dropdown.Item onSelect={() => {
           this.handleSubmit(songObj[0]);
+          var songItem = [songObj[1], songObj[2]];
+          this.setState({
+            song: songItem,
+          });
           console.log(songObj[0])
           }}>{songObj[1] + ' by ' + songObj[2]}</Dropdown.Item>)
       });
@@ -77,10 +81,11 @@ export default class LongestStreak extends React.Component {
 		  method: 'GET' // The type of HTTP request.
 		}).then(response => response.json()).then((data) => {
       console.log(data.rows)
-      var result = data.rows;
-      console.log(result[0]);
+      var result = data.rows[0];
+      result[1] = result[1].split("T")[0];
+      result[2] = result[2].split("T")[0];
       this.setState({
-        streak: result[0]
+        streak: result
       });
     });
   }
@@ -102,6 +107,13 @@ export default class LongestStreak extends React.Component {
         
         <div className="jumbotron">
         <div className="movies-container">
+        <div className="movie">
+                  <div className="header"><strong>Title</strong></div>
+                  <div className="header"><strong>Artists</strong></div>
+              </div>
+           <div className="movies-container" id="results">
+                {this.state.song}
+            </div>
 			          <div className="movie">
                   <div className="header"><strong>Days</strong></div>
                   <div className="header"><strong>Start</strong></div>
