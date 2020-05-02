@@ -1,15 +1,18 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import {useHistory} from 'react-router-dom'
 
 export default class GenreButton extends React.Component {
 	constructor(props) {
+    console.log(props)
 		super(props);
   }
-  
-  loadPlaylist() {
-    // this.props.id
-    console.log('new page plz')
-  }
+
+  // routeChange=(id)=> {
+  //   console.log('loading playlist id ' + id)
+  //   let path = '/playlist/' + id;
+  //   window.location.href= path
+  // }
 
 	render() {
 		var cursedButton = {
@@ -20,7 +23,9 @@ export default class GenreButton extends React.Component {
 		}
 		
 		return (
-      <div className="row" id={this.props.id} style={cursedButton} >
+      <div className="row" id={this.props.id} style={cursedButton} onClick={() => {
+          window.location.href = '/playlist/' + this.props.id
+        }}>
         <div className="col">
           <div>
             <img className="" src={this.props.image} style={{maxHeight: "175px"}}/>

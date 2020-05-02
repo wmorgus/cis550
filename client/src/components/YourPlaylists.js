@@ -2,6 +2,7 @@ import React from 'react';
 import '../style/Dashboard.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import PageNavbar from './PageNavbar';
+import {Redirect} from 'react-router-dom'
 import PlaylistThumbnail from './PlaylistThumbnail';
 
 export default class YourPlaylists extends React.Component {
@@ -33,7 +34,6 @@ export default class YourPlaylists extends React.Component {
     render() {    
       return (
         <div className="yourPlaylists">
-  
           <PageNavbar active="yourPlaylists" apikey={this.props.apikey}/>
           <div className="container">
             {this.state.playlists}

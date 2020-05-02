@@ -4,6 +4,7 @@ import './index.css';
 import App from './components/App';
 import * as serviceWorker from './serviceWorker';
 import {CookiesProvider} from "react-cookie";
+import 'bootstrap/dist/css/bootstrap.css';
 
 ReactDOM.render(<CookiesProvider><App /></CookiesProvider>, 
   document.getElementById('root'));
