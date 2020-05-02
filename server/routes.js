@@ -259,13 +259,34 @@ function getFollowPlaylists(req, res) {
 
 
 function getTime(req, res) {
-  connection.query(query, function(err, rows, fields) {
-    if (err) console.log(err);
-    else {
-      res.json(rows);
+  conn.execute(query, function(err, result) {
+    if (err) {
+      console.error(err.message);
+      return;
     }
+    console.log(result.rows);
   });
-}
+};
+
+function getTopSongsFrom(req, res) {
+  console.log("params");
+  console.log(req.params.date);
+  var date = req.params.date.split("_");
+  var month = date[0];
+  var day = date[1];
+  var year = date[2];
+  query = "SELECT title, artists, streams FROM (SELECT * FROM Top_Songs WHERE day = " + 
+  date[1] + " AND month = " + date[0] + " AND year = " + date[2] + " ORDER BY streams DESC) a" +
+  " JOIN All_Songs ON All_Songs.SID = a.sid";
+  console.log(query);
+  conn.execute(query, function(err, result) {
+    if (err) {
+      console.error(err.message);
+      return;
+    } 
+    res.send(JSON.stringify(result));
+  });
+};
 
 
 
@@ -297,5 +318,6 @@ module.exports = {
   getRecommendations,
   getRecsFromPlaylist,
   getTime,
-  getDBTest
+  getTopSongsFrom,
+  getDBTest,
 }
