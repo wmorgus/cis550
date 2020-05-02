@@ -258,16 +258,42 @@ function getFollowPlaylists(req, res) {
 
 
 
-function getTime(req, res) {
-  connection.query(query, function(err, rows, fields) {
-    if (err) console.log(err);
-    else {
-      res.json(rows);
-    }
+function getTopSongsFrom(req, res) {
+  console.log("params");
+  console.log(req.params.date);
+  var date = req.params.date.split("_");
+  query = "SELECT title, artists, streams FROM (SELECT * FROM Top_Songs WHERE day = " + 
+  date[1] + " AND month = " + date[0] + " AND year = " + date[2] + " ORDER BY streams DESC) a" +
+  " JOIN All_Songs ON All_Songs.SID = a.sid";
+  console.log(query);
+  conn.execute(query, function(err, result) {
+    if (err) {
+      console.error(err.message);
+      return;
+    } 
+    res.send(JSON.stringify(result));
   });
-}
+};
 
+function getMonthlyArtists(req, res) {
+  console.log("params");
+  console.log(req.params.date);
+  var date = req.params.date.split("_");
 
+  query = "WITH AllStreams AS (SELECT SUM(streams) as allstreams FROM Top_Songs WHERE year = " + date[1] + " AND month = " + date[0] + ")" +
+  "SELECT artists, totalstreams, totalstreams/allstreams AS percentage " + 
+  "FROM (SELECT artists, SUM(streams) as totalStreams FROM (SELECT * FROM Top_Songs WHERE year = " + date[1] + " AND month = " +
+  date[0] + " ) Month JOIN All_Songs ON Month.sid = All_Songs.sid GROUP BY artists ORDER BY totalStreams desc) x, AllStreams WHERE ROWNUM <= 10"
+  console.log(query);
+  conn.execute(query, function(err, result) {
+    if (err) {
+      console.error(err.message);
+      return;
+    } 
+    console.log(result);
+    res.send(JSON.stringify(result));
+  });
+};
 
 function getDBTest(req, res) {
   console.log('reqqing')
@@ -280,6 +306,8 @@ function getDBTest(req, res) {
     console.log(result.rows);
   });
 };
+
+
 
 // The exported functions, which can be accessed in index.js.
 module.exports = {
@@ -296,6 +324,7 @@ module.exports = {
   getFollowPlaylists,
   getRecommendations,
   getRecsFromPlaylist,
-  getTime,
-  getDBTest
+  getTopSongsFrom,
+  getDBTest,
+  getMonthlyArtists,
 }
