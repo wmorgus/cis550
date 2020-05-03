@@ -156,7 +156,7 @@ function getUserPlaylists(req, res) {
   }
 
   request(reqOps, function (error, response){
-    if (response.body) {
+    if (response && response.body) {
       var res2 = JSON.parse(response.body);
       // console.log(res2)
       if (res2) {
@@ -166,6 +166,7 @@ function getUserPlaylists(req, res) {
         console.log(res2.error_description)
       }
     } else {
+      console.log(error)
       console.log("error with playlists request")
   }});
 }
@@ -181,11 +182,11 @@ function recursiveReq(reqOps, addTo, cb) {
         }
         if (res2.tracks) {
           for (var ind in res2.tracks.items) {
-            addTo.push(res2.tracks.items[ind].track.id)
+            addTo.push(res2.tracks.items[ind].track)
           }
         } else {
           for (var ind in res2.items) {
-            addTo.push(res2.items[ind].track.id)
+            addTo.push(res2.items[ind].track)
           }
         }
         if ((res2.tracks && res2.tracks.next) || res2.next) {
@@ -212,8 +213,12 @@ function recursiveReq(reqOps, addTo, cb) {
 
 function completeRecursion(id, res, obj, output) {
   //call leems function here with id and output
-  obj.all = output
+  obj.allSongs = output
   res.send(obj)
+}
+
+function getMore() {
+
 }
 
 //thank god for github
