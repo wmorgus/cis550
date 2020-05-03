@@ -19,8 +19,9 @@ export default class PlaylistComparison extends React.Component {
   componentDidMount() {
     var oid = '';
     fetch('http://localhost:8081/spotify/getUser?apikey=' + this.props.apikey).then(response => response.json()).then((data) => {
-			console.log(data)
-			oid = data.id
+            console.log(data)
+            oid = 'million_playlist'
+			//oid = data.id
 		}).finally(() => {
 			this.setState({
 				oid: oid
