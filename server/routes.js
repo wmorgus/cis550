@@ -286,13 +286,30 @@ function getUser(req, res) {
 //use Spotify audio features to generate a new playlist
 //by querying for songs with qualities similar to the selected user playlist
 function getRecsSimilarSongs(req, res) {
+  var song = "4CUCBqTA74rmKu4mEgD6QH"
   console.log('finding similar songs')
-  connection.query(query, function(err, rows, fields) {
-    if (err) console.log(err);
-    else {
-      res.json(rows);
-    }
-  });
+
+  query = "WITH vals(min_energy, max_energy, min_dance, max_dance) as ( " + 
+    "SELECT (alls.energy-.01) AS min_energy, (alls.energy+.01) AS max_energy, " + 
+    "(alls.danceability-.01) AS min_dance, (alls.danceability+.01) AS max_dance " + 
+    "FROM playlist_songs ps " + 
+    "JOIN all_songs alls ON alls.sid = ps.sid " + 
+    "WHERE ps.sid = '7upxcSIbWaeiS3mom33Bee') " + 
+    "SELECT distinct sid, title, artists, album " + 
+    "FROM all_songs, vals " + 
+    "WHERE all_songs.energy BETWEEN vals.min_energy AND vals.max_energy " + 
+    "AND all_songs.danceability BETWEEN vals.min_dance AND vals.max_dance " + 
+    "AND all_songs.sid <> '7upxcSIbWaeiS3mom33Bee'"
+    
+
+    conn.execute(query, function(err, result) {
+      if (err) {
+        console.error(err.message);
+        return;
+      } 
+      console.log(result);
+      res.send(JSON.stringify(result));
+    });
 };
 
 //query for existing playlists that are similar to the selected user playlist
@@ -331,6 +348,7 @@ function getTopSongsFrom(req, res) {
       console.error(err.message);
       return;
     } 
+    console.log(result);
     res.send(JSON.stringify(result));
   });
 };

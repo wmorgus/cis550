@@ -13,7 +13,8 @@ export default class RecPlaylist extends React.Component {
         songThumbnails: [],
         selectedRecType: "",
         recTypes: ['song', 'playlist', 'popular'],
-        resultSongs: []
+        resultSongs: [],
+        info: ""
       }
 
       this.exampleRecRoute = this.exampleRecRoute.bind(this);
@@ -23,7 +24,6 @@ export default class RecPlaylist extends React.Component {
     }
 
     componentDidMount() {
-      //the react gods hate me right now.
       var id = window.location.href.split('/')[window.location.href.split('/').length - 1]
       console.log(this.props.apikey)
       var playlists = []
@@ -74,6 +74,7 @@ export default class RecPlaylist extends React.Component {
 
     switch(selectedType) {
       case "song":
+       
         fetch("http://localhost:8081/recommendations/bysong/" + this.state.playlistid,
         {
           method: "GET"
@@ -82,6 +83,7 @@ export default class RecPlaylist extends React.Component {
         }, err => {
           console.log(err);
         }).then(data => {
+          console.log('data: ')
           console.log(data); //displays your JSON object in the console
           /*
           let recs = moviesList.map((movie, i) => 
@@ -91,12 +93,14 @@ export default class RecPlaylist extends React.Component {
           //This saves our HTML representation of the data into the state, which we can call in our render function
           //this.state.movies = moviesList;
           this.setState({
-            resultSongs: []
+            resultSongs: [],
+            info : "Use Spotify audio features to generate a list of songs you might like by querying for songs that are similar to those in this playlist."
           });
         });
         break;
 
-      case "playlist":       
+      case "playlist":   
+        
         fetch("http://localhost:8081/recommendations/byplaylist/" + this.state.playlistid,
         {
           method: "GET"
@@ -107,13 +111,15 @@ export default class RecPlaylist extends React.Component {
         }).then(data => {
           console.log(data); //displays your JSON object in the console
           this.setState({
-            resultSongs: []
+            resultSongs: [], 
+            info : "Find existing playlists similar to this one made by other users."  
           });
         });
 
         break;
 
       case "popular":
+     
         fetch("http://localhost:8081/recommendations/bypopular/" + this.state.playlistid,
         {
           method: "GET"
@@ -124,7 +130,8 @@ export default class RecPlaylist extends React.Component {
         }).then(data => {
           console.log(data); //displays your JSON object in the console
           this.setState({
-            resultSongs: []
+            resultSongs: [],
+            info : "Use Spotify audio features to generate a list of songs you might like by querying for songs that made the Top 100 and are similar to those in this playlist."
           });
         });
 
@@ -132,11 +139,7 @@ export default class RecPlaylist extends React.Component {
       default:
         console.log('selected type not recognized');
     } 
-
-
-
-
-      
+ 
     }
 
     render() {    
@@ -164,6 +167,7 @@ export default class RecPlaylist extends React.Component {
             </div>
           </div>
           <div className="container">
+            <h5>{this.state.info}</h5>
             {this.state.songThumbnails}
           </div>
         </div>
