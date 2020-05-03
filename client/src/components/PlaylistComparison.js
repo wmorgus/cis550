@@ -9,10 +9,8 @@ export default class PlaylistComparison extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      day: 1,
-      month: 1,
-      year: 2017,
-      table: []
+      oid: 'million_playlist',
+      playlists:[]
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -30,20 +28,16 @@ export default class PlaylistComparison extends React.Component {
     handleSubmit = (event) => {
       event.preventDefault();
 
-		fetch("http://localhost:8081/topsongsfrom/" + this.state.month + "_" + this.state.day + "_" + this.state.year,
+		fetch("http://localhost:8081/playlistacoustics/" + this.state.oid,
 		{
 		  method: 'GET' // The type of HTTP request.
 		}).then(response => response.json()).then((data) => {
       console.log(data.rows)
       var result = data.rows;
       console.log(result[0]);
-      let songDivs = result.map((songObj, i) =>
-			<TopSongRow key={i} title={songObj[0]} artists={songObj[1]} streams={songObj[2]}/>
-			  );
-			  this.setState({
-        songs: songDivs
+      this.setState({
+        playlists: result
 			  });
-
       });
     }
 
@@ -53,10 +47,13 @@ export default class PlaylistComparison extends React.Component {
         <PageNavbar active="time" apikey={this.props.apikey}/>
         <div className="Home">
           <div className="lander">
-            <h1>Songs Throughout Time</h1>
-            <p>Different analyses of top songs from 2017-2018</p>
+            <h1>Compare Your Playlists</h1>
+            <p>Choose from the options below to rank your playlists</p>
             <form>
-              <Button variant="btn btn-success" href="http://localhost:3000/time">Back</Button>
+              <Button variant="btn btn-success" href="http://localhost:3000">Back</Button>
+            </form>
+            <form>
+              <Button variant="btn btn-success" onClick = {this.handleSubmit}>Acousticness</Button>
             </form>
           </div>
         </div>
@@ -69,7 +66,7 @@ export default class PlaylistComparison extends React.Component {
                   <div className="header"><strong>streams</strong></div>
               </div>
               <div className="movies-container" id="results">
-              {this.state.songs}
+              {this.state.playlists}
               </div>
             </div>
             </div>

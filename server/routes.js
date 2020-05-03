@@ -547,9 +547,9 @@ function getPlaylistValidation(sids, pid, oid) {
 
 function getPlaylistAcoustics(req, res) {
 
-  query = "WITH Playlists AS (SELECT pid FROM playlist_owner WHERE oid = '" + million_playlist + "')," + 
+  query = "WITH Playlists AS (SELECT pid FROM playlist_owner WHERE oid = '" + req.params.oid + "')," + 
   " PlaylistData AS (SELECT Playlists.pid, sid FROM Playlists JOIN Playlist_Songs ON Playlists.pid = Playlist_Songs.pid) " + 
-  "SELECT pid, AVG(acousticness) FROM PlaylistData JOIN All_Songs ON PlaylistData.sid = All_Songs.sid GROUP BY pid";
+  "SELECT pid, AVG(acousticness) as avg FROM PlaylistData JOIN All_Songs ON PlaylistData.sid = All_Songs.sid GROUP BY pid ORDER BY avg DESC";
   
     
   console.log(query);
@@ -585,4 +585,5 @@ module.exports = {
   getLongestStreak,
   getAcoustics,
   getPlaylistValidation,
+  getPlaylistAcoustics
 }
