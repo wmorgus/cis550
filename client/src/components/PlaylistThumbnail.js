@@ -28,7 +28,7 @@ export default class PlaylistThumbnail extends React.Component {
         }}>
         <div className="col">
           <div>
-            <img className="" src={this.props.image} style={{maxHeight: "175px"}}/>
+            <img className="" src={this.props.image} style={{height: "175px", width: "175px", objectFit: "cover", overflow: "none"}}/>
           </div>
         </div>
         <div className="col-9" style={{display: "flex", alignItems: "center"}}>

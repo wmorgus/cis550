@@ -4,11 +4,14 @@ var oracle = require('oracledb');
 
 var conn;
 
+var uploadQueue;
+
 /****       oracle helper funcs          ****/
 
 async function initDB() {
   console.log('initingdb')
   conn = await oracle.getConnection(config.dbpool);
+  uploadQueue = [];
   console.log('initdone')
 }
 
