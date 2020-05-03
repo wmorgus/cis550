@@ -238,7 +238,7 @@ function getUser(req, res) {
 function getRecommendations(req, res) {
   
   //probably won't end up using this one? dont need to query db to get user playlists
-  getAllPlaylists(req, res);
+
 /*
   connection.query(query, function(err, rows, fields) {
     if (err) console.log(err);
