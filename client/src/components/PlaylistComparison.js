@@ -1,7 +1,7 @@
 import React from 'react';
 import '../style/Time.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Button} from 'react-bootstrap';
+import {Button, Table} from 'react-bootstrap';
 import PageNavbar from './PageNavbar';
 import TopSongRow from './TopSongRow';
 
@@ -42,6 +42,24 @@ export default class PlaylistComparison extends React.Component {
   handleAcousticSubmit = (event) => {
     event.preventDefault();
 
+<<<<<<< HEAD
+		fetch("http://localhost:8081/playlistacoustics/" + this.state.oid,
+		{
+		  method: 'GET' // The type of HTTP request.
+		}).then(response => response.json()).then((data) => {
+      console.log(data.rows)
+      var result = data.rows;
+      console.log("result" + result);
+      let songDivs = result.map((songObj, i) =>
+      <tr key = {i}>
+        <td>{songObj[0]}</td>
+        <td>{songObj[1]}</td>
+      </tr>
+      );
+      this.setState({
+        playlists: songDivs
+			  });
+=======
   fetch("http://localhost:8081/playlistacoustics/" + this.state.oid,
   {
     method: 'GET' // The type of HTTP request.
@@ -51,10 +69,56 @@ export default class PlaylistComparison extends React.Component {
     console.log(result[0]);
     this.setState({
       playlists: result
+>>>>>>> 889e62f4bb9f8a65af3892a1c2f74601dfd5abcc
       });
     });
   }
 
+<<<<<<< HEAD
+    handleDanceSubmit = (event) => {
+        event.preventDefault();
+  
+          fetch("http://localhost:8081/playlistdance/" + this.state.oid,
+          {
+            method: 'GET' // The type of HTTP request.
+          }).then(response => response.json()).then((data) => {
+        console.log(data.rows)
+        var result = data.rows;
+        console.log(result[0]);
+        let songDivs = result.map((songObj, i) =>
+        <tr key = {i}>
+          <td>{songObj[0]}</td>
+          <td>{songObj[1]}</td>
+        </tr>
+        );
+        this.setState({
+          playlists: songDivs
+        });
+        });
+      }
+
+      handleEnergySubmit = (event) => {
+        event.preventDefault();
+  
+          fetch("http://localhost:8081/playlistenergy/" + this.state.oid,
+          {
+            method: 'GET' // The type of HTTP request.
+          }).then(response => response.json()).then((data) => {
+        console.log(data.rows)
+        var result = data.rows;
+        console.log(result[0]);
+        let songDivs = result.map((songObj, i) =>
+        <tr key = {i}>
+          <td>{songObj[0]}</td>
+          <td>{songObj[1]}</td>
+        </tr>
+        );
+        this.setState({
+          playlists: songDivs
+                });
+        });
+      }
+=======
   handleDanceSubmit = (event) => {
     event.preventDefault();
       fetch("http://localhost:8081/playlistdance/" + this.state.oid,
@@ -85,6 +149,7 @@ export default class PlaylistComparison extends React.Component {
             });
     });
   }
+>>>>>>> 889e62f4bb9f8a65af3892a1c2f74601dfd5abcc
 
   render() {
     return (
@@ -110,7 +175,21 @@ export default class PlaylistComparison extends React.Component {
         </div>
         
         <div className="jumbotron">
-        <div className="movies-container">
+        <div className="table">
+                  <Table bordered striped hover>
+                    <thead>
+                      <tr>
+                        <th>PID</th>
+                        <th>Title</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                    {this.state.playlists}
+                  </tbody>
+              </Table>
+              </div>
+
+        {/* <div className="movies-container">
 			          <div className="movie">
                   <div className="header"><strong>title</strong></div>
                   <div className="header"><strong>artists</strong></div>
@@ -119,7 +198,7 @@ export default class PlaylistComparison extends React.Component {
               <div className="movies-container" id="results">
               {this.state.playlists}
               </div>
-            </div>
+            </div> */}
             </div>
       </div>
 
