@@ -116,7 +116,7 @@ function logout(req, res) {
 
 function getAllPlaylists(req, res) {
   var offset = 0
-  if (req.body.offset) {
+  if (req.query.offset) {
     offset = req.query.offset
   }
   var reqOps = {
@@ -139,6 +139,33 @@ function getAllPlaylists(req, res) {
     } else {
       console.log("error with playlists request")
     }});
+}
+
+function getUserPlaylists(req, res) {
+  var offset = 0
+  if (req.query.offset) {
+    offset = req.query.offset
+  }//https://api.spotify.com/v1/users/willmorgus/playlists?offset=0&limit=20
+  var reqOps = {
+    uri: 'https://api.spotify.com/v1/users/' + req.query.user + '/playlists?offset=' + offset,
+    method: 'GET',
+    headers: {
+      'Authorization': 'Bearer ' + req.query.apikey
+    }
+  }
+  request(reqOps, function (error, response){
+    if (response.body) {
+      var res2 = JSON.parse(response.body);
+      // console.log(res2)
+      if (res2) {
+        res.send(JSON.stringify(res2))
+      } else {
+        console.log("error with accessing playlists")
+        console.log(res2.error_description)
+      }
+    } else {
+      console.log("error with playlists request")
+  }});
 }
 
 function recursiveReq(reqOps, addTo, cb) {
@@ -184,6 +211,7 @@ function completeRecursion(id, res, obj, output) {
   res.send(obj)
 }
 
+//thank god for github
 function partial(f) {
   var args = Array.prototype.slice.call(arguments, 1)
   return function() {
@@ -390,6 +418,7 @@ module.exports = {
   totalRestart,
   storeCode,
   getAllPlaylists,
+  getUserPlaylists,
   getPlaylist,
   getSong,
   getUser,

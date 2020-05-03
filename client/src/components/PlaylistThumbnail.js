@@ -2,9 +2,9 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {useHistory} from 'react-router-dom'
 
-export default class GenreButton extends React.Component {
+export default class PlaylistThumbnail extends React.Component {
 	constructor(props) {
-    console.log(props)
+    // console.log(props)
 		super(props);
   }
 

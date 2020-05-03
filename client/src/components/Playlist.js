@@ -21,8 +21,8 @@ export default class Playlist extends React.Component {
       var newObj = {}
       console.log(id)
       fetch('http://localhost:8081/spotify/getPlaylist?apikey=' + this.props.apikey + '&id=' + id).then(response => response.json()).then((data) => {
-        console.log('dataobj')
-        console.log(data)
+        // console.log('dataobj')
+        // console.log(data)
         newObj = data
         // for (var ind in data.items) {
         //   var curr = data.items[ind];
@@ -51,7 +51,6 @@ export default class Playlist extends React.Component {
             <div class="statdiv">
 
             </div>
-            
           </div>
           <div className="container">
             {this.state.songThumbnails}
