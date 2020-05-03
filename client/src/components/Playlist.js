@@ -1,6 +1,7 @@
 import React from 'react';
 import '../style/Dashboard.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import SongThumbnail from './SongThumbnail';
 import PageNavbar from './PageNavbar';
 
 export default class Playlist extends React.Component {
@@ -19,12 +20,15 @@ export default class Playlist extends React.Component {
       console.log(this.props.apikey)
       var playlists = []
       var newObj = {}
+      var songThumbs = []
       console.log(id)
       fetch('http://localhost:8081/spotify/getPlaylist?apikey=' + this.props.apikey + '&id=' + id).then(response => response.json()).then((data) => {
         // console.log('dataobj')
         // console.log(data)
         newObj = data
-        console.log(data)
+        songThumbs = data.allSongs.map((songObj, i) =>
+          <SongThumbnail songObj={songObj}/>
+        )
         // for (var ind in data.items) {
         //   var curr = data.items[ind];
         //   console.log(curr)
@@ -33,7 +37,8 @@ export default class Playlist extends React.Component {
         // }
       }).finally(() => {
         this.setState({
-          playlistObj: newObj
+          playlistObj: newObj,
+          songThumbnails: songThumbs
         });
       });
     }
@@ -69,7 +74,7 @@ export default class Playlist extends React.Component {
           <PageNavbar active="yourPlaylists" apikey={this.props.apikey} />
           <div className="playlistHeader" style={{backgroundColor: "#e9e9e9"}}>
             <div className="container" style={{display: "flex", maxHeight: "300px", padding:"10px 10px"}}>
-              <img src={this.state.playlistObj.images[0].url} className="imgThumbnail"/>
+              <img src={this.state.playlistObj.images[0].url} className="imgThumbnail" style={{maxHeight: "300px"}}/>
               <div className="namediv" style={{marginLeft: "10px", width: "80%"}}>
                 <div style={{display: "flex", justifyContent: "space-between"}}>
                   <h4>{this.state.playlistObj.name}</h4>

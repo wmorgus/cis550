@@ -76,7 +76,7 @@ function storeCode(req, res) {
 			}
 		}
 		request(reqOps, function (error, response){
-			if (response.body) {
+			if (response && response.body) {
 				var res2 = JSON.parse(response.body);
 				if (res2.access_token) {
 					var token = res2.access_token;
@@ -93,7 +93,7 @@ function storeCode(req, res) {
 				console.log("error with token request")
 			}});
 	} else {
-		console.log(req.query.error)
+		console.log(error)
 		res.redirect('http://localhost:3000/login')
 	}
 }
