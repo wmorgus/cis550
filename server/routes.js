@@ -82,10 +82,6 @@ function storeCode(req, res) {
 					var token = res2.access_token;
 					var expires = res2.expires_in;
 					var refresh = res2.refresh_token;
-					//here, set cookie for client with api token
-					console.log(token)
-					console.log(expires)
-          console.log(refresh)
           res.cookie('access_token', token, {maxAge: expires * 1000});
           res.cookie('refresh_token', refresh)
 					res.redirect('http://localhost:3000/')
@@ -133,7 +129,7 @@ function getAllPlaylists(req, res) {
   request(reqOps, function (error, response){
     if (response.body) {
       var res2 = JSON.parse(response.body);
-      console.log(res2)
+      // console.log(res2)
       if (res2) {
         res.send(JSON.stringify(res2))
       } else {
@@ -145,11 +141,58 @@ function getAllPlaylists(req, res) {
     }});
 }
 
-function getPlaylist(req, res) {
-  var offset = 0
-  if (req.query.offset) {
-    offset = req.query.offset
+function recursiveReq(reqOps, addTo, cb) {
+  request(reqOps, function (error, response){
+    if (response && response.body) {
+      var res2 = JSON.parse(response.body);
+      if (res2) {
+        console.log(res2)
+        if (res2.tracks) {
+          for (var ind in res2.tracks.items) {
+            addTo.push(res2.tracks.items[ind].track.id)
+          }
+        } else {
+          for (var ind in res2.items) {
+            addTo.push(res2.items[ind].track.id)
+          }
+        }
+        if ((res2.tracks && res2.tracks.next) || res2.next) {
+          if (res2.tracks) {
+            reqOps.uri = res2.tracks.next
+            recursiveReq(reqOps, addTo, partial(cb, res2)) 
+          } else {
+            reqOps.uri = res2.next
+            recursiveReq(reqOps, addTo, cb) 
+          }
+        } else {
+          cb(addTo, res2)
+        }
+      } else {
+        console.log("error with accessing playlist")
+        console.log(res2.error_description)
+      }
+    } else {
+      console.log(error)
+      console.log("error with playlist request")
+    }});
+
+}
+
+function completeRecursion(id, res, obj, output) {
+  //call leems function here with id and output
+  obj.all = output
+  res.send(obj)
+}
+
+function partial(f) {
+  var args = Array.prototype.slice.call(arguments, 1)
+  return function() {
+    var remainingArgs = Array.prototype.slice.call(arguments)
+    return f.apply(null, args.concat(remainingArgs))
   }
+}
+
+function getPlaylist(req, res) {
   var reqOps = {
     uri: 'https://api.spotify.com/v1/playlists/' + req.query.id,
     method: 'GET',
@@ -157,20 +200,7 @@ function getPlaylist(req, res) {
         'Authorization': 'Bearer ' + req.query.apikey
     }
   }
-  request(reqOps, function (error, response){
-    if (response.body) {
-      var res2 = JSON.parse(response.body);
-      if (res2) {
-        // var playlist = res2.items
-        // console.log(items)
-        res.send(res2)
-      } else {
-        console.log("error with accessing playlist")
-        console.log(res2.error_description)
-      }
-    } else {
-      console.log("error with playlist request")
-    }});
+  recursiveReq(reqOps, [], partial(completeRecursion, req.query.id, res));
 }
 
 function getSong(req, res) {
@@ -186,7 +216,7 @@ function getSong(req, res) {
       var res2 = JSON.parse(response.body);
       if (res2.items) {
         var playlists = res2.items
-        console.log(items)
+        // console.log(items)
         res.send(JSON.stringify(items))
       } else {
         console.log("error with accessing song")
@@ -208,7 +238,7 @@ function getUser(req, res) {
   request(reqOps, function (err, response){
     if (response.body) {
       var res2 = JSON.parse(response.body);
-      console.log(res2)
+      // console.log(res2)
       if (res2) {
         res.json(res2)
       } else {
@@ -273,13 +303,10 @@ function getRecsPopular(req, res) {
 /* ---- Songs vs Time Routes ---- */
 
 function getTopSongsFrom(req, res) {
-  console.log("params");
-  console.log(req.params.date);
   var date = req.params.date.split("_");
   query = "SELECT title, artists, streams FROM (SELECT * FROM Top_Songs WHERE day = " + 
   date[1] + " AND month = " + date[0] + " AND year = " + date[2] + " ORDER BY streams DESC) a" +
   " JOIN All_Songs ON All_Songs.SID = a.sid";
-  console.log(query);
   conn.execute(query, function(err, result) {
     if (err) {
       console.error(err.message);
@@ -290,15 +317,12 @@ function getTopSongsFrom(req, res) {
 };
 
 function getMonthlyArtists(req, res) {
-  console.log("params");
-  console.log(req.params.date);
   var date = req.params.date.split("_");
 
   query = "WITH AllStreams AS (SELECT SUM(streams) as allstreams FROM Top_Songs WHERE year = " + date[1] + " AND month = " + date[0] + ")" +
   "SELECT artists, totalstreams, totalstreams/allstreams AS percentage " + 
   "FROM (SELECT artists, SUM(streams) as totalStreams FROM (SELECT * FROM Top_Songs WHERE year = " + date[1] + " AND month = " +
   date[0] + " ) Month JOIN All_Songs ON Month.sid = All_Songs.sid GROUP BY artists ORDER BY totalStreams desc) x, AllStreams WHERE ROWNUM <= 10"
-  console.log(query);
   conn.execute(query, function(err, result) {
     if (err) {
       console.error(err.message);
@@ -312,7 +336,6 @@ function getMonthlyArtists(req, res) {
 
 function getStreakSids(req, res) {
   query = "SELECT a.SID as SID, title, artists FROM (SELECT DISTINCT SID FROM top_songs) a JOIN all_songs ON a.sid = all_songs.SID";
-  console.log(query);
   conn.execute(query, function(err, result) {
     if (err) {
       console.error(err.message);
@@ -323,15 +346,11 @@ function getStreakSids(req, res) {
 };
 
 function getLongestStreak(req, res) {
-  console.log("params");
-  console.log(req.params.sid);
-
   query = "with g(instance_date) as ( select to_date(to_char(year, 'FM0000') || to_char(month, 'FM00') || to_char(day, 'FM00'), 'YYYYMMDD') as d " +
     "from top_songs where sid = '" + req.params.sid + "' ), temp(rn, grp, instance_date) as (select row_number() over (order by instance_date), " +
     "instance_date - row_number() over (order by instance_date) as grp, instance_date from g), temp2 as ( " +
     "select count(*) as days, min(instance_date), max(instance_date) from temp group by grp order by 1 desc, 2 desc) select * from temp2 where rownum = 1"
     
-  console.log(query);
   conn.execute(query, function(err, result) {
     if (err) {
       console.error(err.message);

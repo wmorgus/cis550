@@ -7,7 +7,7 @@ export default class Playlist extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-        playlistObj: {images: ['']},
+        playlistObj: {images: [{url: ''}], name: '', owner: {display_name: ''}, description: ''},
         songThumbnails: [],
         avgs: []
       }
@@ -41,8 +41,17 @@ export default class Playlist extends React.Component {
       return (
         <div className="playlist">
           <PageNavbar active="yourPlaylists" apikey={this.props.apikey} />
-          <div class="playlistHeader">
-            <img src={this.state.playlistObj.images[0]} ></img>
+          <div class="playlistHeader" style={{display: "flex"}}>
+            <img src={this.state.playlistObj.images[0].url} />
+            <div class="namediv">
+              <h4>{this.state.playlistObj.name}</h4>
+              <h5>{this.state.playlistObj.owner.display_name}</h5>
+              <p>{this.state.playlistObj.description}</p>
+            </div>
+            <div class="statdiv">
+
+            </div>
+            
           </div>
           <div className="container">
             {this.state.songThumbnails}
