@@ -38,11 +38,11 @@ export default class TopSongs extends React.Component {
       var result = data.rows;
       console.log(result[0]);
       let songDivs = result.map((songObj, i) =>
-			<TopSongRow key={i} title={songObj[0]} artists={songObj[1]} streams={songObj[2]}/>
-			  );
-			  this.setState({
+			  <TopSongRow key={i} title={songObj[0]} artists={songObj[1]} streams={songObj[2]}/>
+      );
+      this.setState({
         songs: songDivs
-			  });
+      });
 
       });
     }
