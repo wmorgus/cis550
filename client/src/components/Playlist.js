@@ -8,8 +8,8 @@ export default class Playlist extends React.Component {
       super(props);
       this.state = {
         playlistObj: {images: [{url: ''}], name: '', owner: {display_name: ''}, description: ''},
-        songThumbnails: [],
-        avgs: []
+        songThumbnails: <h5>Songs loading...</h5>,
+        stats: <h5>Statistics loading...</h5>
       }
     }
 
@@ -37,6 +37,8 @@ export default class Playlist extends React.Component {
         });
       });
     }
+    
+    //Nathan serves up the third edition of J&amp;G&#x27;s quarantunes with
     //don&#x27;t mind me, i&#x27;m just patiently waiting for this band to blow up and take over the world nbd
     utf8_to_str(a) {
       // if (a.search('&#x') != -1) {
@@ -60,19 +62,24 @@ export default class Playlist extends React.Component {
       // return decodeURIComponent(s)
     }
 
+
     render() {    
       return (
         <div className="playlist">
           <PageNavbar active="yourPlaylists" apikey={this.props.apikey} />
-          <div class="playlistHeader" style={{display: "flex"}}>
-            <img src={this.state.playlistObj.images[0].url} />
-            <div class="namediv">
-              <h4>{this.state.playlistObj.name}</h4>
-              <h5>{this.state.playlistObj.owner.display_name}</h5>
-              <p>{this.utf8_to_str(this.state.playlistObj.description)}</p>
-            </div>
-            <div class="statdiv">
-
+          <div className="playlistHeader" style={{backgroundColor: "#e9e9e9"}}>
+            <div className="container" style={{display: "flex", maxHeight: "300px", padding:"10px 10px"}}>
+              <img src={this.state.playlistObj.images[0].url} className="imgThumbnail"/>
+              <div className="namediv" style={{marginLeft: "10px"}}>
+                <div style={{display: "flex", justifyContent: "space-between"}}>
+                  <h4>{this.state.playlistObj.name}</h4>
+                  <h5>{this.state.playlistObj.owner.display_name}</h5>
+                </div>
+                <p>{this.utf8_to_str(this.state.playlistObj.description)}</p>
+                <div class="statdiv">
+                  {this.state.stats}
+                </div>
+              </div>
             </div>
           </div>
           <div className="container">
