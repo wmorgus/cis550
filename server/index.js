@@ -28,6 +28,9 @@ app.get('/spotify/getUser', routes.getUser);
 
 app.get('/topsongsfrom/:date', routes.getTopSongsFrom);
 app.get('/monthlyartists/:date', routes.getMonthlyArtists);
+app.get('/longeststreak/:sid', routes.getLongestStreak);
+app.get('/streaksids', routes.getStreakSids);
+app.get('/acoustics', routes.getAcoustics);
 
 app.get('/testdb', routes.getDBTest);
 

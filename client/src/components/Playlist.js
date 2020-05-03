@@ -40,6 +40,7 @@ export default class Playlist extends React.Component {
           <PageNavbar active="yourPlaylists" apikey={this.props.apikey}/>
           <div className="container">
             <h1>will</h1>
+            <h2>{this.props.apikey}</h2>
           </div>
         </div>
     )};

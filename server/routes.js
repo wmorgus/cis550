@@ -322,7 +322,57 @@ function getMonthlyArtists(req, res) {
 };
 
 
+function getStreakSids(req, res) {
+  query = "SELECT a.SID as SID, title, artists FROM (SELECT DISTINCT SID FROM top_songs) a JOIN all_songs ON a.sid = all_songs.SID";
+  console.log(query);
+  conn.execute(query, function(err, result) {
+    if (err) {
+      console.error(err.message);
+      return;
+    } 
+    res.send(JSON.stringify(result));
+  });
+};
 
+function getLongestStreak(req, res) {
+  console.log("params");
+  console.log(req.params.sid);
+
+  query = "with g(instance_date) as ( select to_date(to_char(year, 'FM0000') || to_char(month, 'FM00') || to_char(day, 'FM00'), 'YYYYMMDD') as d " +
+    "from top_songs where sid = '" + req.params.sid + "' ), temp(rn, grp, instance_date) as (select row_number() over (order by instance_date), " +
+    "instance_date - row_number() over (order by instance_date) as grp, instance_date from g), temp2 as ( " +
+    "select count(*) as days, min(instance_date), max(instance_date) from temp group by grp order by 1 desc, 2 desc) select * from temp2 where rownum = 1"
+    
+  console.log(query);
+  conn.execute(query, function(err, result) {
+    if (err) {
+      console.error(err.message);
+      return;
+    } 
+    console.log(result);
+    res.send(JSON.stringify(result));
+  });
+};
+
+function getAcoustics(req, res) {
+
+  query = "WITH info AS (SELECT tops.sid as sid, acousticness, energy, danceability FROM (SELECT DISTINCT SID FROM TOP_SONGS) tops " + 
+  "JOIN all_songs ON tops.sid = all_songs.sid), DataSum AS " +
+  " (SELECT month, year, SUM(acousticness) as asums, SUM(energy) as esums, SUM(danceability) as dsums FROM info " +
+  "JOIN top_songs ON info.sid = top_songs.sid  GROUP BY month, year ORDER BY YEAR ASC, MONTH ASC), " +
+"largestSum AS (SELECT MAX(asums) as maxasum, MAX(esums) as maxesum, MAX(dsums) as maxdsum FROM DataSum) " + 
+"SELECT (asums / maxasum) as asum, (dsums / maxdsum) as dsum, (esums / maxesum) as esum FROM DataSum, largestSum";
+    
+  console.log(query);
+  conn.execute(query, function(err, result) {
+    if (err) {
+      console.error(err.message);
+      return;
+    } 
+    console.log(result);
+    res.send(JSON.stringify(result));
+  });
+};
 
 // The exported functions, which can be accessed in index.js.
 module.exports = {
@@ -343,4 +393,7 @@ module.exports = {
   getTopSongsFrom,
   getDBTest,
   getMonthlyArtists,
+  getStreakSids,
+  getLongestStreak,
+  getAcoustics,
 }

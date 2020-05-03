@@ -1,21 +1,64 @@
 import React from 'react';
 import '../style/Time.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Button} from 'react-bootstrap';
+import {Button, Dropdown} from 'react-bootstrap';
 import PageNavbar from './PageNavbar';
+import TopSidRow from './TopSidRow';
 import TopSongRow from './TopSongRow';
+import CustomDropdown from './CustomDropdown';
+// import { MDBForm, MDBSelectInput, MDBSelect, MDBSelectOptions, MDBSelectOption } from "mdbreact";
 
 export default class LongestStreak extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      day: 1,
-      month: 1,
-      year: 2017,
-      table: []
+      song: "",
+      sids: [],
+      streak: [],
+      table: [],
+      sidc: [],
+      table: [],
+      dropdownjerns: []
+
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
+  }
+
+  componentDidMount() {
+    // Send an HTTP request to the server.
+    var songObjs = []
+    fetch("http://localhost:8081/streaksids",
+    {
+      method: 'GET' // The type of HTTP request.
+    }).then(response => response.json()).then((data) => {
+      console.log(data.rows)
+      var result = data.rows;
+      console.log(result[0]);
+      var dropdownjerns = []
+      var sidDivs = []
+      // let sidDivs = result.map((songObj, i) =>{
+      //   if (i == 1) {
+      //     console.log(songObj)
+      //   }
+      //   songObjs.push({name: songObj[1] + ' by ' + songObj[2], id: songObj[0]})
+      //   return(<option value={songObj[0]}>{songObj[1]}</option>)
+      // });
+      dropdownjerns = result.map((songObj, i) =>{
+        return(<Dropdown.Item onSelect={() => {
+          this.handleSubmit(songObj[0]);
+          var songItem = [songObj[1], songObj[2]];
+          this.setState({
+            song: songItem,
+          });
+          console.log(songObj[0])
+          }}>{songObj[1] + ' by ' + songObj[2]}</Dropdown.Item>)
+      });
+      this.setState({
+        dropdownjerns: dropdownjerns,
+        sids: sidDivs,
+      });
+    });
   }
 
   handleInputChange = (event) => {
@@ -27,82 +70,62 @@ export default class LongestStreak extends React.Component {
     });
   }
 
-    handleSubmit = (event) => {
-      event.preventDefault();
 
-		fetch("http://localhost:8081/topsongsfrom/" + this.state.month + "_" + this.state.day + "_" + this.state.year,
-		{
+  handleDropSubmit = (id) => {
+    console.log('drop submitted: ' + id)
+  }
+
+  handleSubmit = (result) => {
+    console.log(result);
+		fetch("http://localhost:8081/longeststreak/" + result, {
 		  method: 'GET' // The type of HTTP request.
 		}).then(response => response.json()).then((data) => {
       console.log(data.rows)
-      var result = data.rows;
-      console.log(result[0]);
-      let songDivs = result.map((songObj, i) =>
-			<TopSongRow key={i} title={songObj[0]} artists={songObj[1]} streams={songObj[2]}/>
-			  );
-			  this.setState({
-        songs: songDivs
-			  });
-
+      var result = data.rows[0];
+      result[1] = result[1].split("T")[0];
+      result[2] = result[2].split("T")[0];
+      this.setState({
+        streak: result
       });
-    }
+    });
+  }
 
   render() {
     return (
-      <div className="container songtable-container">
+      <div>
         <PageNavbar active="time" apikey={this.props.apikey}/>
-        <div className="Home">
-          <div className="lander">
-            <h1>Songs Throughout Time</h1>
-            <p>Different analyses of top songs from 2017-2018</p>
-            <form>
+        <div style={{display: ""}}>
+        <form>
               <Button variant="btn btn-success" href="http://localhost:3000/time">Back</Button>
-            </form>
+        </form>
+          <div className="h5">Longest Song Streaks</div>
+          <p>How Many Consecutive Days a Song Has Stayed on the Charts</p>
+          <div style={{maxHeight: '30%'}}>
+            <CustomDropdown dropdownjerns={this.state.dropdownjerns}/>
           </div>
         </div>
-        <form onSubmit = {this.handleSubmit} className="inputForm">
-          <br />
-          <label>
-            Day:
-            <input
-              name="day"
-              type="number"
-              value={this.state.day}
-              onChange={this.handleInputChange} />
-          </label>
-          <br />
-          <label>
-            Month:
-            <input
-              name="month"
-              type="number"
-              value={this.state.month}
-              onChange={this.handleInputChange} />
-          </label>
-          <br />
-          <label>
-            Year:
-            <input
-              name="year"
-              type="number"
-              value={this.state.year}
-              onChange={this.handleInputChange} />
-          </label>
-          <input type="submit" value="Submit" />
-        </form>
+
+      
         
         <div className="jumbotron">
         <div className="movies-container">
+        <div className="movie">
+                  <div className="header"><strong>Title</strong></div>
+                  <div className="header"><strong>Artists</strong></div>
+              </div>
+           <div className="movies-container" id="results">
+                {this.state.song}
+            </div>
 			          <div className="movie">
-                  <div className="header"><strong>title</strong></div>
-                  <div className="header"><strong>artists</strong></div>
-                  <div className="header"><strong>streams</strong></div>
+                  <div className="header"><strong>Days</strong></div>
+                  <div className="header"><strong>Start</strong></div>
+                  <div className="header"><strong>End</strong></div>
               </div>
               <div className="movies-container" id="results">
-              {this.state.songs}
+                {this.state.streak}
               </div>
             </div>
-            </div>
+          </div>
       </div>
 
     );
