@@ -356,7 +356,12 @@ function getLongestStreak(req, res) {
 
 function getAcoustics(req, res) {
 
-  query = "";
+  query = "WITH info AS (SELECT tops.sid as sid, acousticness, energy, danceability FROM (SELECT DISTINCT SID FROM TOP_SONGS) tops " + 
+  "JOIN all_songs ON tops.sid = all_songs.sid), DataSum AS " +
+  " (SELECT month, year, SUM(acousticness) as asums, SUM(energy) as esums, SUM(danceability) as dsums FROM info " +
+  "JOIN top_songs ON info.sid = top_songs.sid  GROUP BY month, year ORDER BY YEAR ASC, MONTH ASC), " +
+"largestSum AS (SELECT MAX(asums) as maxasum, MAX(esums) as maxesum, MAX(dsums) as maxdsum FROM DataSum) " + 
+"SELECT (asums / maxasum) as asum, (dsums / maxdsum) as dsum, (esums / maxesum) as esum FROM DataSum, largestSum";
     
   console.log(query);
   conn.execute(query, function(err, result) {

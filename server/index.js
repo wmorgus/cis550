@@ -28,8 +28,8 @@ app.get('/recommendations', routes.getRecommendations);
 app.get('/recommendations/:pid', routes.getRecommendations);
 app.get('/topsongsfrom/:date', routes.getTopSongsFrom);
 app.get('/monthlyartists/:date', routes.getMonthlyArtists);
+app.get('/monthlyartists/:date', routes.getMonthlyArtists);
 app.get('/streaksids', routes.getStreakSids);
-app.get('/longeststreak/:sid', routes.getLongestStreak);
 app.get('/acoustics', routes.getAcoustics);
 
 app.get('/testdb', routes.getDBTest);
