@@ -14,7 +14,8 @@ export default class LongestStreak extends React.Component {
     this.state = {
       song: [],
       sids: [],
-      streak: [],
+      streaks: [],
+      currSongs: [],
       table: [],
       sidc: [],
       table: [],
@@ -23,6 +24,7 @@ export default class LongestStreak extends React.Component {
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleClear = this.handleClear.bind(this);
   }
 
   componentDidMount() {
@@ -64,6 +66,12 @@ export default class LongestStreak extends React.Component {
     });
   }
 
+  handleClear() {
+    this.setState({
+      streaks: []
+    })
+  }
+
 
   handleDropSubmit = (id) => {
     console.log('drop submitted: ' + id)
@@ -79,8 +87,28 @@ export default class LongestStreak extends React.Component {
       console.log("result: " + result);
       result[1] = result[1].split("T")[0];
       result[2] = result[2].split("T")[0];
+      var row = (
+      <tr> 
+        <td>{this.state.song[0]}</td>
+        <td>{this.state.song[1]}</td>
+        <td>{result[0]}</td>
+        <td>{result[1]}</td>
+        <td>{result[2]}</td>
+      </tr>
+      )
+      var currSong = this.state.song[0] + this.state.song[1]
+      var newStreaks = this.state.streaks
+      var displaySongs = this.state.currSongs
+      var checkInd = displaySongs.indexOf(currSong)
+      if (checkInd != -1){
+        displaySongs.splice(checkInd, 1)
+        newStreaks.splice(checkInd, 1)
+      }
+      newStreaks.unshift(row)
+      displaySongs.unshift(currSong)
       this.setState({
-        streak: result
+        streaks: newStreaks,
+        currSongs: displaySongs
       });
     });
   }
@@ -89,11 +117,14 @@ export default class LongestStreak extends React.Component {
     return (
       <div>
         <PageNavbar active="time" apikey={this.props.apikey}/>
-        <div style={{display: ""}}>
+        <div style={{margin: "10px 10px"}}>
           <div className="h5">Longest Song Streaks</div>
           <p>How Many Consecutive Days a Song Has Stayed on the Charts</p>
-          <div style={{maxHeight: '30%'}}>
-            <CustomDropdown dropdownjerns={this.state.dropdownjerns}/>
+          <div style={{display: "flex"}}>
+            <div style={{maxHeight: '30%', marginRight: '10px'}}>
+              <CustomDropdown dropdownjerns={this.state.dropdownjerns}/>
+            </div>
+            <Button variant="danger" onClick={this.handleClear}>Clear Table</Button>
           </div>
         </div>
         <div className="jumbotron">
@@ -109,13 +140,7 @@ export default class LongestStreak extends React.Component {
                       </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>{this.state.song[0]}</td>
-                      <td>{this.state.song[1]}</td>
-                      <td>{this.state.streak[0]}</td>
-                      <td>{this.state.streak[1]}</td>
-                      <td>{this.state.streak[2]}</td>
-                    </tr>
+                    {this.state.streaks}
                   </tbody>
               </Table>
               </div>
