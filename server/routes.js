@@ -286,6 +286,7 @@ function getUser(req, res) {
 //use Spotify audio features to generate a new playlist
 //by querying for songs with qualities similar to the selected user playlist
 function getRecsSimilarSongs(req, res) {
+  console.log('finding similar songs')
   connection.query(query, function(err, rows, fields) {
     if (err) console.log(err);
     else {
@@ -297,6 +298,7 @@ function getRecsSimilarSongs(req, res) {
 //query for existing playlists that are similar to the selected user playlist
 //that the user isn't already following
 function getRecsSimilarPlaylists(req, res) {
+  console.log('finding similar playlists')
   connection.query(query, function(err, rows, fields) {
     if (err) console.log(err);
     else {
@@ -308,6 +310,7 @@ function getRecsSimilarPlaylists(req, res) {
 ////use Spotify audio features to generate a new playlist
 //by querying for top 100 songs with qualities similar to the selected user playlist
 function getRecsPopular(req, res) {
+  console.log('finding similar popular songs')
   connection.query(query, function(err, rows, fields) {
     if (err) console.log(err);
     else {
