@@ -71,26 +71,72 @@ export default class RecPlaylist extends React.Component {
 
     exampleRecRoute(selectedType) {
     console.log('fetching data for selected type: ' + selectedType)
-      fetch("http://localhost:8081/recommendations/" + selectedType + "/" + this.state.playlistid,
-      {
-        method: "GET"
-      }).then(res => {
-        return res.json();
-      }, err => {
-        console.log(err);
-      }).then(data => {
-        console.log(data); //displays your JSON object in the console
-        /*
-        let recs = moviesList.map((movie, i) => 
-         <TopSongRow  />
-        );
-  */
-        //This saves our HTML representation of the data into the state, which we can call in our render function
-        //this.state.movies = moviesList;
-        this.setState({
-          resultSongs: []
+
+    switch(selectedType) {
+      case "song":
+        fetch("http://localhost:8081/recommendations/bysong/" + this.state.playlistid,
+        {
+          method: "GET"
+        }).then(res => {
+          return res.json();
+        }, err => {
+          console.log(err);
+        }).then(data => {
+          console.log(data); //displays your JSON object in the console
+          /*
+          let recs = moviesList.map((movie, i) => 
+           <TopSongRow  />
+          );
+    */
+          //This saves our HTML representation of the data into the state, which we can call in our render function
+          //this.state.movies = moviesList;
+          this.setState({
+            resultSongs: []
+          });
         });
-      });
+        break;
+
+      case "playlist":       
+        fetch("http://localhost:8081/recommendations/byplaylist/" + this.state.playlistid,
+        {
+          method: "GET"
+        }).then(res => {
+          return res.json();
+        }, err => {
+          console.log(err);
+        }).then(data => {
+          console.log(data); //displays your JSON object in the console
+          this.setState({
+            resultSongs: []
+          });
+        });
+
+        break;
+
+      case "popular":
+        fetch("http://localhost:8081/recommendations/bypopular/" + this.state.playlistid,
+        {
+          method: "GET"
+        }).then(res => {
+          return res.json();
+        }, err => {
+          console.log(err);
+        }).then(data => {
+          console.log(data); //displays your JSON object in the console
+          this.setState({
+            resultSongs: []
+          });
+        });
+
+        break;
+      default:
+        console.log('selected type not recognized');
+    } 
+
+
+
+
+      
     }
 
     render() {    
