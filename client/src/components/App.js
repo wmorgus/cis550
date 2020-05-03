@@ -47,8 +47,8 @@ class App extends React.Component {
 			<div className="App">
 				<Router>
 					<Switch>
-						<PrivateRoute path='/recommendations' component={Recommendations} cookies={cookies} />
 						<PrivateRoute path='/recommendations/:id' component={RecPlaylist} cookies={cookies} />
+						<PrivateRoute path='/recommendations' component={Recommendations} cookies={cookies} />
 						<PrivateRoute path='/time' component={Time} cookies={cookies} />
 						<PrivateRoute path='/playlist/:id' component={Playlist} cookies={cookies} />
 						<PrivateRoute path='/monthlyartists' component={MonthlyArtists} cookies={cookies} />

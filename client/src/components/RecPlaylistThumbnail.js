@@ -4,7 +4,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button';
 import RecPlaylistThumbnail from './RecPlaylistThumbnail';
 import {useHistory} from 'react-router-dom';
-import PlaylistButton from './PlaylistButton';
 
 export default class GenreButton extends React.Component {
 	constructor(props) {
