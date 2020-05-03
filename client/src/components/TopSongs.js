@@ -47,7 +47,7 @@ export default class TopSongs extends React.Component {
 			  );
 			  this.setState({
         songs: songDivs
-			  });
+      });
 
       });
     }

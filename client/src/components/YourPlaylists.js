@@ -25,8 +25,8 @@ export default class YourPlaylists extends React.Component {
       var nxt = '';
       var uid = '';
       var ct = 0;
-      console.log(this)
-      console.log(this.props.apikey)
+      // console.log(this)
+      // console.log(this.props.apikey)
       var playlists = []
       fetch('http://localhost:8081/spotify/getPlaylists?apikey=' + this.props.apikey).then(response => response.json()).then((data) => {
         console.log(data)
@@ -37,6 +37,7 @@ export default class YourPlaylists extends React.Component {
         ct = data.limit
         for (var ind in data.items) {
           var curr = data.items[ind];
+          
           playlists.push(<PlaylistThumbnail id={curr.id} name={curr.name} image={curr.images[0].url} owner={curr.owner.display_name} key={ind}/>)
         }
       }).finally(() => {
@@ -51,7 +52,7 @@ export default class YourPlaylists extends React.Component {
     }
 
     onScroll() {
-      console.log(this.state)
+      // console.log(this.state)
       if ((window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 500) && !this.state.loading && this.state.nxt != '') {
         this.setState({loading: true});
         var nxt = '';
@@ -59,14 +60,19 @@ export default class YourPlaylists extends React.Component {
         var playlists = this.state.playlists
         // console.log(this.state.next)
         fetch('http://localhost:8081/spotify/getUserPlaylists?apikey=' + this.props.apikey + '&offset=' + this.state.count + '&user=' + this.state.uid).then(response => response.json()).then((data) => {
-          console.log(data)
+          // console.log(data)
           if (data.next) {
             nxt = data.next
           }
           ct += data.limit
           for (var ind in data.items) {
             var curr = data.items[ind];
-            playlists.push(<PlaylistThumbnail id={curr.id} name={curr.name} image={curr.images[0].url} owner={curr.owner.display_name} key={ind}/>)
+            if (!curr.images[0]) {
+              console.log(curr)
+              playlists.push(<PlaylistThumbnail id={curr.id} name={curr.name} image={'https://tidal.com/browse/assets/images/defaultImages/defaultPlaylistImage.png'} owner={curr.owner.display_name} key={ind}/>)
+            } else {
+              playlists.push(<PlaylistThumbnail id={curr.id} name={curr.name} image={curr.images[0].url} owner={curr.owner.display_name} key={ind}/>)
+            }
           }
         }).finally(() => {
           this.setState({
