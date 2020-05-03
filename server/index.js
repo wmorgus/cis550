@@ -13,6 +13,10 @@ app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
+app.use(function(req, res, next) {
+	console.log(req.method + ': ' + req.url)
+	next()
+})
 
 app.get('/login', routes.login);
 app.get('/storeCode', routes.storeCode);

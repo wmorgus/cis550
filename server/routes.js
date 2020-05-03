@@ -76,7 +76,7 @@ function storeCode(req, res) {
 			}
 		}
 		request(reqOps, function (error, response){
-			if (response.body) {
+			if (response && response.body) {
 				var res2 = JSON.parse(response.body);
 				if (res2.access_token) {
 					var token = res2.access_token;
@@ -93,7 +93,7 @@ function storeCode(req, res) {
 				console.log("error with token request")
 			}});
 	} else {
-		console.log(req.query.error)
+		console.log(error)
 		res.redirect('http://localhost:3000/login')
 	}
 }
@@ -127,7 +127,7 @@ function getAllPlaylists(req, res) {
     }
   }
   request(reqOps, function (error, response){
-    if (response.body) {
+    if (response && response.body) {
       var res2 = JSON.parse(response.body);
       // console.log(res2)
       if (res2) {
@@ -138,6 +138,7 @@ function getAllPlaylists(req, res) {
       }
     } else {
       console.log("error with playlists request")
+      console.log(error)
     }});
 }
 
@@ -155,7 +156,7 @@ function getUserPlaylists(req, res) {
   }
 
   request(reqOps, function (error, response){
-    if (response.body) {
+    if (response && response.body) {
       var res2 = JSON.parse(response.body);
       // console.log(res2)
       if (res2) {
@@ -165,6 +166,7 @@ function getUserPlaylists(req, res) {
         console.log(res2.error_description)
       }
     } else {
+      console.log(error)
       console.log("error with playlists request")
   }});
 }
@@ -175,19 +177,22 @@ function recursiveReq(reqOps, addTo, cb) {
       var res2 = JSON.parse(response.body);
       if (res2) {
         console.log(res2)
+        if (addTo.length == 0) {
+          cb = partial(cb, res2)
+        }
         if (res2.tracks) {
           for (var ind in res2.tracks.items) {
-            addTo.push(res2.tracks.items[ind].track.id)
+            addTo.push(res2.tracks.items[ind].track)
           }
         } else {
           for (var ind in res2.items) {
-            addTo.push(res2.items[ind].track.id)
+            addTo.push(res2.items[ind].track)
           }
         }
         if ((res2.tracks && res2.tracks.next) || res2.next) {
           if (res2.tracks) {
             reqOps.uri = res2.tracks.next
-            recursiveReq(reqOps, addTo, partial(cb, res2)) 
+            recursiveReq(reqOps, addTo, cb) 
           } else {
             reqOps.uri = res2.next
             recursiveReq(reqOps, addTo, cb) 
@@ -208,8 +213,12 @@ function recursiveReq(reqOps, addTo, cb) {
 
 function completeRecursion(id, res, obj, output) {
   //call leems function here with id and output
-  obj.all = output
+  obj.allSongs = output
   res.send(obj)
+}
+
+function getMore() {
+
 }
 
 //thank god for github
@@ -265,7 +274,7 @@ function getUser(req, res) {
     }
   }
   request(reqOps, function (err, response){
-    if (response.body) {
+    if (response && response.body) {
       var res2 = JSON.parse(response.body);
       // console.log(res2)
       if (res2) {
@@ -275,6 +284,7 @@ function getUser(req, res) {
         console.log(res2.error_description)
       }
     } else {
+      console.log(err)
       console.log("error with user request")
   }});
 }
@@ -426,7 +436,7 @@ function getPlaylistValidation(sids, pid, oid) {
     if (err) {
       console.error(err.message);
       return;
-    } 
+    }
     console.log(result);
     if (result == 0) {
       //there is no playlist by that name, check each song in all_songs
