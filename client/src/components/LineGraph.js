@@ -1,6 +1,7 @@
 import React from "react";
 import { Line } from "react-chartjs-2";
 import { MDBContainer } from "mdbreact";
+import {Button} from 'react-bootstrap';
 
 class LineGraph extends React.Component {
     constructor(props) {
@@ -107,7 +108,11 @@ class LineGraph extends React.Component {
 
   render() {
     return (
+        
       <MDBContainer>
+          <form>
+              <Button variant="btn btn-success" href="http://localhost:3000/time">Back</Button>
+        </form>
         <h3 className="mt-5">Line chart</h3>
         <Line data={this.state.dataLine} options={{ responsive: true }} />
       </MDBContainer>
