@@ -1,7 +1,7 @@
 import React from 'react';
 import '../style/Time.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Button} from 'react-bootstrap';
+import {Button, Table} from 'react-bootstrap';
 import PageNavbar from './PageNavbar';
 import TopSongRow from './TopSongRow';
 
@@ -34,9 +34,15 @@ export default class PlaylistComparison extends React.Component {
 		}).then(response => response.json()).then((data) => {
       console.log(data.rows)
       var result = data.rows;
-      console.log(result[0]);
+      console.log("result" + result);
+      let songDivs = result.map((songObj, i) =>
+      <tr key = {i}>
+        <td>{songObj[0]}</td>
+        <td>{songObj[1]}</td>
+      </tr>
+      );
       this.setState({
-        playlists: result
+        playlists: songDivs
 			  });
       });
     }
@@ -51,9 +57,15 @@ export default class PlaylistComparison extends React.Component {
         console.log(data.rows)
         var result = data.rows;
         console.log(result[0]);
+        let songDivs = result.map((songObj, i) =>
+        <tr key = {i}>
+          <td>{songObj[0]}</td>
+          <td>{songObj[1]}</td>
+        </tr>
+        );
         this.setState({
-          playlists: result
-                });
+          playlists: songDivs
+        });
         });
       }
 
@@ -67,8 +79,14 @@ export default class PlaylistComparison extends React.Component {
         console.log(data.rows)
         var result = data.rows;
         console.log(result[0]);
+        let songDivs = result.map((songObj, i) =>
+        <tr key = {i}>
+          <td>{songObj[0]}</td>
+          <td>{songObj[1]}</td>
+        </tr>
+        );
         this.setState({
-          playlists: result
+          playlists: songDivs
                 });
         });
       }
@@ -97,7 +115,21 @@ export default class PlaylistComparison extends React.Component {
         </div>
         
         <div className="jumbotron">
-        <div className="movies-container">
+        <div className="table">
+                  <Table bordered striped hover>
+                    <thead>
+                      <tr>
+                        <th>PID</th>
+                        <th>Title</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                    {this.state.playlists}
+                  </tbody>
+              </Table>
+              </div>
+
+        {/* <div className="movies-container">
 			          <div className="movie">
                   <div className="header"><strong>title</strong></div>
                   <div className="header"><strong>artists</strong></div>
@@ -106,7 +138,7 @@ export default class PlaylistComparison extends React.Component {
               <div className="movies-container" id="results">
               {this.state.playlists}
               </div>
-            </div>
+            </div> */}
             </div>
       </div>
 
