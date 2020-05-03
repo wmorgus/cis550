@@ -107,8 +107,10 @@ export default class PlaylistComparison extends React.Component {
 
   render() {
     return (
-      <div className="container songtable-container">
+        <div>
         <PageNavbar active="time" apikey={this.props.apikey}/>
+      <div className="container songtable-container">
+        
         <div className="Home">
           <div className="lander">
             <h1>Compare Your Playlists</h1>
@@ -134,7 +136,7 @@ export default class PlaylistComparison extends React.Component {
                     <thead>
                       <tr>
                         <th>PID</th>
-                        <th>Title</th>
+                        <th>Score</th>
                       </tr>
                   </thead>
                   <tbody>
@@ -155,7 +157,7 @@ export default class PlaylistComparison extends React.Component {
             </div> */}
             </div>
       </div>
-
+      </div>
     );
   }
 }
