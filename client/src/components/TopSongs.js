@@ -1,7 +1,7 @@
 import React from 'react';
 import '../style/Time.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Button} from 'react-bootstrap';
+import {Button, Table} from 'react-bootstrap';
 import PageNavbar from './PageNavbar';
 import TopSongRow from './TopSongRow';
 
@@ -38,7 +38,12 @@ export default class TopSongs extends React.Component {
       var result = data.rows;
       console.log(result[0]);
       let songDivs = result.map((songObj, i) =>
-			<TopSongRow key={i} title={songObj[0]} artists={songObj[1]} streams={songObj[2]}/>
+      <tr key = {i}>
+        <td>{songObj[0]}</td>
+        <td>{songObj[1]}</td>
+        <td>{songObj[2]}</td>
+      </tr>
+			// <TopSongRow key={i} title={songObj[0]} artists={songObj[1]} streams={songObj[2]}/>
 			  );
 			  this.setState({
         songs: songDivs
@@ -49,7 +54,7 @@ export default class TopSongs extends React.Component {
 
   render() {
     return (
-      <div className="container songtable-container">
+      <div className="topSongs">
         <PageNavbar active="time" apikey={this.props.apikey}/>
         <div className="Home">
           <div className="lander">
@@ -92,14 +97,20 @@ export default class TopSongs extends React.Component {
         </form>
         
         <div className="jumbotron">
-        <div className="movies-container">
-			          <div className="movie">
-                  <div className="header"><strong>title</strong></div>
-                  <div className="header"><strong>artists</strong></div>
-                  <div className="header"><strong>streams</strong></div>
-              </div>
-              <div className="movies-container" id="results">
-              {this.state.songs}
+            <div className="movies-container">
+			          <div className="table">
+                  <Table bordered striped hover>
+                    <thead>
+                      <tr>
+                        <th>Title</th>
+                        <th>Artists</th>
+                        <th>Streams</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                    {this.state.songs}
+                  </tbody>
+              </Table>
               </div>
             </div>
             </div>
