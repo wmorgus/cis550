@@ -153,6 +153,7 @@ function getUserPlaylists(req, res) {
       'Authorization': 'Bearer ' + req.query.apikey
     }
   }
+
   request(reqOps, function (error, response){
     if (response.body) {
       var res2 = JSON.parse(response.body);
@@ -281,23 +282,11 @@ function getUser(req, res) {
 
 /* ---- Playlist Rec Routes ---- */
 
-function getRecommendations(req, res) {
-  
-  //probably won't end up using this one? dont need to query db to get user playlists
-
-/*
-  connection.query(query, function(err, rows, fields) {
-    if (err) console.log(err);
-    else {
-      res.json(rows);
-    }
-  });
-  */
-};
 
 //use Spotify audio features to generate a new playlist
 //by querying for songs with qualities similar to the selected user playlist
 function getRecsSimilarSongs(req, res) {
+  console.log('finding similar songs')
   connection.query(query, function(err, rows, fields) {
     if (err) console.log(err);
     else {
@@ -309,6 +298,7 @@ function getRecsSimilarSongs(req, res) {
 //query for existing playlists that are similar to the selected user playlist
 //that the user isn't already following
 function getRecsSimilarPlaylists(req, res) {
+  console.log('finding similar playlists')
   connection.query(query, function(err, rows, fields) {
     if (err) console.log(err);
     else {
@@ -320,6 +310,7 @@ function getRecsSimilarPlaylists(req, res) {
 ////use Spotify audio features to generate a new playlist
 //by querying for top 100 songs with qualities similar to the selected user playlist
 function getRecsPopular(req, res) {
+  console.log('finding similar popular songs')
   connection.query(query, function(err, rows, fields) {
     if (err) console.log(err);
     else {
@@ -613,7 +604,6 @@ module.exports = {
   getPlaylist,
   getSong,
   getUser,
-  getRecommendations,
   getRecsSimilarSongs,
   getRecsSimilarPlaylists,
   getRecsPopular,
