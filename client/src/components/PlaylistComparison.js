@@ -1,7 +1,7 @@
 import React from 'react';
 import '../style/Time.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Button, Table} from 'react-bootstrap';
+import { Button, Table } from 'react-bootstrap';
 import PageNavbar from './PageNavbar';
 import TopSongRow from './TopSongRow';
 
@@ -10,7 +10,7 @@ export default class PlaylistComparison extends React.Component {
     super(props);
     this.state = {
       oid: 'million_playlist',
-      playlists:[]
+      playlists: []
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -19,14 +19,14 @@ export default class PlaylistComparison extends React.Component {
   componentDidMount() {
     var oid = '';
     fetch('http://localhost:8081/spotify/getUser?apikey=' + this.props.apikey).then(response => response.json()).then((data) => {
-            console.log(data)
-            oid = 'million_playlist'
-			//oid = data.id
-		}).finally(() => {
-			this.setState({
-				oid: oid
-			});
-		});
+      console.log(data)
+      oid = 'million_playlist'
+      //oid = data.id
+    }).finally(() => {
+      this.setState({
+        oid: oid
+      });
+    });
 
   }
 
@@ -42,110 +42,127 @@ export default class PlaylistComparison extends React.Component {
   handleAcousticSubmit = (event) => {
     event.preventDefault();
 
-		fetch("http://localhost:8081/playlistacoustics/" + this.state.oid,
-		{
-		  method: 'GET' // The type of HTTP request.
-		}).then(response => response.json()).then((data) => {
-      console.log(data.rows)
-      var result = data.rows;
-      console.log("result" + result);
-      let songDivs = result.map((songObj, i) =>
-      <tr key = {i}>
-        <td>{songObj[0]}</td>
-        <td>{songObj[1]}</td>
-      </tr>
-      );
-      this.setState({
-        playlists: songDivs
-			  });
+    fetch("http://localhost:8081/playlistacoustics/" + this.state.oid,
+      {
+        method: 'GET' // The type of HTTP request.
+      }).then(response => response.json()).then((data) => {
+        console.log(data.rows)
+        var result = data.rows;
+        console.log("result" + result);
+        let songDivs = result.map((songObj, i) =>
+          <tr key={i}>
+            <td>{songObj[0]}</td>
+            <td>{songObj[1]}</td>
+          </tr>
+        );
+        this.setState({
+          playlists: songDivs
+        });
       });
   }
 
-    handleDanceSubmit = (event) => {
-        event.preventDefault();
-  
-          fetch("http://localhost:8081/playlistdance/" + this.state.oid,
-          {
-            method: 'GET' // The type of HTTP request.
-          }).then(response => response.json()).then((data) => {
-        console.log(data.rows)
-        var result = data.rows;
-        console.log(result[0]);
-        let songDivs = result.map((songObj, i) =>
-        <tr key = {i}>
-          <td>{songObj[0]}</td>
-          <td>{songObj[1]}</td>
-        </tr>
-        );
-        this.setState({
-          playlists: songDivs
-        });
-        });
-      }
+  handleDanceSubmit = (event) => {
+    event.preventDefault();
 
-      handleEnergySubmit = (event) => {
-        event.preventDefault();
-  
-          fetch("http://localhost:8081/playlistenergy/" + this.state.oid,
-          {
-            method: 'GET' // The type of HTTP request.
-          }).then(response => response.json()).then((data) => {
+    fetch("http://localhost:8081/playlistdance/" + this.state.oid,
+      {
+        method: 'GET' // The type of HTTP request.
+      }).then(response => response.json()).then((data) => {
         console.log(data.rows)
         var result = data.rows;
         console.log(result[0]);
         let songDivs = result.map((songObj, i) =>
-        <tr key = {i}>
-          <td>{songObj[0]}</td>
-          <td>{songObj[1]}</td>
-        </tr>
+          <tr key={i}>
+            <td>{songObj[0]}</td>
+            <td>{songObj[1]}</td>
+          </tr>
         );
         this.setState({
           playlists: songDivs
-                });
         });
-      }
+      });
+  }
+
+  handleEnergySubmit = (event) => {
+    event.preventDefault();
+
+    fetch("http://localhost:8081/playlistenergy/" + this.state.oid,
+      {
+        method: 'GET' // The type of HTTP request.
+      }).then(response => response.json()).then((data) => {
+        console.log(data.rows)
+        var result = data.rows;
+        console.log(result[0]);
+        let songDivs = result.map((songObj, i) =>
+          <tr key={i}>
+            <td>{songObj[0]}</td>
+            <td>{songObj[1]}</td>
+          </tr>
+        );
+        this.setState({
+          playlists: songDivs
+        });
+      });
+  }
 
   render() {
     return (
-        <div>
-        <PageNavbar active="time" apikey={this.props.apikey}/>
-      <div className="container songtable-container">
-        
-        <div className="Home">
-          <div className="lander">
-            <h1>Compare Your Playlists</h1>
-            <p>Choose from the options below to rank your playlists</p>
-            <form>
-              <Button variant="btn btn-success" href="http://localhost:3000">Back</Button>
-            </form>
-            <form>
-              <Button variant="btn btn-success" onClick = {this.handleAcousticSubmit}>Acousticness</Button>
-            </form>
-            <form>
-              <Button variant="btn btn-success" onClick = {this.handleDanceSubmit}>Danceability</Button>
-            </form>
-            <form>
-              <Button variant="btn btn-success" onClick = {this.handleEnergySubmit}>Energy</Button>
-            </form>
-          </div>
-        </div>
-        
-        <div className="jumbotron">
-        <div className="table">
-                  <Table bordered striped hover>
-                    <thead>
-                      <tr>
-                        <th>PID</th>
-                        <th>Score</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                    {this.state.playlists}
-                  </tbody>
-              </Table>
-              </div>
+      <div>
+        <PageNavbar active="time" apikey={this.props.apikey} />
+        <div className="container songtable-container">
 
-        {/* <div className="movies-container">
+          <div className="Home">
+            <div className="lander">
+              <h1>Compare Your Playlists</h1>
+              <p>Choose from the options below to rank your playlists</p>
+              <form>
+                <Button variant="btn btn-success" href="http://localhost:3000">Back</Button>
+              </form>
+              <br></br>
+              <form>
+                <div className="container">
+                  <div className="row">    
+                  <div class="col-sm centerVal">
+                  <Button variant="btn btn-success" onClick={this.handleAcousticSubmit}>Acousticness</Button>
+                  </div>
+                  <div class="col-sm center-block">
+                  <Button variant="btn btn-success" onClick={this.handleDanceSubmit}>Danceability</Button>
+                  </div>
+                  <div class="col-sm center-block">
+                  <Button variant="btn btn-success" onClick={this.handleEnergySubmit}>Energy</Button>
+                  </div>
+                  </div>
+                </div>
+                
+                
+                
+              </form>
+              <form>
+
+              </form>
+              <form>
+
+              </form>
+            </div>
+          </div>
+          <br></br>
+          <br></br>
+          <div className="container">
+            <div className="table">
+              <Table bordered striped hover>
+                <thead>
+                  <tr>
+                    <th>PID</th>
+                    <th>Score</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {this.state.playlists}
+                </tbody>
+              </Table>
+            </div>
+
+            {/* <div className="movies-container">
 			          <div className="movie">
                   <div className="header"><strong>title</strong></div>
                   <div className="header"><strong>artists</strong></div>
@@ -155,8 +172,8 @@ export default class PlaylistComparison extends React.Component {
               {this.state.playlists}
               </div>
             </div> */}
-            </div>
-      </div>
+          </div>
+        </div>
       </div>
     );
   }

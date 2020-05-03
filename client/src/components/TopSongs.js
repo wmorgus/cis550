@@ -43,11 +43,10 @@ export default class TopSongs extends React.Component {
         <td>{songObj[1]}</td>
         <td>{songObj[2]}</td>
       </tr>
-			// <TopSongRow key={i} title={songObj[0]} artists={songObj[1]} streams={songObj[2]}/>
 			  );
 			  this.setState({
         songs: songDivs
-      });
+			  });
 
       });
     }
