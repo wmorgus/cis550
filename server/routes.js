@@ -515,6 +515,25 @@ function getPlaylistValidation(sids, pid, oid) {
     }
   });
 };
+
+
+function getPlaylistAcoustics(req, res) {
+
+  query = "WITH Playlists AS (SELECT pid FROM playlist_owner WHERE oid = '" + million_playlist + "')," + 
+  " PlaylistData AS (SELECT Playlists.pid, sid FROM Playlists JOIN Playlist_Songs ON Playlists.pid = Playlist_Songs.pid) " + 
+  "SELECT pid, AVG(acousticness) FROM PlaylistData JOIN All_Songs ON PlaylistData.sid = All_Songs.sid GROUP BY pid";
+  
+    
+  console.log(query);
+  conn.execute(query, function(err, result) {
+    if (err) {
+      console.error(err.message);
+      return;
+    } 
+    console.log(result);
+    res.send(JSON.stringify(result));
+  });
+};
 // The exported functions, which can be accessed in index.js.
 module.exports = {
   initDB,

@@ -95,18 +95,12 @@ export default class LongestStreak extends React.Component {
       <div>
         <PageNavbar active="time" apikey={this.props.apikey}/>
         <div style={{display: ""}}>
-        <form>
-              <Button variant="btn btn-success" href="http://localhost:3000/time">Back</Button>
-        </form>
           <div className="h5">Longest Song Streaks</div>
           <p>How Many Consecutive Days a Song Has Stayed on the Charts</p>
           <div style={{maxHeight: '30%'}}>
             <CustomDropdown dropdownjerns={this.state.dropdownjerns}/>
           </div>
         </div>
-
-      
-        
         <div className="jumbotron">
         <div className="movies-container">
         <div className="movie">
