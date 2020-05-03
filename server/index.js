@@ -20,6 +20,7 @@ app.get('/logout', routes.logout);
 app.get('/totalRestart', routes.totalRestart);
 
 app.get('/spotify/getPlaylists', routes.getAllPlaylists);
+app.get('/spotify/getUserPlaylists', routes.getUserPlaylists);
 app.get('/spotify/getPlaylist', routes.getPlaylist);
 app.get('/spotify/getSong', routes.getSong);
 app.get('/spotify/getUser', routes.getUser);
@@ -31,6 +32,9 @@ app.get('/monthlyartists/:date', routes.getMonthlyArtists);
 app.get('/longeststreak/:sid', routes.getLongestStreak);
 app.get('/streaksids', routes.getStreakSids);
 app.get('/acoustics', routes.getAcoustics);
+app.get('/playlistacoustics/:oid', routes.getPlaylistAcoustics);
+app.get('/playlistdance/:oid', routes.getPlaylistDance);
+app.get('/playlistenergy/:oid', routes.getPlaylistEnergy);
 
 
 var server = app.listen(8081, () => {
