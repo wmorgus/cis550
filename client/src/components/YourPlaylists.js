@@ -2,7 +2,8 @@ import React from 'react';
 import '../style/Dashboard.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import PageNavbar from './PageNavbar';
-import {Redirect} from 'react-router-dom'
+import {Redirect} from 'react-router-dom';
+import {Button} from 'react-bootstrap';
 import PlaylistThumbnail from './PlaylistThumbnail';
 import { Next } from 'react-bootstrap/PageItem';
 
@@ -93,6 +94,7 @@ export default class YourPlaylists extends React.Component {
       return (
         <div className="yourPlaylists">
           <PageNavbar active="yourPlaylists" apikey={this.props.apikey}/>
+          <Button variant="btn btn-success" href="http://localhost:3000/playlistcomparison">Cool Shit Will Doesn't Want You To See</Button>
           <div className="container">
             {this.state.playlists}
           </div>

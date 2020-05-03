@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Dropdown, FormControl} from 'react-bootstrap';
+import {Dropdown, DropdownButton, FormControl, Button, ButtonGroup} from 'react-bootstrap';
 
 const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
   <a
@@ -59,12 +59,13 @@ export default class CustomDropdown extends React.Component {
 
   render(){
     return (
-    <Dropdown>
-      <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
-        View all songs
-      </Dropdown.Toggle>
+      <Dropdown as={ButtonGroup}>
+      <Button variant="success">View All Songs</Button>
+    
+      <Dropdown.Toggle split variant="success" id="dropdown-split-basic" />
+    
       <Dropdown.Menu as={CustomMenu}>
-        {this.props.dropdownjerns}
+       {this.props.dropdownjerns}
       </Dropdown.Menu>
     </Dropdown>
   )};

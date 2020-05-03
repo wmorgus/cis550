@@ -16,6 +16,7 @@ import MonthlyArtists from './MonthlyArtists';
 import TopSongs from './TopSongs';
 import LongestStreak from './LongestStreak';
 import LineGraph from './LineGraph';
+import PlaylistComparison from './PlaylistComparison';
 import Landing from './Landing';
 
 var checkAuth = function(cookieObj) {
@@ -54,6 +55,7 @@ class App extends React.Component {
 						<PrivateRoute path='/monthlyartists' component={MonthlyArtists} cookies={cookies} />
 						<PrivateRoute path='/topsongs' component={TopSongs} cookies={cookies} />
 						<PrivateRoute path='/longeststreak' component={LongestStreak} cookies={cookies} />
+						<PrivateRoute path='/playlistcomparison' component={PlaylistComparison} cookies={cookies} />
 						<PrivateRoute path='/graphs' component={LineGraph} cookies={cookies} />
 						<Route path="/landing" render={() => (<Landing />)}/>
 						<PrivateRoute path='/' component={YourPlaylists} cookies={cookies} />
