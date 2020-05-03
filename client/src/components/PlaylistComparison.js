@@ -25,7 +25,7 @@ export default class PlaylistComparison extends React.Component {
     });
   }
 
-    handleSubmit = (event) => {
+    handleAcousticSubmit = (event) => {
       event.preventDefault();
 
 		fetch("http://localhost:8081/playlistacoustics/" + this.state.oid,
@@ -41,6 +41,38 @@ export default class PlaylistComparison extends React.Component {
       });
     }
 
+    handleDanceSubmit = (event) => {
+        event.preventDefault();
+  
+          fetch("http://localhost:8081/playlistdance/" + this.state.oid,
+          {
+            method: 'GET' // The type of HTTP request.
+          }).then(response => response.json()).then((data) => {
+        console.log(data.rows)
+        var result = data.rows;
+        console.log(result[0]);
+        this.setState({
+          playlists: result
+                });
+        });
+      }
+
+      handleEnergySubmit = (event) => {
+        event.preventDefault();
+  
+          fetch("http://localhost:8081/playlistenergy/" + this.state.oid,
+          {
+            method: 'GET' // The type of HTTP request.
+          }).then(response => response.json()).then((data) => {
+        console.log(data.rows)
+        var result = data.rows;
+        console.log(result[0]);
+        this.setState({
+          playlists: result
+                });
+        });
+      }
+
   render() {
     return (
       <div className="container songtable-container">
@@ -53,7 +85,13 @@ export default class PlaylistComparison extends React.Component {
               <Button variant="btn btn-success" href="http://localhost:3000">Back</Button>
             </form>
             <form>
-              <Button variant="btn btn-success" onClick = {this.handleSubmit}>Acousticness</Button>
+              <Button variant="btn btn-success" onClick = {this.handleAcousticSubmit}>Acousticness</Button>
+            </form>
+            <form>
+              <Button variant="btn btn-success" onClick = {this.handleDanceSubmit}>Danceability</Button>
+            </form>
+            <form>
+              <Button variant="btn btn-success" onClick = {this.handleEnergySubmit}>Energy</Button>
             </form>
           </div>
         </div>

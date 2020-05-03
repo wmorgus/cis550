@@ -33,6 +33,8 @@ app.get('/longeststreak/:sid', routes.getLongestStreak);
 app.get('/streaksids', routes.getStreakSids);
 app.get('/acoustics', routes.getAcoustics);
 app.get('/playlistacoustics/:oid', routes.getPlaylistAcoustics);
+app.get('/playlistdance/:oid', routes.getPlaylistDance);
+app.get('/playlistenergy/:oid', routes.getPlaylistEnergy);
 
 
 var server = app.listen(8081, () => {
