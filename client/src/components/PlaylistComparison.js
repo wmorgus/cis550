@@ -16,6 +16,19 @@ export default class PlaylistComparison extends React.Component {
     this.handleInputChange = this.handleInputChange.bind(this);
   }
 
+  componentDidMount() {
+    var oid = '';
+    fetch('http://localhost:8081/spotify/getUser?apikey=' + this.props.apikey).then(response => response.json()).then((data) => {
+			console.log(data)
+			oid = data.id
+		}).finally(() => {
+			this.setState({
+				oid: oid
+			});
+		});
+
+  }
+
   handleInputChange = (event) => {
     const value = event.target.value;
     const name = event.target.name;
@@ -25,53 +38,52 @@ export default class PlaylistComparison extends React.Component {
     });
   }
 
-    handleAcousticSubmit = (event) => {
-      event.preventDefault();
+  handleAcousticSubmit = (event) => {
+    event.preventDefault();
 
-		fetch("http://localhost:8081/playlistacoustics/" + this.state.oid,
-		{
-		  method: 'GET' // The type of HTTP request.
-		}).then(response => response.json()).then((data) => {
-      console.log(data.rows)
-      var result = data.rows;
-      console.log(result[0]);
-      this.setState({
-        playlists: result
-			  });
+  fetch("http://localhost:8081/playlistacoustics/" + this.state.oid,
+  {
+    method: 'GET' // The type of HTTP request.
+  }).then(response => response.json()).then((data) => {
+    console.log(data.rows)
+    var result = data.rows;
+    console.log(result[0]);
+    this.setState({
+      playlists: result
       });
-    }
+    });
+  }
 
-    handleDanceSubmit = (event) => {
-        event.preventDefault();
-  
-          fetch("http://localhost:8081/playlistdance/" + this.state.oid,
-          {
-            method: 'GET' // The type of HTTP request.
-          }).then(response => response.json()).then((data) => {
-        console.log(data.rows)
-        var result = data.rows;
-        console.log(result[0]);
-        this.setState({
-          playlists: result
-                });
-        });
-      }
+  handleDanceSubmit = (event) => {
+    event.preventDefault();
+      fetch("http://localhost:8081/playlistdance/" + this.state.oid,
+      {
+        method: 'GET' // The type of HTTP request.
+      }).then(response => response.json()).then((data) => {
+    console.log(data.rows)
+    var result = data.rows;
+    console.log(result[0]);
+    this.setState({
+      playlists: result
+            });
+    });
+  }
 
-      handleEnergySubmit = (event) => {
-        event.preventDefault();
-  
-          fetch("http://localhost:8081/playlistenergy/" + this.state.oid,
-          {
-            method: 'GET' // The type of HTTP request.
-          }).then(response => response.json()).then((data) => {
-        console.log(data.rows)
-        var result = data.rows;
-        console.log(result[0]);
-        this.setState({
-          playlists: result
-                });
-        });
-      }
+  handleEnergySubmit = (event) => {
+    event.preventDefault();
+
+      fetch("http://localhost:8081/playlistenergy/" + this.state.oid,
+      {
+        method: 'GET' // The type of HTTP request.
+      }).then(response => response.json()).then((data) => {
+    console.log(data.rows)
+    var result = data.rows;
+    console.log(result[0]);
+    this.setState({
+      playlists: result
+            });
+    });
+  }
 
   render() {
     return (
