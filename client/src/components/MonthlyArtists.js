@@ -44,7 +44,7 @@ export default class MonthlyArtists extends React.Component {
       <tr key = {i}>
       <td>{artistObj[0]}</td>
       <td>{artistObj[1]}</td>
-      <td>{artistObj[2]}</td>
+      <td>{Math.round(artistObj[2] * 10000) / 100 + "%"}</td>
     </tr>
 			  );
 			  this.setState({
