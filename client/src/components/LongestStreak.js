@@ -1,7 +1,7 @@
 import React from 'react';
 import '../style/Time.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Button, Dropdown} from 'react-bootstrap';
+import {Button, Dropdown, Table} from 'react-bootstrap';
 import PageNavbar from './PageNavbar';
 import TopSidRow from './TopSidRow';
 import TopSongRow from './TopSongRow';
@@ -12,7 +12,7 @@ export default class LongestStreak extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      song: "",
+      song: [],
       sids: [],
       streak: [],
       table: [],
@@ -37,13 +37,7 @@ export default class LongestStreak extends React.Component {
       console.log(result[0]);
       var dropdownjerns = []
       var sidDivs = []
-      // let sidDivs = result.map((songObj, i) =>{
-      //   if (i == 1) {
-      //     console.log(songObj)
-      //   }
-      //   songObjs.push({name: songObj[1] + ' by ' + songObj[2], id: songObj[0]})
-      //   return(<option value={songObj[0]}>{songObj[1]}</option>)
-      // });
+
       dropdownjerns = result.map((songObj, i) =>{
         return(<Dropdown.Item onSelect={() => {
           this.handleSubmit(songObj[0]);
@@ -80,8 +74,9 @@ export default class LongestStreak extends React.Component {
 		fetch("http://localhost:8081/longeststreak/" + result, {
 		  method: 'GET' // The type of HTTP request.
 		}).then(response => response.json()).then((data) => {
-      console.log(data.rows)
+      console.log("rows vals: " + data.rows)
       var result = data.rows[0];
+      console.log("result: " + result);
       result[1] = result[1].split("T")[0];
       result[2] = result[2].split("T")[0];
       this.setState({
@@ -102,23 +97,28 @@ export default class LongestStreak extends React.Component {
           </div>
         </div>
         <div className="jumbotron">
-        <div className="movies-container">
-        <div className="movie">
-                  <div className="header"><strong>Title</strong></div>
-                  <div className="header"><strong>Artists</strong></div>
+        <div className="table">
+                  <Table bordered striped hover>
+                    <thead>
+                      <tr>
+                        <th>Title</th>
+                        <th>Artists</th>
+                        <th>Days</th>
+                        <th>Start</th>
+                        <th>End</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{this.state.song[0]}</td>
+                      <td>{this.state.song[1]}</td>
+                      <td>{this.state.streak[0]}</td>
+                      <td>{this.state.streak[1]}</td>
+                      <td>{this.state.streak[2]}</td>
+                    </tr>
+                  </tbody>
+              </Table>
               </div>
-           <div className="movies-container" id="results">
-                {this.state.song}
-            </div>
-			          <div className="movie">
-                  <div className="header"><strong>Days</strong></div>
-                  <div className="header"><strong>Start</strong></div>
-                  <div className="header"><strong>End</strong></div>
-              </div>
-              <div className="movies-container" id="results">
-                {this.state.streak}
-              </div>
-            </div>
           </div>
       </div>
 

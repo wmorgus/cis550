@@ -14,8 +14,9 @@ export default class Time extends React.Component {
 
   render() {
     return (
-      <div className="container songtable-container">
-        <PageNavbar active="time" apikey={this.props.apikey}/>
+      
+      <div className="Time">
+      <PageNavbar active="time" apikey={this.props.apikey}/>  
         <div className="Home">
           <div className="lander">
             <h1>Songs Throughout Time</h1>

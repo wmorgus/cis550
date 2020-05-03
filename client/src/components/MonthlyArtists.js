@@ -1,7 +1,7 @@
 import React from 'react';
 import '../style/Time.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Button} from 'react-bootstrap';
+import {Button, Table} from 'react-bootstrap';
 import PageNavbar from './PageNavbar';
 import TopArtistRow from './TopArtistRow';
 
@@ -41,7 +41,11 @@ export default class MonthlyArtists extends React.Component {
       var result = data.rows;
       console.log(result[0]);
       let artistDivs = result.map((artistObj, i) =>
-			<TopArtistRow key={i} artist={artistObj[0]} streams={artistObj[1]} percent={Math.round(10000*artistObj[2])/100 + "%"}/>
+      <tr key = {i}>
+      <td>{artistObj[0]}</td>
+      <td>{artistObj[1]}</td>
+      <td>{artistObj[2]}</td>
+    </tr>
 			  );
 			  this.setState({
         artists: artistDivs
@@ -84,14 +88,20 @@ export default class MonthlyArtists extends React.Component {
 
             <div className="jumbotron">
             <div className="movies-container">
-                <div className="movie">
-                <div className="header"><strong>artist</strong></div>
-                <div className="header"><strong>streams</strong></div>
-                <div className="header"><strong>percent of streams</strong></div>
-                </div>
-                <div className="movies-container" id="results">
-                {this.state.artists}
-                </div>
+			          <div className="table">
+                  <Table bordered striped hover>
+                    <thead>
+                      <tr>
+                        <th>Artist</th>
+                        <th>Streams</th>
+                        <th>Percent of Streams</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                    {this.state.artists}
+                  </tbody>
+              </Table>
+              </div>
             </div>
             </div>
         </div>
