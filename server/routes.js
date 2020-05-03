@@ -18,18 +18,6 @@ async function closeDB(cb) {
   })
 }
 
-function getDBTest(req, res) {
-  console.log('reqqing')
-  var query = 'SELECT COUNT(*) FROM ALL_SONGS'
-  conn.execute(query, function(err, result) {
-    if (err) {
-      console.error(err.message);
-      return;
-    }
-    console.log(result.rows);
-  });
-};
-
 /****       spotify api key mgmt          ****/
 
 function login(req, res) {
@@ -159,23 +147,23 @@ function getAllPlaylists(req, res) {
 
 function getPlaylist(req, res) {
   var offset = 0
-  if (req.body.offset) {
-    offset = req.body.offset
+  if (req.query.offset) {
+    offset = req.query.offset
   }
   var reqOps = {
-    uri: 'https://api.spotify.com/v1/playlists/' + req.body.playlistID,
+    uri: 'https://api.spotify.com/v1/playlists/' + req.query.id,
     method: 'GET',
     headers: {
-        'Authorization': 'Bearer ' + req.cookies.access_token
+        'Authorization': 'Bearer ' + req.query.apikey
     }
   }
   request(reqOps, function (error, response){
     if (response.body) {
       var res2 = JSON.parse(response.body);
-      if (res2.items) {
-        var playlist = res2.items
-        console.log(items)
-        res.send(JSON.stringify(items))
+      if (res2) {
+        // var playlist = res2.items
+        // console.log(items)
+        res.send(res2)
       } else {
         console.log("error with accessing playlist")
         console.log(res2.error_description)
@@ -391,7 +379,6 @@ module.exports = {
   getRecsSimilarPlaylists,
   getRecsPopular,
   getTopSongsFrom,
-  getDBTest,
   getMonthlyArtists,
   getStreakSids,
   getLongestStreak,

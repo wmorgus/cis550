@@ -32,8 +32,6 @@ app.get('/monthlyartists/:date', routes.getMonthlyArtists);
 app.get('/streaksids', routes.getStreakSids);
 app.get('/acoustics', routes.getAcoustics);
 
-app.get('/testdb', routes.getDBTest);
-
 
 var server = app.listen(8081, () => {
 	routes.initDB()

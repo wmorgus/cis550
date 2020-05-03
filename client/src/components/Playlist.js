@@ -1,15 +1,15 @@
 import React from 'react';
-import { useParams } from "react-router";
 import '../style/Dashboard.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import PageNavbar from './PageNavbar';
-import PlaylistThumbnail from './PlaylistThumbnail';
 
 export default class Playlist extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-        songs: []
+        playlistObj: {images: ['']},
+        songThumbnails: [],
+        avgs: []
       }
     }
 
@@ -18,29 +18,34 @@ export default class Playlist extends React.Component {
       var id = window.location.href.split('/')[window.location.href.split('/').length - 1]
       console.log(this.props.apikey)
       var playlists = []
+      var newObj = {}
       console.log(id)
-      // fetch('http://localhost:8081/spotify/getPlaylist?apikey=' + this.props.apikey + '&id=' + id).then(response => response.json()).then((data) => {
-      //   console.log(data)
-      //   for (var ind in data.items) {
-      //     var curr = data.items[ind];
-      //     console.log(curr)
-      //     console.log(curr.images)
-      //     playlists.push(<PlaylistThumbnail id={curr.id} name={curr.name} image={curr.images[0].url} owner={curr.owner.display_name} key={ind}/>)
-      //   }
-      // }).finally(() => {
-      //   this.setState({
-      //     playlists: playlists
-      //   });
-      // });
+      fetch('http://localhost:8081/spotify/getPlaylist?apikey=' + this.props.apikey + '&id=' + id).then(response => response.json()).then((data) => {
+        console.log('dataobj')
+        console.log(data)
+        newObj = data
+        // for (var ind in data.items) {
+        //   var curr = data.items[ind];
+        //   console.log(curr)
+        //   console.log(curr.images)
+        //   playlists.push(<PlaylistThumbnail id={curr.id} name={curr.name} image={curr.images[0].url} owner={curr.owner.display_name} key={ind}/>)
+        // }
+      }).finally(() => {
+        this.setState({
+          playlistObj: newObj
+        });
+      });
     }
 
     render() {    
       return (
         <div className="playlist">
-          <PageNavbar active="yourPlaylists" apikey={this.props.apikey}/>
+          <PageNavbar active="yourPlaylists" apikey={this.props.apikey} />
+          <div class="playlistHeader">
+            <img src={this.state.playlistObj.images[0]} ></img>
+          </div>
           <div className="container">
-            <h1>will</h1>
-            <h2>{this.props.apikey}</h2>
+            {this.state.songThumbnails}
           </div>
         </div>
     )};
