@@ -15,3 +15,41 @@
   .movie .header, .movieResults .title, .movieResults .artists, .movieResults .streams {
     flex: .5 0 25%;
   }
+
+.photo {
+    background-image: url("../assets/top-monthly-artists.png");
+    height: 40vh;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.photo2 {
+  background-image: url("../assets/artists-to-watch.jpg");
+  height: 40vh;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.photo3 {
+  background-image: url("../assets/top40.png");
+  height: 40vh;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.photo4 {
+  background-image: url("../assets/acoustic.png");
+  height: 40vh;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.artist-words {
+    padding: 10px;
+    font-size: 1.3em;
+}
+
