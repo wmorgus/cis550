@@ -409,6 +409,140 @@ function getAcoustics(req, res) {
   });
 };
 
+function getPlaylistValidation(sids, pid, oid) {
+  query = "SELECT COUNT(*) FROM Playlist_Owner WHERE pid = " + pid;
+  var ret = "";
+  //check if there is a playlist with this id 
+  conn.execute(query, function(err, result) {
+    if (err) {
+      console.error(err.message);
+      return;
+    } 
+    console.log(result);
+    if (result == 0) {
+      //there is no playlist by that name, check each song in all_songs
+      query = "INSERT INTO playlist_owner(pid, oid) " + 
+      "VALUES (" + pid + ", " + oid + ")";
+      conn.execute(query, function(err, result) {
+          if (err) {
+            console.error(err.message);
+            return;
+          } 
+          sids.forEach(function(element) {
+            query = "SELECT COUNT(*) FROM All_Songs WHERE sid = " + element;
+              conn.execute(query, function(err, result) {
+              if (err) {
+                console.error(err.message);
+                return;
+              } 
+              console.log(result);
+              if (result == 0) {
+                // this is a new song for all_songs, wowwie 
+                query = "INSERT INTO all_songs (sid, title, album, artists, energy, danceability, loudness, tempo, acousticness, duration_ms, valence) " + 
+                "VALUES (" + "TODO" + ")";
+                conn.execute(query, function(err, result) {
+                  if (err) {
+                    console.error(err.message);
+                    return;
+                  } 
+                  console.log(result);
+                  query = "INSERT INTO playlist_songs(sid, pid) " + 
+                  "VALUES (" + element + ", " + pid + ")";
+                  //insert every song into our new playlist
+                  conn.execute(query, function(err, result) {
+                    if (err) {
+                      console.error(err.message);
+                      return;
+                    } 
+                    console.log(result);
+                  });
+                });
+            } else {
+              query = "INSERT INTO playlist_songs(sid, pid) " + 
+              "VALUES (" + element + ", " + pid + ")";
+              //insert every song into our new playlist
+              conn.execute(query, function(err, result) {
+                if (err) {
+                  console.error(err.message);
+                  return;
+                } 
+                console.log(result);
+              });
+            }
+          });
+        });
+      });
+    } else {
+      //this playlist is already in the system
+      query = "SELECT * FROM Playlist_Songs WHERE pid = " + pid;
+      conn.execute(query, function(err, result) {
+          if (err) {
+            console.error(err.message);
+            return;
+          } 
+          sids.forEach(function(element) {
+            if (!result.includes(element)) {
+              // this song is new to the playlist
+              query = "SELECT COUNT(*) FROM All_Songs WHERE sid = " + element;
+              conn.execute(query, function(err, result) {
+              if (err) {
+                console.error(err.message);
+                return;
+              } 
+              console.log(result);
+              if (result == 0) {
+                //new song is not in all_songs
+                query = "INSERT INTO all_songs (sid, title, album, artists, energy, danceability, loudness, tempo, acousticness, duration_ms, valence) " + 
+                "VALUES (" + "TODO" + ")";
+                conn.execute(query, function(err, result) {
+                  if (err) {
+                    console.error(err.message);
+                    return;
+                  } 
+                  console.log(result);
+                  query = "INSERT INTO playlist_songs(sid, pid) " + 
+                  "VALUES (" + element + ", " + pid + ")";
+                  //insert every song into our new playlist
+                  conn.execute(query, function(err, result) {
+                    if (err) {
+                      console.error(err.message);
+                      return;
+                    } 
+                    console.log(result);
+                  });
+                });
+            } else {
+              query = "INSERT INTO playlist_songs(sid, pid) " + 
+              "VALUES (" + element + ", " + pid + ")";
+              //insert every song into our new playlist
+              conn.execute(query, function(err, result) {
+                if (err) {
+                  console.error(err.message);
+                  return;
+                } 
+                console.log(result);
+              });
+            }
+            });
+            }
+          });
+          result.forEach(function(element) {
+            if (!sids.includes(element)) {
+              // if element not in sids, we must delete
+              query = "DELETE playlist_songs WHERE sid = " + element +  " AND pid = " + pid;
+              conn.execute(query, function(err, result) {
+                if (err) {
+                  console.error(err.message);
+                  return;
+                } 
+                console.log(result);
+              });
+            }
+          });
+      });
+    }
+  });
+};
 // The exported functions, which can be accessed in index.js.
 module.exports = {
   initDB,
@@ -431,4 +565,5 @@ module.exports = {
   getStreakSids,
   getLongestStreak,
   getAcoustics,
+  getPlaylistValidation,
 }
