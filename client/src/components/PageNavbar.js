@@ -1,6 +1,6 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Nav, Navbar, NavDropdown} from 'react-bootstrap';
+import { Nav, Navbar, NavDropdown, ButtonGroup, Dropdown} from 'react-bootstrap';
 
 export default class PageNavbar extends React.Component {
 	constructor(props) {
@@ -67,7 +67,9 @@ export default class PageNavbar extends React.Component {
 						{this.state.navDivs}
 					</Nav>
 					<Nav>
-						<NavDropdown title={
+
+					<Dropdown as={ButtonGroup}>
+						<Dropdown.Toggle id="dropdown-split-basic" style={{background: "transparent", border: "#333333"}}>
 							<div className="container-flex" style={{height: "80%"}}> 
 								<img className="img-thumbnail" 
 									src={this.state.picUrl} 
@@ -81,9 +83,14 @@ export default class PageNavbar extends React.Component {
 								Logged in as: {this.state.name}
 								</Navbar.Text>
 							</div>
-							} id="basic-nav-dropdown">
-							<NavDropdown.Item href="http://localhost:8081/logout">Logout</NavDropdown.Item>
-						</NavDropdown>
+						</Dropdown.Toggle>
+					
+						<Dropdown.Menu style={{color: "#ff00ff", width: '100%'}}>
+							<Dropdown.Item href="http://localhost:8081/logout">Logout</Dropdown.Item>
+						</Dropdown.Menu>
+					</Dropdown>
+						{/* <Dropdown.Toggle split variant="success" id="dropdown-split-basic" /> */}
+
 					</Nav>
 				</Navbar.Collapse>
 			</Navbar>

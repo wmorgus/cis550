@@ -2,10 +2,12 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {useHistory} from 'react-router-dom'
 
-export default class GenreButton extends React.Component {
+export default class SongThumbnail extends React.Component {
 	constructor(props) {
-    console.log(props)
-		super(props);
+    super(props);
+    this.state = {
+      artistsNames: ''
+    }
   }
 
   // routeChange=(id)=> {
@@ -14,27 +16,33 @@ export default class GenreButton extends React.Component {
   //   window.location.href= path
   // }
 
+  componentDidMount() {
+    console.log(this.props.songObj.artists)
+    var artists = ''
+    for (var ind in this.props.songObj.artists) {
+      artists += this.props.songObj.artists[ind].name + ', '
+    }
+    artists = artists.substring(0, artists.lastIndexOf(','))
+    this.setState({
+      artistsNames: artists
+    })
+  }
+
 	render() {
-		var cursedButton = {
-      margin: "3px 0px", 
-      padding: "7px 0px", 
-      backgroundColor: "#f3f3f3", 
-      cursor: "pointer"
-		}
-		
 		return (
-      <div className="row" id={this.props.id} style={cursedButton} onClick={() => {
-          window.location.href = '/playlist/' + this.props.id
-        }}>
+      <div className="row" id={this.props.songObj.id} style={{maxHeight: "175px", marginTop: "5px"}}>
         <div className="col">
           <div>
-            <img className="" src={this.props.image} style={{maxHeight: "175px"}}/>
+            <img className="" src={this.props.songObj.album.images[0].url} style={{maxHeight: "175px"}}/>
           </div>
         </div>
         <div className="col-9" style={{display: "flex", alignItems: "center"}}>
           <div>
-            <h2>{this.props.name}</h2>
-            <h4>{this.props.owner}</h4>
+            <h2>{this.props.songObj.name}</h2>
+            <div>
+              <h4>{this.state.artistsNames}</h4>
+              <p>{this.props.songObj.album.name}</p>
+            </div>
           </div>
         </div>
       </div>
