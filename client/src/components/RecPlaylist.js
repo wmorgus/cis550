@@ -8,13 +8,22 @@ export default class RecPlaylist extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-
+          playlistid: "",
+          name: "" ,
+          owner: "", 
+          description: "",
+          picture: ""
         }
 
       }
-
+     
       componentDidMount() {
-       
+        var id = window.location.href.split('/')[window.location.href.split('/').length - 1]
+        console.log(this.props.apikey)
+
+        this.setState({
+          playlistid : id
+        });
     };
 
       render() { 
@@ -25,7 +34,7 @@ export default class RecPlaylist extends React.Component {
             <PageNavbar active="recommendations" apikey={this.props.apikey}/>
     
             <br></br>
-            <h2>Basing Recommendations On: </h2>
+        <h2>Basing Recommendations On: {this.state.playlistid}</h2>
             <div className="container">
 
           </div>
