@@ -20,6 +20,7 @@ app.get('/logout', routes.logout);
 app.get('/totalRestart', routes.totalRestart);
 
 app.get('/spotify/getPlaylists', routes.getAllPlaylists);
+app.get('/spotify/getUserPlaylists', routes.getUserPlaylists);
 app.get('/spotify/getPlaylist', routes.getPlaylist);
 app.get('/spotify/getSong', routes.getSong);
 app.get('/spotify/getUser', routes.getUser);
