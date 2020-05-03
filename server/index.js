@@ -32,6 +32,7 @@ app.get('/monthlyartists/:date', routes.getMonthlyArtists);
 app.get('/longeststreak/:sid', routes.getLongestStreak);
 app.get('/streaksids', routes.getStreakSids);
 app.get('/acoustics', routes.getAcoustics);
+app.get('/playlistacoustics/:oid', routes.getPlaylistAcoustics);
 
 
 var server = app.listen(8081, () => {
