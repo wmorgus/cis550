@@ -310,9 +310,7 @@ function getUser(req, res) {
 /* ---- Playlist Rec Routes ---- */
 
 function getAverageFeatures(req, res) {
-  console.log('finding average attributes for ' + req.params.pid)
-  console.log(req.params.energy)
-  console.log(req.params.danceability)
+
   query = "WITH PlaylistData AS (SELECT pid, sid FROM Playlist_Songs WHERE pid = '" + req.params.pid + "') " + 
   "SELECT AVG(energy) as energy, AVG(danceability) as danceability, AVG(loudness) as loudness, " +
   "AVG(acousticness) as acousticness, AVG(valence) as valence " +
@@ -320,6 +318,25 @@ function getAverageFeatures(req, res) {
   "GROUP BY pid"
   
 
+  conn.execute(query, function(err, result) {
+    if (err) {
+      console.error(err.message);
+      return;
+    } 
+    console.log(result);
+    res.send(JSON.stringify(result));
+  });
+};
+
+function getTracklist(req, res) {
+  console.log('finding tracks for ' + req.params.pid)
+/*
+  query = "SELECT sid FROM playlist_songs WHERE pid = '" + req.params.pid + "'"
+  */
+ query = "WITH ids AS (SELECT sid FROM playlist_songs WHERE pid = '" + req.params.pid + "')" + 
+  "SELECT title, artists " + 
+  "FROM all_songs NATURAL JOIN ids"
+console.log(query)
   conn.execute(query, function(err, result) {
     if (err) {
       console.error(err.message);
@@ -765,6 +782,7 @@ module.exports = {
   getSong,
   getUser,
   getAverageFeatures,
+  getTracklist,
   checkQueue,
   getRecsSimilarSongs,
   getRecsSimilarPlaylists,

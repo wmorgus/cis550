@@ -30,6 +30,7 @@ app.get('/spotify/getSong', routes.getSong);
 app.get('/spotify/getUser', routes.getUser);
 
 app.get('/recommendations/avg/:pid', routes.getAverageFeatures);
+app.get('/recommendations/tracks/:pid', routes.getTracklist);
 app.get('/checkQueue', routes.checkQueue);
 
 app.get('/recommendations/bysong', routes.getRecsSimilarSongs);
