@@ -2,7 +2,6 @@ import React from 'react';
 import '../style/Dashboard.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import PageNavbar from './PageNavbar';
-import SongThumbnail from './SongThumbnail';
 import RecSongRow from './RecSongRow';
 
 export default class RecPlaylist extends React.Component {
@@ -11,7 +10,7 @@ export default class RecPlaylist extends React.Component {
       this.state = {
         playlistObj: {images: [{url: ''}], name: '', owner: {display_name: ''}, description: ''},
         playlistid: "", 
-        selectedRecType: "",
+        selectedRecType: "song",
         recTypes: ['song', 'playlist', 'popular'],
         resultSongs: [],
         includeEnergy: true, 
