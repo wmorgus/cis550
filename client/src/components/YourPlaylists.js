@@ -93,7 +93,6 @@ export default class YourPlaylists extends React.Component {
       return (
         <div className="yourPlaylists">
           <PageNavbar active="yourPlaylists" apikey={this.props.apikey}/>
-          <Button variant="btn btn-success" href="http://localhost:3000/playlistcomparison">Cool Shit Will Doesn't Want You To See</Button>
           <div className="container">
             {this.state.playlists}
           </div>
