@@ -312,7 +312,7 @@ function getAverageFeatures(req, res) {
   console.log('finding average attributes for ' + req.params.pid)
   var playlist = req.params.pid
   console.log('avg pid found ' + playlist)
-  query = "WITH PlaylistData AS (SELECT pid, sid FROM Playlist_Songs WHERE pid = '" + {playlist} + "') " + 
+  query = "WITH PlaylistData AS (SELECT pid, sid FROM Playlist_Songs WHERE pid = '" + req.params.pid + "') " + 
   "SELECT pid, AVG(energy) as energy, AVG(danceability) as danceability, AVG(loudness) as loudness, " +
   "AVG(acousticness) as acousticness, AVG(valence) as valence " +
   "FROM PlaylistData JOIN All_Songs ON PlaylistData.sid = All_Songs.sid " +
@@ -680,11 +680,8 @@ module.exports = {
   getPlaylist,
   getSong,
   getUser,
-<<<<<<< HEAD
   getAverageFeatures,
-=======
   checkQueue,
->>>>>>> a571d1a21fa6fb6ce7294f6131b751f7cfc5e185
   getRecsSimilarSongs,
   getRecsSimilarPlaylists,
   getRecsPopular,
