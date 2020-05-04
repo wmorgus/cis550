@@ -412,7 +412,7 @@ function getRecsSimilarPlaylists(req, res) {
   where temp3.energy between temp2.energy - .1 AND temp2.energy + .1
   and temp3.danceability between temp2.danceability - .1 and temp2.danceability + .1
   and temp3.loudness between temp2.loudness - .1 and temp2.loudness +.1
-  `;
+  AND rownum < 25`;
 
   conn.execute(query, function(err, result) {
     if (err) {

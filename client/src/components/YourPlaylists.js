@@ -35,7 +35,7 @@ export default class YourPlaylists extends React.Component {
         if (data.next) {
           nxt = data.next
         }
-        uid = data.href.split('/')[5]
+        uid = data.href.split('/')[5];
         ct = data.limit
         playlists = data.items.map((curr, ind) => <PlaylistThumbnail id={curr.id} name={curr.name} image={curr.images[0].url} owner={curr.owner.display_name} key={ind}/>)
       }).finally(() => {
