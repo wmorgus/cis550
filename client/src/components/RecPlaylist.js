@@ -102,6 +102,7 @@ export default class RecPlaylist extends React.Component {
 
     switch(selectedType) {
       case "song":
+
         var testPID = '1055milplay'
       //build fetch url string here to allow for custom attribute inclusion
      
@@ -117,6 +118,7 @@ export default class RecPlaylist extends React.Component {
       + "&energy=" + this.state.qualityObj.energy + "&danceability=" + this.state.qualityObj.danceability
       + "&loudness=" + this.state.qualityObj.loudness + "&acousticness=" + this.state.qualityObj.acousticness
       + "&valence=" + this.state.qualityObj.valence,
+
         {
           method: "GET"
         }).then(res => {
