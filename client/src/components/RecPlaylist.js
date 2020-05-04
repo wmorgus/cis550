@@ -94,7 +94,7 @@ export default class RecPlaylist extends React.Component {
 
     switch(selectedType) {
       case "song":
-       
+       console.log("with playlistid " + this.state.playlistid)
         fetch("http://localhost:8081/recommendations/bysong/" + this.state.playlistid,
         {
           method: "GET"

@@ -337,15 +337,10 @@ function getRecsSimilarSongs(req, res) {
   var song = "4CUCBqTA74rmKu4mEgD6QH"
   console.log('finding similar songs')
 
-  //build query
-  var buildQuery = ""
-
-
-  query = "WITH basis AS (SELECT sid FROM Playlist_Songs WHERE pid = pidVariable) " + 
-  "SELECT distinct sid, title, artists, album" + 
-  "FROM all_songs, vals" + 
-  "WHERE AND all_songs.sid NOT IN basis" + buildQuery
-  
+  query = "WITH basis AS (SELECT sid FROM Playlist_Songs WHERE pid = '" + testPID + "') " + 
+  "SELECT distinct sid, title, artists, album " + 
+  "FROM all_songs, basis " + 
+  "WHERE all_songs.sid NOT IN basis";
   
   
   /*query = "WITH vals(min_energy, max_energy, min_dance, max_dance) as ( " + 
@@ -375,11 +370,39 @@ function getRecsSimilarSongs(req, res) {
 //that the user isn't already following
 function getRecsSimilarPlaylists(req, res) {
   console.log('finding similar playlists')
-  connection.query(query, function(err, rows, fields) {
-    if (err) console.log(err);
-    else {
-      res.json(rows);
-    }
+  query = `WITH PlaylistData AS 
+  (SELECT pid, sid 
+  FROM Playlist_Songs 
+  WHERE pid = '` + req.params.pid + `'
+  ), 
+  temp2 as (
+  SELECT pid, AVG(energy) as energy, AVG(danceability) as danceability, AVG(loudness) as loudness,
+  AVG(acousticness) as acousticness, AVG(valence) as valence
+  FROM PlaylistData
+  JOIN all_Songs ON PlaylistData.sid = all_Songs.sid
+  GROUP BY pid
+  ),
+  temp3 as (
+  select pid, avg(energy) as energy, avg(danceability) as danceability, avg(loudness) as loudness
+  from playlist_songs
+  join all_songs on playlist_songs.sid = all_songs.sid
+  group by pid
+  )
+  select distinct temp3.pid
+  from temp3 
+  join temp2 on temp2.pid <> temp3.pid
+  where temp3.energy between temp2.energy - .1 AND temp2.energy + .1
+  and temp3.danceability between temp2.danceability - .1 and temp2.danceability + .1
+  and temp3.loudness between temp2.loudness - .1 and temp2.loudness +.1
+  `;
+
+  conn.execute(query, function(err, result) {
+    if (err) {
+      console.error(err.message);
+      return;
+    } 
+    console.log(result);
+    res.send(JSON.stringify(result));
   });
 };
 
