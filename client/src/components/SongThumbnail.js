@@ -4,7 +4,10 @@ import {useHistory} from 'react-router-dom'
 
 export default class SongThumbnail extends React.Component {
 	constructor(props) {
-		super(props);
+    super(props);
+    this.state = {
+      artistsNames: ''
+    }
   }
 
   // routeChange=(id)=> {
@@ -14,11 +17,18 @@ export default class SongThumbnail extends React.Component {
   // }
 
   componentDidMount() {
-
+    console.log(this.props.songObj.artists)
+    var artists = ''
+    for (var ind in this.props.songObj.artists) {
+      artists += this.props.songObj.artists[ind].name + ', '
+    }
+    artists = artists.substring(0, artists.lastIndexOf(','))
+    this.setState({
+      artistsNames: artists
+    })
   }
 
 	render() {
-		
 		return (
       <div className="row" id={this.props.songObj.id} style={{maxHeight: "175px", marginTop: "5px"}}>
         <div className="col">
@@ -29,7 +39,10 @@ export default class SongThumbnail extends React.Component {
         <div className="col-9" style={{display: "flex", alignItems: "center"}}>
           <div>
             <h2>{this.props.songObj.name}</h2>
-            <h4>{this.props.songObj.album.name}</h4>
+            <div>
+              <h4>{this.state.artistsNames}</h4>
+              <p>{this.props.songObj.album.name}</p>
+            </div>
           </div>
         </div>
       </div>
