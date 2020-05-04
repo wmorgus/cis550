@@ -32,7 +32,7 @@ app.get('/spotify/getUser', routes.getUser);
 app.get('/recommendations/avg/:pid', routes.getAverageFeatures);
 app.get('/checkQueue', routes.checkQueue);
 
-app.get('/recommendations/bysong/:pid', routes.getRecsSimilarSongs);
+app.get('/recommendations/bysong', routes.getRecsSimilarSongs);
 app.get('/recommendations/byplaylist/:pid', routes.getRecsSimilarPlaylists);
 app.get('/recommendations/bypopular/:pid', routes.getRecsPopular);
 

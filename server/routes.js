@@ -310,10 +310,10 @@ function getUser(req, res) {
 
 function getAverageFeatures(req, res) {
   console.log('finding average attributes for ' + req.params.pid)
-  var playlist = req.params.pid
-  console.log('avg pid found ' + playlist)
+  console.log(req.params.energy)
+  console.log(req.params.danceability)
   query = "WITH PlaylistData AS (SELECT pid, sid FROM Playlist_Songs WHERE pid = '" + req.params.pid + "') " + 
-  "SELECT pid, AVG(energy) as energy, AVG(danceability) as danceability, AVG(loudness) as loudness, " +
+  "SELECT AVG(energy) as energy, AVG(danceability) as danceability, AVG(loudness) as loudness, " +
   "AVG(acousticness) as acousticness, AVG(valence) as valence " +
   "FROM PlaylistData JOIN All_Songs ON PlaylistData.sid = All_Songs.sid " +
   "GROUP BY pid"
@@ -324,7 +324,6 @@ function getAverageFeatures(req, res) {
       console.error(err.message);
       return;
     } 
-    console.log('look here, dummy')
     console.log(result);
     res.send(JSON.stringify(result));
   });
@@ -336,11 +335,39 @@ function getRecsSimilarSongs(req, res) {
   var testPID = '1055milplay'
   var song = "4CUCBqTA74rmKu4mEgD6QH"
   console.log('finding similar songs')
+  console.log(req)
 
-  query = "WITH basis AS (SELECT sid FROM Playlist_Songs WHERE pid = '" + testPID + "') " + 
-  "SELECT distinct sid, title, artists, album " + 
-  "FROM all_songs, basis " + 
-  "WHERE all_songs.sid NOT IN basis";
+
+  //build query
+  var buildQuery = ""
+
+  if (req.params.energy) {
+    buildQuery += " AND all_songs.energy BETWEEN " + req.params.energy - .1 
+    + " + AND " + req.params.energy + .1
+  }
+  if (req.param.danceability) {
+    buildQuery += " AND all_songs.energy BETWEEN " + req.params.danceability - .1 
+    + " + AND " + req.param.danceability + .1
+  }
+  if (req.param.loudness) {
+    buildQuery += " AND all_songs.energy BETWEEN " + req.param.loudness - .1 
+    + " + AND " + req.param.loudness + .1
+  }
+  if (req.param.acoustiness) {
+    buildQuery += " AND all_songs.energy BETWEEN " + req.param.acoustiness - .1 
+    + " + AND " + req.param.acousticness + .1
+  }
+  if (req.param.valence) {
+    buildQuery += " AND all_songs.energy BETWEEN " + req.param.valence - .1 
+    + " + AND " + req.param.valence + .1
+  }
+  //console.log('buildquery ' + buildQuery)
+  
+  query = "WITH basis AS (SELECT sid FROM Playlist_Songs WHERE pid = " + testPID + ") " + 
+  "SELECT distinct sid, title, artists, album" + 
+  "FROM all_songs, vals" + 
+  "WHERE AND all_songs.sid NOT IN basis"
+  
   
   
   /*query = "WITH vals(min_energy, max_energy, min_dance, max_dance) as ( " + 

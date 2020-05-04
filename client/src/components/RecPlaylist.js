@@ -14,7 +14,12 @@ export default class RecPlaylist extends React.Component {
         selectedRecType: "",
         recTypes: ['song', 'playlist', 'popular'],
         resultSongs: [],
-        qualityObj: {energy: '', danceability: '', loudness: '', acousticness: '', valence: ""},
+        includeEnergy: true, 
+        includeDanceability: true, 
+        includeLoudness: true, 
+        includeAcousticness: true,
+        includeValence: true,
+        qualityObj: {energy: '', danceability: '', loudness: '', acousticness: '', valence: ''},
         info: ""
       }
 
@@ -56,10 +61,12 @@ export default class RecPlaylist extends React.Component {
           console.log(err);
         }).then(data => {
           console.log('averages found')
+          //console.log('first val' + data.rows[0][0])
           console.log(data); //displays your JSON object in the console
           this.setState({
-            
+            qualityObj : {energy: data.rows[0][0], danceability: data.rows[0][1], loudness: data.rows[0][2], acousticness: data.rows[0][3], valence: data.rows[0][4]}
           });
+          console.log(this.state.qualityObj)
         });
     }
 
@@ -94,8 +101,23 @@ export default class RecPlaylist extends React.Component {
 
     switch(selectedType) {
       case "song":
-       console.log("with playlistid " + this.state.playlistid)
-        fetch("http://localhost:8081/recommendations/bysong/" + this.state.playlistid,
+
+        var testPID = '1055milplay'
+      //build fetch url string here to allow for custom attribute inclusion
+     
+      
+      
+      console.log("http://localhost:8081/recommendations/bysong?pid=" + testPID
+        + "&energy=" + this.state.qualityObj.energy + "&danceability=" + this.state.qualityObj.danceability
+        + "&loudness=" + this.state.qualityObj.loudness + "&acousticness=" + this.state.qualityObj.acousticness
+        + "&valence=" + this.state.qualityObj.valence)
+
+
+      fetch("http://localhost:8081/recommendations/bysong?pid=" + testPID
+      + "&energy=" + this.state.qualityObj.energy + "&danceability=" + this.state.qualityObj.danceability
+      + "&loudness=" + this.state.qualityObj.loudness + "&acousticness=" + this.state.qualityObj.acousticness
+      + "&valence=" + this.state.qualityObj.valence,
+
         {
           method: "GET"
         }).then(res => {
