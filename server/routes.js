@@ -367,7 +367,7 @@ function getRecsSimilarSongs(req, res) {
   //console.log('buildquery ' + buildQuery)
   
   query = "WITH basis AS (SELECT sid FROM Playlist_Songs WHERE pid = '" + testPID + "') " + 
-  "SELECT distinct sid, title, artists, album " + 
+  "SELECT distinct title, artists " + 
   "FROM all_songs " + 
   "WHERE all_songs.sid NOT IN (SELECT * FROM basis) " + buildQuery
   + " AND ROWNUM < 101"
@@ -461,10 +461,10 @@ function getRecsPopular(req, res) {
   //console.log('buildquery ' + buildQuery)
   
   query = "WITH basis AS (SELECT sid FROM Playlist_Songs WHERE pid = '" + testPID + "') " + 
-  "SELECT distinct sid, title, artists, album " + 
+  "SELECT distinct title, artists " + 
   "FROM all_songs " + 
   "WHERE all_songs.sid NOT IN (SELECT * FROM basis) " + 
-  "AND all_songs.sid NOT IN (SELECT sid FROM top_songs) " + buildQuery 
+  "AND all_songs.sid IN (SELECT sid FROM top_songs) " + buildQuery 
   + " AND ROWNUM < 101"
   
   console.log(query)
