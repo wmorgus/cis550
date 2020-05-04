@@ -10,7 +10,8 @@ export default class PlaylistComparison extends React.Component {
     super(props);
     this.state = {
       oid: 'million_playlist',
-      playlists: []
+      playlists: [],
+      columnName: "Score"
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -56,7 +57,8 @@ export default class PlaylistComparison extends React.Component {
           </tr>
         );
         this.setState({
-          playlists: songDivs
+          playlists: songDivs,
+          columnName: "Acousticness"
         });
       });
   }
@@ -78,7 +80,8 @@ export default class PlaylistComparison extends React.Component {
           </tr>
         );
         this.setState({
-          playlists: songDivs
+          playlists: songDivs,
+          columnName: "Danceability"
         });
       });
   }
@@ -100,7 +103,8 @@ export default class PlaylistComparison extends React.Component {
           </tr>
         );
         this.setState({
-          playlists: songDivs
+          playlists: songDivs,
+          columnName: "Energy"
         });
       });
   }
@@ -153,7 +157,7 @@ export default class PlaylistComparison extends React.Component {
                 <thead>
                   <tr>
                     <th>PID</th>
-                    <th>Score</th>
+                    <th>{this.state.columnName}</th>
                   </tr>
                 </thead>
                 <tbody>
