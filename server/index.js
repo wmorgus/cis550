@@ -29,6 +29,7 @@ app.get('/spotify/getPlaylist', routes.getPlaylist);
 app.get('/spotify/getSong', routes.getSong);
 app.get('/spotify/getUser', routes.getUser);
 
+app.get('/recommendations/avg/:pid', routes.getAverageFeatures);
 app.get('/recommendations/bysong/:pid', routes.getRecsSimilarSongs);
 app.get('/recommendations/byplaylist/:pid', routes.getRecsSimilarPlaylists);
 app.get('/recommendations/bypopular/:pid', routes.getRecsPopular);

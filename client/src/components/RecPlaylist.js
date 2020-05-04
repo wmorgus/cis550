@@ -14,6 +14,7 @@ export default class RecPlaylist extends React.Component {
         selectedRecType: "",
         recTypes: ['song', 'playlist', 'popular'],
         resultSongs: [],
+        qualityObj: {energy: '', danceability: '', loudness: '', acousticness: '', valence: ""},
         info: ""
       }
 
@@ -30,10 +31,11 @@ export default class RecPlaylist extends React.Component {
       var newObj = {}
       console.log(id)
       
+      //request info about the current playlist
       fetch('http://localhost:8081/spotify/getPlaylist?apikey=' + this.props.apikey + '&id=' + id).then(response => response.json()).then((data) => {
 
         newObj = data
-        console.log(data)
+      //  console.log(data)
 
       }).finally(() => {
         this.setState({
@@ -41,6 +43,24 @@ export default class RecPlaylist extends React.Component {
           playlistObj: newObj
         });
       });
+
+      //calculate stats for the current playlist
+      var testPID = '1055milplay'
+     // fetch("http://localhost:8081/recommendations/avg/" + id,
+      fetch("http://localhost:8081/recommendations/avg/" + testPID,
+        {
+          method: "GET"
+        }).then(res => {
+          return res.json();
+        }, err => {
+          console.log(err);
+        }).then(data => {
+          console.log('averages found')
+          console.log(data); //displays your JSON object in the console
+          this.setState({
+            
+          });
+        });
     }
 
     utf8_to_str(a) {
@@ -155,6 +175,7 @@ export default class RecPlaylist extends React.Component {
               <h4>{this.state.playlistObj.name}</h4>
               <h5>By {this.state.playlistObj.owner.display_name}</h5>
               <p>{this.utf8_to_str(this.state.playlistObj.description)}</p>
+              <p>{this.state.playlistid}</p>
             </div>
             <div className="years-container">
 			          <div className="dropdown-container">

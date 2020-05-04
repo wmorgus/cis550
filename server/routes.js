@@ -292,14 +292,47 @@ function getUser(req, res) {
 
 /* ---- Playlist Rec Routes ---- */
 
+function getAverageFeatures(req, res) {
+  console.log('finding average attributes for ' + req.params.pid)
+  var playlist = req.params.pid
+  console.log('avg pid found ' + playlist)
+  query = "WITH PlaylistData AS (SELECT pid, sid FROM Playlist_Songs WHERE pid = '" + {playlist} + "') " + 
+  "SELECT pid, AVG(energy) as energy, AVG(danceability) as danceability, AVG(loudness) as loudness, " +
+  "AVG(acousticness) as acousticness, AVG(valence) as valence " +
+  "FROM PlaylistData JOIN All_Songs ON PlaylistData.sid = All_Songs.sid " +
+  "GROUP BY pid"
+  
+
+  conn.execute(query, function(err, result) {
+    if (err) {
+      console.error(err.message);
+      return;
+    } 
+    console.log('look here, dummy')
+    console.log(result);
+    res.send(JSON.stringify(result));
+  });
+};
 
 //use Spotify audio features to generate a new playlist
 //by querying for songs with qualities similar to the selected user playlist
 function getRecsSimilarSongs(req, res) {
+  var testPID = '1055milplay'
   var song = "4CUCBqTA74rmKu4mEgD6QH"
   console.log('finding similar songs')
 
-  query = "WITH vals(min_energy, max_energy, min_dance, max_dance) as ( " + 
+  //build query
+  var buildQuery = ""
+
+
+  query = "WITH basis AS (SELECT sid FROM Playlist_Songs WHERE pid = pidVariable) " + 
+  "SELECT distinct sid, title, artists, album" + 
+  "FROM all_songs, vals" + 
+  "WHERE AND all_songs.sid NOT IN basis" + buildQuery
+  
+  
+  
+  /*query = "WITH vals(min_energy, max_energy, min_dance, max_dance) as ( " + 
     "SELECT (alls.energy-.01) AS min_energy, (alls.energy+.01) AS max_energy, " + 
     "(alls.danceability-.01) AS min_dance, (alls.danceability+.01) AS max_dance " + 
     "FROM playlist_songs ps " + 
@@ -310,7 +343,7 @@ function getRecsSimilarSongs(req, res) {
     "WHERE all_songs.energy BETWEEN vals.min_energy AND vals.max_energy " + 
     "AND all_songs.danceability BETWEEN vals.min_dance AND vals.max_dance " + 
     "AND all_songs.sid <> '7upxcSIbWaeiS3mom33Bee'"
-    
+    */
 
     conn.execute(query, function(err, result) {
       if (err) {
@@ -632,6 +665,7 @@ module.exports = {
   getPlaylist,
   getSong,
   getUser,
+  getAverageFeatures,
   getRecsSimilarSongs,
   getRecsSimilarPlaylists,
   getRecsPopular,
