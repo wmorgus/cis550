@@ -122,7 +122,7 @@ export default class PlaylistComparison extends React.Component {
               <form>
                 <div className="container">
                   <div className="row">    
-                  <div class="col-sm centerVal">
+                  <div class="col-sm center-block">
                   <Button variant="btn btn-success" onClick={this.handleAcousticSubmit}>Acousticness</Button>
                   </div>
                   <div class="col-sm center-block">
