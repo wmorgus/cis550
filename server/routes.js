@@ -1,6 +1,7 @@
 var config = require('./db-config.js');
 const request = require('request');
 var oracle = require('oracledb');
+const url = require('url');
 
 var conn;
 
@@ -335,39 +336,42 @@ function getRecsSimilarSongs(req, res) {
   var testPID = '1055milplay'
   var song = "4CUCBqTA74rmKu4mEgD6QH"
   console.log('finding similar songs')
-  console.log(req)
+  console.log(req.url)
+  const queryObject = url.parse(req.url,true).query;
+  console.log(queryObject);
 
 
   //build query
   var buildQuery = ""
-
-  if (req.params.energy) {
-    buildQuery += " AND all_songs.energy BETWEEN " + req.params.energy - .1 
-    + " + AND " + req.params.energy + .1
+  var upper; 
+  if (queryObject.energy) {
+    upper = parseFloat(queryObject.energy) + .1 
+    buildQuery += " AND all_songs.energy BETWEEN " + (queryObject.energy - .1)  + " AND " + upper
   }
-  if (req.param.danceability) {
-    buildQuery += " AND all_songs.energy BETWEEN " + req.params.danceability - .1 
-    + " + AND " + req.param.danceability + .1
+  if (queryObject.danceability) {
+    upper = parseFloat(queryObject.danceability) + .1 
+    buildQuery += " AND all_songs.danceability BETWEEN " + (queryObject.danceability - .1) + " AND " + upper
   }
-  if (req.param.loudness) {
-    buildQuery += " AND all_songs.energy BETWEEN " + req.param.loudness - .1 
-    + " + AND " + req.param.loudness + .1
+  if (queryObject.loudness) {
+    upper = parseFloat(queryObject.loudness) + .1 
+    buildQuery += " AND all_songs.loudness BETWEEN " + (queryObject.loudness - .1) + " AND " + upper
   }
-  if (req.param.acoustiness) {
-    buildQuery += " AND all_songs.energy BETWEEN " + req.param.acoustiness - .1 
-    + " + AND " + req.param.acousticness + .1
+  if (queryObject.acoustiness) {
+    upper = parseFloat(queryObject.acousticness) + .1 
+    buildQuery += " AND all_songs.acoustiness BETWEEN " + (queryObject.acoustiness - .1) + " AND " + upper
   }
-  if (req.param.valence) {
-    buildQuery += " AND all_songs.energy BETWEEN " + req.param.valence - .1 
-    + " + AND " + req.param.valence + .1
+  if (queryObject.valence) {
+    upper = parseFloat(queryObject.valence) + .1 
+    buildQuery += " AND all_songs.valence BETWEEN " + (queryObject.valence - .1) + " AND " + upper
   }
   //console.log('buildquery ' + buildQuery)
   
-  query = "WITH basis AS (SELECT sid FROM Playlist_Songs WHERE pid = " + testPID + ") " + 
-  "SELECT distinct sid, title, artists, album" + 
-  "FROM all_songs, vals" + 
-  "WHERE AND all_songs.sid NOT IN basis"
+  query = "WITH basis AS (SELECT sid FROM Playlist_Songs WHERE pid = '" + testPID + "') " + 
+  "SELECT distinct sid, title, artists, album " + 
+  "FROM all_songs " + 
+  "WHERE all_songs.sid NOT IN (SELECT * FROM basis) " + buildQuery
   
+  console.log(query)
   
   
   /*query = "WITH vals(min_energy, max_energy, min_dance, max_dance) as ( " + 
