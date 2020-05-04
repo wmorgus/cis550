@@ -680,11 +680,8 @@ module.exports = {
   getPlaylist,
   getSong,
   getUser,
-<<<<<<< HEAD
   getAverageFeatures,
-=======
   checkQueue,
->>>>>>> a571d1a21fa6fb6ce7294f6131b751f7cfc5e185
   getRecsSimilarSongs,
   getRecsSimilarPlaylists,
   getRecsPopular,
