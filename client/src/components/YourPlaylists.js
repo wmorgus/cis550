@@ -15,7 +15,9 @@ export default class YourPlaylists extends React.Component {
         next: '',
         uid: '',
         count: 0,
-        loading: false
+        loading: false,
+        statsReady: false,
+        statsDivs: []
       }
       this.onScroll = this.onScroll.bind(this);
     }
@@ -35,21 +37,18 @@ export default class YourPlaylists extends React.Component {
         }
         uid = data.href.split('/')[5]
         ct = data.limit
-        for (var ind in data.items) {
-          var curr = data.items[ind];
-          
-          playlists.push(<PlaylistThumbnail id={curr.id} name={curr.name} image={curr.images[0].url} owner={curr.owner.display_name} key={ind}/>)
-        }
+        playlists = data.items.map((curr, ind) => <PlaylistThumbnail id={curr.id} name={curr.name} image={curr.images[0].url} owner={curr.owner.display_name} key={ind}/>)
       }).finally(() => {
-        
         this.setState({
           playlists: playlists,
           uid: uid,
           count: ct,
-          next: nxt
+          next: nxt,
+          loading: false
         });
       });
     }
+
 
     onScroll() {
       // console.log(this.state)

@@ -8,10 +8,13 @@ export default class Playlist extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
+        id: '',
         playlistObj: {images: [{url: ''}], name: 'Playlist loading...', owner: {display_name: ''}, description: ''},
         songThumbnails: <h5>Songs loading...</h5>,
-        stats: <h5>Statistics loading...</h5>
+        stats: <h5>Statistics loading...</h5>,
+        statsReady: false
       }
+      this.checkQueue = this.checkQueue.bind(this)
     }
 
     componentDidMount() {
@@ -38,9 +41,31 @@ export default class Playlist extends React.Component {
       }).finally(() => {
         this.setState({
           playlistObj: newObj,
-          songThumbnails: songThumbs
+          songThumbnails: songThumbs,
+          id: id
         });
+        this.checkQueue()
       });
+    }
+
+    checkQueue() {
+      if (!this.state.statsReady) {
+        fetch('http://localhost:8081/checkQueue?id=' + this.state.id).then(response => response.json()).then((data) => {
+          if (data.status == 'done') {
+            console.log('done')
+            this.setState({
+              statsReady: true
+            })
+            this.checkQueue()
+          } else {
+            console.log('uploading')
+            setTimeout(this.checkQueue, 2500)
+          }
+        })
+      } else {
+        console.log('she ready')
+      }
+      
     }
     
     //Nathan serves up the third edition of J&amp;G&#x27;s quarantunes with

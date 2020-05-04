@@ -11,7 +11,7 @@ var uploadQueue;
 async function initDB() {
   console.log('initingdb')
   conn = await oracle.getConnection(config.dbpool);
-  uploadQueue = [];
+  uploadQueue = [''];
   console.log('initdone')
 }
 
@@ -218,13 +218,26 @@ function completeRecursion(id, res, obj, output) {
   //call leems function here with id and output
   obj.allSongs = output
   res.send(obj)
+  var sids = []
+  console.log()
+  sids = output.map((val, ind) => val.id)
+  // uploadQueue.push(id)
+  // playlistValidation(sids, id, obj.owner.id, partial(completeValidation, id))
 }
 
-function getMore() {
-
+function completeValidation(id) {
+  uploadQueue.slice(uploadQueue.indexOf(id), 1)
 }
 
-//thank god for github
+function checkQueue(req, res) {
+  if (uploadQueue.indexOf(req.query.id) != -1) {
+    res.json({status: 'uploading'})
+  } else {
+    res.json({status: 'done'})
+  }
+}
+
+//thank god for the internet
 function partial(f) {
   var args = Array.prototype.slice.call(arguments, 1)
   return function() {
@@ -413,11 +426,10 @@ function getAcoustics(req, res) {
   });
 };
 
-function getPlaylistValidation(sids, pid, oid) {
+function playlistValidation(sids, pid, oid, cb) {
   query = "SELECT COUNT(*) FROM Playlist_Owner WHERE pid = " + pid;
   var ret = "";
-  //check if there is a playlist with this id 
-  conn.execute(query, function(err, result) {
+  conn.execute(query, function(err, result) { //check if there is a playlist with this id 
     if (err) {
       console.error(err.message);
       return;
@@ -617,6 +629,7 @@ module.exports = {
   getPlaylist,
   getSong,
   getUser,
+  checkQueue,
   getRecsSimilarSongs,
   getRecsSimilarPlaylists,
   getRecsPopular,
@@ -625,7 +638,6 @@ module.exports = {
   getStreakSids,
   getLongestStreak,
   getAcoustics,
-  getPlaylistValidation,
   getPlaylistAcoustics,
   getPlaylistDance,
   getPlaylistEnergy
