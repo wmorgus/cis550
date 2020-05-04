@@ -34,7 +34,7 @@ app.get('/checkQueue', routes.checkQueue);
 
 app.get('/recommendations/bysong', routes.getRecsSimilarSongs);
 app.get('/recommendations/byplaylist/:pid', routes.getRecsSimilarPlaylists);
-app.get('/recommendations/bypopular/:pid', routes.getRecsPopular);
+app.get('/recommendations/bypopular', routes.getRecsPopular);
 
 app.get('/topsongsfrom/:date', routes.getTopSongsFrom);
 app.get('/monthlyartists/:date', routes.getMonthlyArtists);

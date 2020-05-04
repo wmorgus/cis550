@@ -2,7 +2,7 @@ import React from 'react';
 import '../style/Dashboard.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import PageNavbar from './PageNavbar';
-import RecSongRow from './RecSongRow';
+import {Button, Table} from 'react-bootstrap';
 
 export default class RecPlaylist extends React.Component {
     constructor(props) {
@@ -13,13 +13,9 @@ export default class RecPlaylist extends React.Component {
         selectedRecType: "song",
         recTypes: ['song', 'playlist', 'popular'],
         resultSongs: [],
-        includeEnergy: true, 
-        includeDanceability: true, 
-        includeLoudness: true, 
-        includeAcousticness: true,
-        includeValence: true,
         qualityObj: {energy: '', danceability: '', loudness: '', acousticness: '', valence: ''},
-        info: ""
+        info: "",
+        tableHeader : []
       }
 
       this.exampleRecRoute = this.exampleRecRoute.bind(this);
@@ -101,18 +97,10 @@ export default class RecPlaylist extends React.Component {
 
     switch(selectedType) {
       case "song":
-
-        var testPID = '1055milplay'
+  
       //build fetch url string here to allow for custom attribute inclusion
      
-      
-      
-      console.log("http://localhost:8081/recommendations/bysong?pid=" + testPID
-        + "&energy=" + this.state.qualityObj.energy + "&danceability=" + this.state.qualityObj.danceability
-        + "&loudness=" + this.state.qualityObj.loudness + "&acousticness=" + this.state.qualityObj.acousticness
-        + "&valence=" + this.state.qualityObj.valence)
-
-
+      var testPID = '1055milplay'
       fetch("http://localhost:8081/recommendations/bysong?pid=" + testPID
       + "&energy=" + this.state.qualityObj.energy + "&danceability=" + this.state.qualityObj.danceability
       + "&loudness=" + this.state.qualityObj.loudness + "&acousticness=" + this.state.qualityObj.acousticness
@@ -130,22 +118,30 @@ export default class RecPlaylist extends React.Component {
     
 
           //todo? for every song in the result, get the spotify info to display 
-          songThumbs = data.rows.map((songObj, i) =>
-          <RecSongRow artist={songObj[1]} title={songObj[2]}/>
-        )
+    
+
+        songThumbs = data.rows.map((songObj, i) =>
+        <tr key = {i}>
+          <td>{songObj[1]}</td>
+          <td>{songObj[2]}</td>
+        </tr> )
+
+        var header = <thead><tr><th>Song Title</th><th>Artists</th></tr></thead>
 
           //This saves our HTML representation of the data into the state, which we can call in our render function
           //this.state.movies = moviesList;
           this.setState({
             resultSongs: songThumbs,
+            tableHeader: header,
             info : "Use Spotify audio features to generate a list of songs you might like by querying for songs that are similar to those in this playlist."
           });
         });
         break;
 
       case "playlist":   
-        
-        fetch("http://localhost:8081/recommendations/byplaylist/" + this.state.playlistid,
+        //fetch("http://localhost:8081/recommendations/byplaylist/" + this.state.playlistid,
+        var testPID = '1055milplay'
+        fetch("http://localhost:8081/recommendations/byplaylist/" + testPID,
         {
           method: "GET"
         }).then(res => {
@@ -153,31 +149,60 @@ export default class RecPlaylist extends React.Component {
         }, err => {
           console.log(err);
         }).then(data => {
-          console.log(data); //displays your JSON object in the console
+         
+        songThumbs = data.rows.map((songObj, i) =>
+        <tr key = {i}>
+          <td>{songObj[0]}</td>
+        </tr> )
+
+        var header = <thead><tr><th>Playlist Title</th></tr></thead>
+
+
+
           this.setState({
-            resultSongs: [], 
-            info : "Find existing playlists similar to this one made by other users."  
+            resultSongs: songThumbs, 
+            tableHeader: header,
+            info : "Find existing playlists similar to this one."  
           });
         });
 
         break;
 
       case "popular":
-     
-        fetch("http://localhost:8081/recommendations/bypopular/" + this.state.playlistid,
-        {
-          method: "GET"
-        }).then(res => {
-          return res.json();
-        }, err => {
-          console.log(err);
-        }).then(data => {
-          console.log(data); //displays your JSON object in the console
-          this.setState({
-            resultSongs: [],
-            info : "Use Spotify audio features to generate a list of songs you might like by querying for songs that made the Top 100 and are similar to those in this playlist."
+        var testPID = '1055milplay'
+        fetch("http://localhost:8081/recommendations/bypopular?pid=" + testPID
+        + "&energy=" + this.state.qualityObj.energy + "&danceability=" + this.state.qualityObj.danceability
+        + "&loudness=" + this.state.qualityObj.loudness + "&acousticness=" + this.state.qualityObj.acousticness
+        + "&valence=" + this.state.qualityObj.valence,
+  
+          {
+            method: "GET"
+          }).then(res => {
+            return res.json();
+          }, err => {
+            console.log(err);
+          }).then(data => {
+            console.log('data: ')
+            console.log(data); //displays your JSON object in the console
+      
+ 
+            //todo? for every song in the result, get the spotify info to display 
+ 
+          songThumbs = data.rows.map((songObj, i) =>
+          <tr key = {i}>
+            <td>{songObj[1]}</td>
+            <td>{songObj[2]}</td>
+          </tr> )
+  
+          var header = <thead><tr><th>Song Title</th><th>Artist</th></tr></thead>
+            //This saves our HTML representation of the data into the state, which we can call in our render function
+            //this.state.movies = moviesList;
+            this.setState({
+              resultSongs: songThumbs, 
+              tableHeader: header,
+              info : "Use Spotify audio features to generate a list of top 100 songs you might like by querying for songs that are similar to those in this playlist."
+            });
           });
-        });
 
         break;
       default:
@@ -199,7 +224,6 @@ export default class RecPlaylist extends React.Component {
               <h4>{this.state.playlistObj.name}</h4>
               <h5>By {this.state.playlistObj.owner.display_name}</h5>
               <p>{this.utf8_to_str(this.state.playlistObj.description)}</p>
-              <p>{this.state.playlistid}</p>
             </div>
             <div className="years-container">
 			          <div className="dropdown-container">
@@ -213,6 +237,12 @@ export default class RecPlaylist extends React.Component {
           </div>
           <div className="container">
             <h5>{this.state.info}</h5>
+            <Table bordered striped hover>
+                    {this.state.tableHeader}
+                  <tbody>
+                  {this.state.resultSongs}
+                  </tbody>
+              </Table>
             {this.state.resultSongs}
           </div>
         </div>

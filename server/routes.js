@@ -370,23 +370,10 @@ function getRecsSimilarSongs(req, res) {
   "SELECT distinct sid, title, artists, album " + 
   "FROM all_songs " + 
   "WHERE all_songs.sid NOT IN (SELECT * FROM basis) " + buildQuery
+  + " AND ROWNUM < 101"
   
   console.log(query)
   
-  
-  /*query = "WITH vals(min_energy, max_energy, min_dance, max_dance) as ( " + 
-    "SELECT (alls.energy-.01) AS min_energy, (alls.energy+.01) AS max_energy, " + 
-    "(alls.danceability-.01) AS min_dance, (alls.danceability+.01) AS max_dance " + 
-    "FROM playlist_songs ps " + 
-    "JOIN all_songs alls ON alls.sid = ps.sid " + 
-    "WHERE ps.sid = '7upxcSIbWaeiS3mom33Bee') " + 
-    "SELECT distinct sid, title, artists, album " + 
-    "FROM all_songs, vals " + 
-    "WHERE all_songs.energy BETWEEN vals.min_energy AND vals.max_energy " + 
-    "AND all_songs.danceability BETWEEN vals.min_dance AND vals.max_dance " + 
-    "AND all_songs.sid <> '7upxcSIbWaeiS3mom33Bee'"
-    */
-
     conn.execute(query, function(err, result) {
       if (err) {
         console.error(err.message);
@@ -440,13 +427,56 @@ function getRecsSimilarPlaylists(req, res) {
 ////use Spotify audio features to generate a new playlist
 //by querying for top 100 songs with qualities similar to the selected user playlist
 function getRecsPopular(req, res) {
-  console.log('finding similar popular songs')
-  connection.query(query, function(err, rows, fields) {
-    if (err) console.log(err);
-    else {
-      res.json(rows);
-    }
-  });
+  var testPID = '1055milplay'
+  var song = "4CUCBqTA74rmKu4mEgD6QH"
+  console.log('finding similar songs')
+  console.log(req.url)
+  const queryObject = url.parse(req.url,true).query;
+  console.log(queryObject);
+
+
+  //build query
+  var buildQuery = ""
+  var upper; 
+  if (queryObject.energy) {
+    upper = parseFloat(queryObject.energy) + .1 
+    buildQuery += " AND all_songs.energy BETWEEN " + (queryObject.energy - .1)  + " AND " + upper
+  }
+  if (queryObject.danceability) {
+    upper = parseFloat(queryObject.danceability) + .1 
+    buildQuery += " AND all_songs.danceability BETWEEN " + (queryObject.danceability - .1) + " AND " + upper
+  }
+  if (queryObject.loudness) {
+    upper = parseFloat(queryObject.loudness) + .1 
+    buildQuery += " AND all_songs.loudness BETWEEN " + (queryObject.loudness - .1) + " AND " + upper
+  }
+  if (queryObject.acoustiness) {
+    upper = parseFloat(queryObject.acousticness) + .1 
+    buildQuery += " AND all_songs.acoustiness BETWEEN " + (queryObject.acoustiness - .1) + " AND " + upper
+  }
+  if (queryObject.valence) {
+    upper = parseFloat(queryObject.valence) + .1 
+    buildQuery += " AND all_songs.valence BETWEEN " + (queryObject.valence - .1) + " AND " + upper
+  }
+  //console.log('buildquery ' + buildQuery)
+  
+  query = "WITH basis AS (SELECT sid FROM Playlist_Songs WHERE pid = '" + testPID + "') " + 
+  "SELECT distinct sid, title, artists, album " + 
+  "FROM all_songs " + 
+  "WHERE all_songs.sid NOT IN (SELECT * FROM basis) " + 
+  "AND all_songs.sid NOT IN (SELECT sid FROM top_songs) " + buildQuery 
+  + " AND ROWNUM < 101"
+  
+  console.log(query)
+  
+    conn.execute(query, function(err, result) {
+      if (err) {
+        console.error(err.message);
+        return;
+      } 
+      console.log(result);
+      res.send(JSON.stringify(result));
+    });
 };
 
 /* ---- Songs vs Time Routes ---- */
