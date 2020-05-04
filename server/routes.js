@@ -412,7 +412,7 @@ function getRecsSimilarPlaylists(req, res) {
   where temp3.energy between temp2.energy - .1 AND temp2.energy + .1
   and temp3.danceability between temp2.danceability - .1 and temp2.danceability + .1
   and temp3.loudness between temp2.loudness - .1 and temp2.loudness +.1
-  `;
+  AND rownum < 25`;
 
   conn.execute(query, function(err, result) {
     if (err) {
@@ -464,7 +464,7 @@ function getRecsPopular(req, res) {
   "SELECT distinct sid, title, artists, album " + 
   "FROM all_songs " + 
   "WHERE all_songs.sid NOT IN (SELECT * FROM basis) " + 
-  "AND all_songs.sid NOT IN (SELECT sid FROM top_songs) " + buildQuery 
+  "AND all_songs.sid IN (SELECT sid FROM top_songs) " + buildQuery 
   + " AND ROWNUM < 101"
   
   console.log(query)

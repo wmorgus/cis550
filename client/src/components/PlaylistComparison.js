@@ -165,17 +165,6 @@ export default class PlaylistComparison extends React.Component {
                 </tbody>
               </Table>
             </div>
-
-            {/* <div className="movies-container">
-			          <div className="movie">
-                  <div className="header"><strong>title</strong></div>
-                  <div className="header"><strong>artists</strong></div>
-                  <div className="header"><strong>streams</strong></div>
-              </div>
-              <div className="movies-container" id="results">
-              {this.state.playlists}
-              </div>
-            </div> */}
           </div>
         </div>
       </div>

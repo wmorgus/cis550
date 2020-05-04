@@ -243,7 +243,6 @@ export default class RecPlaylist extends React.Component {
                   {this.state.resultSongs}
                   </tbody>
               </Table>
-            {this.state.resultSongs}
           </div>
         </div>
     )};
