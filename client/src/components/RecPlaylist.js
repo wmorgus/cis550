@@ -2,7 +2,8 @@ import React from 'react';
 import '../style/Dashboard.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import PageNavbar from './PageNavbar';
-import TopSongRow from './TopSongRow';
+import SongThumbnail from './SongThumbnail';
+import RecSongRow from './RecSongRow';
 
 export default class RecPlaylist extends React.Component {
     constructor(props) {
@@ -10,7 +11,6 @@ export default class RecPlaylist extends React.Component {
       this.state = {
         playlistObj: {images: [{url: ''}], name: '', owner: {display_name: ''}, description: ''},
         playlistid: "", 
-        songThumbnails: [],
         selectedRecType: "",
         recTypes: ['song', 'playlist', 'popular'],
         resultSongs: [],
@@ -98,6 +98,7 @@ export default class RecPlaylist extends React.Component {
 
     exampleRecRoute(selectedType) {
     console.log('fetching data for selected type: ' + selectedType)
+    var songThumbs = []
 
     switch(selectedType) {
       case "song":
@@ -125,15 +126,17 @@ export default class RecPlaylist extends React.Component {
         }).then(data => {
           console.log('data: ')
           console.log(data); //displays your JSON object in the console
-          /*
-          let recs = moviesList.map((movie, i) => 
-           <TopSongRow  />
-          );
-    */
+    
+
+          //todo? for every song in the result, get the spotify info to display 
+          songThumbs = data.rows.map((songObj, i) =>
+          <RecSongRow artist={songObj[1]} title={songObj[2]}/>
+        )
+
           //This saves our HTML representation of the data into the state, which we can call in our render function
           //this.state.movies = moviesList;
           this.setState({
-            resultSongs: [],
+            resultSongs: songThumbs,
             info : "Use Spotify audio features to generate a list of songs you might like by querying for songs that are similar to those in this playlist."
           });
         });
@@ -209,7 +212,7 @@ export default class RecPlaylist extends React.Component {
           </div>
           <div className="container">
             <h5>{this.state.info}</h5>
-            {this.state.songThumbnails}
+            {this.state.resultSongs}
           </div>
         </div>
     )};
