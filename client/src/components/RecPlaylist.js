@@ -314,7 +314,7 @@ export default class RecPlaylist extends React.Component {
     render() {    
       return (
         <div className="playlist">
-          <PageNavbar active="recommendations" apikey={this.props.apikey} />
+          <PageNavbar active="yourPlaylists" apikey={this.props.apikey} />
 
    
         <div class="pageHeader"  style={{margin: "30px", display: "flex"}}>

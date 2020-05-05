@@ -56,7 +56,7 @@ export default class Recommendations extends React.Component {
         return (
           <div className="Recommendations">
     
-            <PageNavbar active="recommendations" apikey={this.props.apikey}/>
+            <PageNavbar active="yourPlaylists" apikey={this.props.apikey}/>
     
             <br></br>
             <h2>Your Playlists</h2>
