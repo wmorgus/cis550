@@ -2,10 +2,7 @@ import React from 'react';
 import '../style/Dashboard.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import PageNavbar from './PageNavbar';
-import {Redirect} from 'react-router-dom';
-import {Button} from 'react-bootstrap';
 import PlaylistThumbnail from './PlaylistThumbnail';
-import { Next } from 'react-bootstrap/PageItem';
 
 export default class YourPlaylists extends React.Component {
     constructor(props) {

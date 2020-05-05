@@ -25,7 +25,7 @@ export default class Recommendations extends React.Component {
           var split = data.href.split('/');
           var parsedUser; 
           for(var i = 0; i < split.length; i++) {
-            if(split[i] == 'users') {
+            if(split[i] === 'users') {
               parsedUser = split[i + 1];
             }
           }
@@ -36,7 +36,7 @@ export default class Recommendations extends React.Component {
             var redirectTo = "http://localhost:3000/recommendations/" + curr.id;
             //console.log(curr)
             //console.log(curr.images)
-            if(curr.owner.id == parsedUser){
+            if(curr.owner.id === parsedUser){
              
               ownedPlaylists.push(<RecPlaylistThumbnail id={curr.id} name={curr.name} image={curr.images[0].url} owner={curr.owner.display_name} generate = {redirectTo} />);
             } else {

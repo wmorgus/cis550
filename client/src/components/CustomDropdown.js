@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Dropdown, DropdownButton, FormControl, Button, ButtonGroup} from 'react-bootstrap';
+import {Dropdown, FormControl, ButtonGroup} from 'react-bootstrap';
 
 const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
   <a
@@ -48,9 +48,6 @@ const CustomMenu = React.forwardRef(
 export default class CustomDropdown extends React.Component {
   constructor(props) {
     super(props);
-    // this.state = {
-    //   dropdownjerns: []
-    // };
   }
 
   componentDidMount() {
