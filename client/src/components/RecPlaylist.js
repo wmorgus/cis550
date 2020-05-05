@@ -1,8 +1,8 @@
 import React from 'react';
-import '../style/Dashboard.css';
+import '../style/RecPlaylist.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import PageNavbar from './PageNavbar';
-import TopSongRow from './TopSongRow';
+import {Button, Table} from 'react-bootstrap';
 
 export default class RecPlaylist extends React.Component {
     constructor(props) {
@@ -10,30 +10,35 @@ export default class RecPlaylist extends React.Component {
       this.state = {
         playlistObj: {images: [{url: ''}], name: '', owner: {display_name: ''}, description: ''},
         playlistid: "", 
-        songThumbnails: [],
-        selectedRecType: "",
+        playlistObjs: [],
+        selectedRecType: "song",
         recTypes: ['song', 'playlist', 'popular'],
-        resultSongs: []
+        resultSongs: [],
+        qualityObj: {energy: '', danceability: '', loudness: '', acousticness: '', valence: ''},
+        info: "",
+        tableHeader : []
       }
 
       this.exampleRecRoute = this.exampleRecRoute.bind(this);
       this.dropdownDivs = this.dropdownDivs.bind(this);
       this.submitRecType = this.submitRecType.bind(this);
       this.handleChange = this.handleChange.bind(this);
+      this.lookupPlaylist = this.lookupPlaylist.bind(this);
+      this.playListRecWrapper = this.playListRecWrapper.bind(this);
     }
 
     componentDidMount() {
-      //the react gods hate me right now.
       var id = window.location.href.split('/')[window.location.href.split('/').length - 1]
       console.log(this.props.apikey)
       var playlists = []
       var newObj = {}
       console.log(id)
       
+      //request info about the current playlist
       fetch('http://localhost:8081/spotify/getPlaylist?apikey=' + this.props.apikey + '&id=' + id).then(response => response.json()).then((data) => {
 
         newObj = data
-        console.log(data)
+      //  console.log(data)
 
       }).finally(() => {
         this.setState({
@@ -41,6 +46,26 @@ export default class RecPlaylist extends React.Component {
           playlistObj: newObj
         });
       });
+
+      //calculate stats for the current playlist
+      var testPID = '1055milplay'
+     // fetch("http://localhost:8081/recommendations/avg/" + id,
+      fetch("http://localhost:8081/recommendations/avg/" + testPID,
+        {
+          method: "GET"
+        }).then(res => {
+          return res.json();
+        }, err => {
+          console.log(err);
+        }).then(data => {
+          console.log('averages found')
+          //console.log('first val' + data.rows[0][0])
+          console.log(data); //displays your JSON object in the console
+          this.setState({
+            qualityObj : {energy: data.rows[0][0], danceability: data.rows[0][1], loudness: data.rows[0][2], acousticness: data.rows[0][3], valence: data.rows[0][4]}
+          });
+          console.log(this.state.qualityObj)
+        });
     }
 
     utf8_to_str(a) {
@@ -71,10 +96,19 @@ export default class RecPlaylist extends React.Component {
 
     exampleRecRoute(selectedType) {
     console.log('fetching data for selected type: ' + selectedType)
+    var songThumbs = []
 
     switch(selectedType) {
       case "song":
-        fetch("http://localhost:8081/recommendations/bysong/" + this.state.playlistid,
+  
+      //build fetch url string here to allow for custom attribute inclusion
+      var songThumbs = []
+      var testPID = '1055milplay'
+      fetch("http://localhost:8081/recommendations/bysong?pid=" + testPID
+      + "&energy=" + this.state.qualityObj.energy + "&danceability=" + this.state.qualityObj.danceability
+      + "&loudness=" + this.state.qualityObj.loudness + "&acousticness=" + this.state.qualityObj.acousticness
+      + "&valence=" + this.state.qualityObj.valence,
+
         {
           method: "GET"
         }).then(res => {
@@ -82,79 +116,244 @@ export default class RecPlaylist extends React.Component {
         }, err => {
           console.log(err);
         }).then(data => {
+          console.log('data: ')
           console.log(data); //displays your JSON object in the console
-          /*
-          let recs = moviesList.map((movie, i) => 
-           <TopSongRow  />
-          );
-    */
+          
+
+          //todo? for every song in the result, get the spotify info to display 
+    
+
+        songThumbs = data.rows.map((songObj, i) =>
+        <tr key = {i}>
+          <td>{songObj[0]}</td>
+          <td>{songObj[1]}</td>
+        </tr> )
+
+        var header = <thead><tr><th>Song Title</th><th>Artists</th></tr></thead>
+
           //This saves our HTML representation of the data into the state, which we can call in our render function
           //this.state.movies = moviesList;
           this.setState({
-            resultSongs: []
+         
+            resultSongs: songThumbs,
+            tableHeader: header,
+            info : "Use Spotify audio features to generate a list of songs you might like by querying for songs that are similar to those in this playlist."
           });
         });
         break;
 
-      case "playlist":       
-        fetch("http://localhost:8081/recommendations/byplaylist/" + this.state.playlistid,
-        {
-          method: "GET"
-        }).then(res => {
-          return res.json();
-        }, err => {
-          console.log(err);
-        }).then(data => {
-          console.log(data); //displays your JSON object in the console
-          this.setState({
-            resultSongs: []
-          });
-        });
-
-        break;
-
+      
       case "popular":
-        fetch("http://localhost:8081/recommendations/bypopular/" + this.state.playlistid,
-        {
-          method: "GET"
-        }).then(res => {
-          return res.json();
-        }, err => {
-          console.log(err);
-        }).then(data => {
-          console.log(data); //displays your JSON object in the console
-          this.setState({
-            resultSongs: []
+        var testPID = '1055milplay'
+        fetch("http://localhost:8081/recommendations/bypopular?pid=" + testPID
+        + "&energy=" + this.state.qualityObj.energy + "&danceability=" + this.state.qualityObj.danceability
+        + "&loudness=" + this.state.qualityObj.loudness + "&acousticness=" + this.state.qualityObj.acousticness
+        + "&valence=" + this.state.qualityObj.valence,
+  
+          {
+            method: "GET"
+          }).then(res => {
+            return res.json();
+          }, err => {
+            console.log(err);
+          }).then(data => {
+            console.log('data: ')
+            console.log(data); //displays your JSON object in the console
+      
+ 
+            //todo? for every song in the result, get the spotify info to display 
+ 
+          
+        songThumbs = data.rows.map((songObj, i) =>
+        <tr key = {i}>
+          <td>{songObj[0]}</td>
+          <td>{songObj[1]}</td>
+        </tr> )
+
+        var header = <thead><tr><th>Song Title</th><th>Artists</th></tr></thead>
+            //This saves our HTML representation of the data into the state, which we can call in our render function
+            //this.state.movies = moviesList;
+            this.setState({
+              resultSongs: songThumbs, 
+              tableHeader: header,
+              info : "Use Spotify audio features to generate a list of top 100 songs you might like by querying for songs that are similar to those in this playlist."
+            });
           });
-        });
 
         break;
+
+
+        case "playlist":   
+        
+
+          var songThumbs = []
+          var tempPlaylists = []
+          //fetch("http://localhost:8081/recommendations/byplaylist/" + this.state.playlistid,
+          var testPID = '1055milplay'
+
+          fetch("http://localhost:8081/recommendations/byplaylist/" + testPID,
+          {
+            method: "GET"
+          }).then(res => {
+            return res.json();
+          }, err => {
+            console.log(err);
+          }).then(data => {
+          
+            tempPlaylists = data.rows
+            console.log(tempPlaylists)
+
+            var header = <thead><tr><th>Playlist ID</th><th>Track List</th></tr></thead>
+            
+            
+            songThumbs = data.rows.map((songObj, i) =>
+            <tr key = {i}>
+              <td>{songObj[0]}</td>
+              <td><Button variant="btn btn-success"  href={"http://localhost:3000/recommendations/results/" + songObj[0]}>Go to Tracklist</Button></td>
+            </tr> )
+            
+
+            /*
+            data.rows.forEach(row => {
+              var linkAddress = "http://localhost:3000/results/" + row[0]
+              songThumbs.push(null)
+            })
+*/
+
+            this.setState({ 
+              resultSongs: songThumbs, 
+              tableHeader: header,
+              info : "Find existing playlists similar to this one."  
+            });
+          });
+            
+       
+         break;
+
       default:
         console.log('selected type not recognized');
     } 
-
-
-
-
-      
+ 
     }
+
+    async playListRecWrapper() {
+      //need to make this first fetch async 
+      var songThumbs = []
+      var tempPlaylists = []
+      //fetch("http://localhost:8081/recommendations/byplaylist/" + this.state.playlistid,
+      var testPID = '1055milplay'
+
+      const response = await fetch("http://localhost:8081/recommendations/byplaylist/" + testPID,
+      {
+        method: "GET"
+      })
+      const data = await response.json();
+      tempPlaylists = data.rows
+        console.log(tempPlaylists)
+
+        var header = <thead><tr><th>Playlist Title</th></tr></thead>
+
+
+
+        this.setState({ 
+          playlistObjs: tempPlaylists, 
+          tableHeader: header,
+          info : "Find existing playlists similar to this one."  
+        });
+      
+      /*
+      .then(res => {
+        return res.json();
+      }, err => {
+        console.log(err);
+      }).then(data => {
+      
+        tempPlaylists = data.rows
+        console.log(tempPlaylists)
+
+        var header = <thead><tr><th>Playlist Title</th></tr></thead>
+
+
+
+        this.setState({ 
+          playlistObjs: tempPlaylists, 
+          tableHeader: header,
+          info : "Find existing playlists similar to this one."  
+        });
+      });
+*/
+      console.log('outside')
+      console.log(this.state.playlistObjs)
+      this.state.playlistObjs.forEach(resultPlaylist =>  this.lookupPlaylist(resultPlaylist, songThumbs))
+ 
+    }
+
+    lookupPlaylist(results, output) {
+      console.log('what the fuck is up')
+      fetch('http://localhost:8081/spotify/getPlaylist?apikey=' + this.props.apikey + '&id=' + results[0],
+        {
+          method: "GET"
+        }).then(res => {
+          return res.json();
+        }, err => {
+          console.log(err);
+        }).then(data => {
+          console.log('here in lookupPlaylist')
+          console.log(data)
+            /*
+        songThumbs = data.rows.map((songObj, i) =>
+        <tr key = {i}>
+          <td>{songObj[0]}</td>
+        </tr> )
+        */
+          
+        });
+      }
+
 
     render() {    
       return (
         <div className="playlist">
           <PageNavbar active="recommendations" apikey={this.props.apikey} />
-          <h2> Basing Recommendations On: </h2>
+
+   
+        <div class="pageHeader"  style={{margin: "30px", display: "flex"}}>
+         
+           
+         
+        
+          <div class="namediv" >
+      
             <br></br>
-          <div class="playlistHeader" style={{display: "flex"}}>
-            
+          <h2> Basing Recommendations On: </h2>
+           
             <img src={this.state.playlistObj.images[0].url}  width="100" height="100"/>
-            <div class="namediv">
+              <div class = "descriptiondiv">
               <h4>{this.state.playlistObj.name}</h4>
               <h5>By {this.state.playlistObj.owner.display_name}</h5>
               <p>{this.utf8_to_str(this.state.playlistObj.description)}</p>
+              </div>
+        
+         
+          </div>
+          <div class="header" style={{margin: "30px", display: "flex"}}>
+          
+          
+    
+            <div class="stat div">
+              <h2>Average attributes for this playlist: </h2>
+               <div>energy: {this.state.qualityObj.energy}</div>
+              <div>danceability: {this.state.qualityObj.danceability}</div>
+              <div>loudness: {this.state.qualityObj.loudness}</div>
+              <div>valence: {this.state.qualityObj.valence}</div>
+              <div>acousticness: {this.state.qualityObj.acousticness}</div>
             </div>
+            </div>
+            
             <div className="years-container">
 			          <div className="dropdown-container">
+                <br></br>
+                <br></br>
 			            <select value={this.state.selectedRecType} onChange={this.handleChange} className="dropdown" id="decadesDropdown">
 			            	{this.dropdownDivs(this.state.recTypes)}
 			            </select>
@@ -162,10 +361,21 @@ export default class RecPlaylist extends React.Component {
 			          </div>
 			  
             </div>
-          </div>
+            </div>
+     
           <div className="container">
-            {this.state.songThumbnails}
+            <br></br>
+            <h5>{this.state.info}</h5>
+            <br></br>
+            <Table bordered striped hover>
+                    {this.state.tableHeader}
+                  <tbody>
+                  {this.state.resultSongs}
+                  </tbody>
+              </Table>
+        
           </div>
-        </div>
+          </div>
+      
     )};
 }

@@ -7,7 +7,7 @@ import {useHistory} from 'react-router-dom';
 
 export default class GenreButton extends React.Component {
 	constructor(props) {
-    console.log(props)
+   // console.log(props)
 		super(props);
   }
 

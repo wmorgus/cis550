@@ -11,6 +11,7 @@ import YourPlaylists from './YourPlaylists';
 import Playlist from './Playlist'
 import Recommendations from './Recommendations';
 import RecPlaylist from './RecPlaylist';
+import DatabasePlaylist from './DatabasePlaylist';
 import Time from './Time';
 import MonthlyArtists from './MonthlyArtists';
 import TopSongs from './TopSongs';
@@ -48,6 +49,7 @@ class App extends React.Component {
 			<div className="App">
 				<Router>
 					<Switch>
+						<PrivateRoute path='/recommendations/results/:id' component={DatabasePlaylist} cookies={cookies} />
 						<PrivateRoute path='/recommendations/:id' component={RecPlaylist} cookies={cookies} />
 						<PrivateRoute path='/recommendations' component={Recommendations} cookies={cookies} />
 						<PrivateRoute path='/time' component={Time} cookies={cookies} />

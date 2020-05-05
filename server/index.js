@@ -31,12 +31,15 @@ app.get('/spotify/getPlaylist', function(req, res) {
 app.get('/spotify/getSong', routes.getSong);
 app.get('/spotify/getUser', routes.getUser);
 
-// app.get('/checkQueue', routes.checkQueue);
+
+app.get('/recommendations/avg/:pid', routes.getAverageFeatures);
+app.get('/recommendations/tracks/:pid', routes.getTracklist);
+app.get('/checkQueue', routes.checkQueue);
 app.get('/queryTesterOut', routes.queryTesterOut);
 
-app.get('/recommendations/bysong/:pid', routes.getRecsSimilarSongs);
+app.get('/recommendations/bysong', routes.getRecsSimilarSongs);
 app.get('/recommendations/byplaylist/:pid', routes.getRecsSimilarPlaylists);
-app.get('/recommendations/bypopular/:pid', routes.getRecsPopular);
+app.get('/recommendations/bypopular', routes.getRecsPopular);
 
 app.get('/topsongsfrom/:date', routes.getTopSongsFrom);
 app.get('/monthlyartists/:date', routes.getMonthlyArtists);

@@ -33,6 +33,17 @@ export default class Playlist extends React.Component {
         // console.log('dataobj')
         // console.log(data)
         newObj = data
+        // console.log(newObj.allSongs);
+        // var ddl = "INSERT INTO playlist_owner (pid, oid) VALUES (" + id + ", liamahosey);";
+        // newObj.allSongs.forEach(element => 
+        //   ddl += "INSERT INTO table_name (sid, title, album, artists, energy, danceability, loudness, tempo, " + 
+        //   "acousticness, duration_ms, valnce) VALUES (" + 
+        //   element.id + " , " + 
+        //   element.album.name + " , " + 
+        //   element.artists[0].name + " , " + 
+        //   element.energy+ " , " + 
+
+        //   ");");
         songThumbs = data.allSongs.map((songObj, i) =>
           <SongThumbnail songObj={songObj}/>
         )
