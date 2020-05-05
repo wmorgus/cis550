@@ -62,6 +62,7 @@ export default class Playlist extends React.Component {
         }).finally(() => {
           this.checkQueue()
         });
+        setTimeout(this.checkQueue, 2500)
       });
     }
 
