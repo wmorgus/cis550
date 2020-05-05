@@ -59,7 +59,7 @@ export default class Playlist extends React.Component {
           songThumbnails: songThumbs,
           id: id
         });
-        this.checkQueue()
+        setTimeout(this.checkQueue, 2500)
       });
     }
 

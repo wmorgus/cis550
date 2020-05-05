@@ -233,6 +233,13 @@ async function completeRecursion(app, apiKey, id, res, obj, output) {
   
   q.push(id)
   app.set('uploadQ', q)
+  //failsafe to make sure that failed uploads don't clog up the queue
+  setTimeout(() => { 
+    var q = app.get('uploadQ')
+    q.splice(q.indexOf(id), 1)
+    app.set('uploadQ', q)
+  }, 90000)
+
   playlistValidation(sids, id, obj.owner.id, infoMap, apiKey, partial(completeValidation, app, id))
 }
 
@@ -639,7 +646,7 @@ function commit() {
 }
 
 function execute(conn, query) { 
-  console.log('executing: ' + query)
+  // console.log('executing: ' + query)
   return new Promise(function(resolve, reject){
     conn.execute(query, function(err, result) {
       if (result) {
@@ -677,7 +684,6 @@ function queryTesterOut(req, res) {
   var q = 'SELECT COUNT(*) FROM all_songs'
 
   execute(conn, q).then((rows) => {
-    console.log(rows)
     // conn.execute("COMMIT", function(err, result) {
     //   if (err) {
     //     console.log('commit failed:')
@@ -708,10 +714,8 @@ function deleteitall(conn, res) {
 function newPlay(pid, oid, sids, infoMap, apiKey) {
   return new Promise((finalResolve, reject) => {
     query = "INSERT INTO playlist_owner(pid, oid) VALUES ('" + pid + "', '" + oid + "')";
-    console.log(query);
     execute(conn, query).then((rows) => {
       Promise.all(sids.map((element) => {
-        console.log('p1 starting for ' + element)
         query = "SELECT COUNT(*) FROM All_Songs WHERE sid = '" + element + "'";
         return new Promise((insASRes, rej) => {
           execute(conn, query).then((rows) => {
@@ -740,7 +744,6 @@ function newPlay(pid, oid, sids, infoMap, apiKey) {
                   }
                 }
                 execute(conn, sQuery).then((insertres) => {
-                  console.log(insertres)
                   insASRes()
                 })
               })
@@ -753,10 +756,8 @@ function newPlay(pid, oid, sids, infoMap, apiKey) {
         Promise.all(sids.map((element) => { 
           query = "INSERT INTO playlist_songs(pid, sid) VALUES ('" + pid + "', '" + element + "')";
           //insert every song into our new playlist
-          console.log(query);
           return new Promise((insPSRes, rej) => {
             execute(conn, query).then(async (rows) => {
-              console.log(rows);
               insPSRes()
             })
           })
@@ -772,7 +773,6 @@ function newPlay(pid, oid, sids, infoMap, apiKey) {
 function notNewPlay(pid, sids, infoMap, apiKey) {
   return new Promise((finalResolve, reject) => {
     query = "SELECT * FROM Playlist_Songs WHERE pid = '" + pid + "'";
-    console.log(query);
     execute(conn, query).then((rows) => {
       Promise.all(sids.map((element) => {
         return new Promise((checkPSRes, rej) => {
@@ -784,7 +784,6 @@ function notNewPlay(pid, sids, infoMap, apiKey) {
           }
           if (!checkFlag) {//new to playlist
             query = "SELECT COUNT(*) FROM All_Songs WHERE sid = '" + element + "'";
-            console.log(query);
             execute(conn, query).then((rows) => {
               if (rows[0][0] == 0) {
                 //new song is not in all_songs
@@ -811,12 +810,10 @@ function notNewPlay(pid, sids, infoMap, apiKey) {
                       query += valsToAdd[ind] + ")"
                     }
                   }
-                  console.log(query);
                   execute(conn, query).then(async (rows) => {
                     query = "INSERT INTO playlist_songs(pid, sid) " + 
                     "VALUES ('" + pid + "', '" + element + "')";
                     //insert every song into our new playlist
-                    console.log(query);
                     execute(conn, query).then(async (rows) => {
                       checkPSRes()
                     });
@@ -825,7 +822,6 @@ function notNewPlay(pid, sids, infoMap, apiKey) {
               } else {
                 query = "INSERT INTO playlist_songs(pid, sid) VALUES ('" + pid + "', '" + sid + "')";
                 //insert every song into our new playlist
-                console.log(query);
                 execute(conn, query).then((rows) => {
                   checkPSRes()
                 });
@@ -845,7 +841,6 @@ function notNewPlay(pid, sids, infoMap, apiKey) {
             if (!sids.includes(element)) {
               // if element not in sids, we must delete
               query = "DELETE playlist_songs WHERE sid = '" + element +  "' AND pid = '" + pid + "'";
-              console.log(query);
               execute(conn, query).then((rows) => { 
                 checkDelRes()
               });
@@ -867,7 +862,6 @@ function notNewPlay(pid, sids, infoMap, apiKey) {
 async function playlistValidation(sids, pid, oid, infoMap, apiKey, cb) {
   console.log('time to validate:')
   query = "SELECT COUNT(*) FROM Playlist_Owner WHERE pid = '" + pid + "'";
-  console.log(query)
   execute(conn, query).then((rows) => {
     if (rows[0][0] == 0) {
       newPlay(pid, oid, sids, infoMap, apiKey).then(() => {
