@@ -61,14 +61,12 @@ export default class Recommendations extends React.Component {
             <br></br>
             <h2>Your Playlists</h2>
             <div className="container">
-            {this.state.yourPlaylists}
-          </div>
-
-          <h2>Playlists You Follow</h2>
+              {this.state.yourPlaylists}
+            </div>
+            <h2>Playlists You Follow</h2>
             <div className="container">
-            {this.state.followPlaylists}
-          </div>
-
+              {this.state.followPlaylists}
+            </div>
         </div>
 
         )};

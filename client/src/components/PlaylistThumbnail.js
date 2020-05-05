@@ -1,6 +1,6 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {useHistory} from 'react-router-dom'
+import {Button} from 'react-bootstrap';
 
 export default class PlaylistThumbnail extends React.Component {
 	constructor(props) {
@@ -18,8 +18,7 @@ export default class PlaylistThumbnail extends React.Component {
 		var cursedButton = {
       margin: "3px 0px", 
       padding: "7px 0px", 
-      backgroundColor: "#f3f3f3", 
-      cursor: "pointer"
+      backgroundColor: "#f3f3f3"
 		}
 		
 		return (
@@ -31,11 +30,15 @@ export default class PlaylistThumbnail extends React.Component {
             <img className="" src={this.props.image} style={{height: "175px", width: "175px", objectFit: "cover", overflow: "none"}}/>
           </div>
         </div>
-        <div className="col-9" style={{display: "flex", alignItems: "center"}}>
+        <div className="col-7" style={{display: "flex", alignItems: "center"}}>
           <div>
             <h2>{this.props.name}</h2>
             <h4>{this.props.owner}</h4>
           </div>
+        </div>
+        <div className="col align-middle" style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "space-around"}}>
+            <Button href={"/playlist/" + this.props.id} style={{height: "30%", width: "100%"}}>Go to playlist</Button>
+            <Button href={"/recommendations/" + this.props.id} style={{height: "30%", width: "100%"}}>Get reccomendations</Button>
         </div>
       </div>
 		);

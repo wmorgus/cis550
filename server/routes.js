@@ -226,7 +226,8 @@ async function completeRecursion(app, apiKey, id, res, obj, output) {
       currArtist += val.artists[ind].name + ', '
     }
     currArtist = currArtist.substring(0, currArtist.lastIndexOf(','))
-    infoMap.set(val.id, [val.name, val.album.name, currArtist])
+    
+    infoMap.set(val.id, [val.name.split("'").join(""), val.album.name.split("'").join(""), currArtist.split("'").join("")])
     return(val.id)
   })
   // console.log(infoMap)
