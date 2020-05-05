@@ -12,7 +12,10 @@ export default class Playlist extends React.Component {
         playlistObj: {images: [{url: ''}], name: 'Playlist loading...', owner: {display_name: ''}, description: ''},
         songThumbnails: <h5>Songs loading...</h5>,
         stats: <h5>Statistics loading...</h5>,
-        statsReady: false
+        statsReady: false,
+        count: "Loading data.",
+        hours: "One Moment Please.",
+        avg_min: "",
       }
       this.checkQueue = this.checkQueue.bind(this)
     }
@@ -33,26 +36,9 @@ export default class Playlist extends React.Component {
         // console.log('dataobj')
         // console.log(data)
         newObj = data
-        // console.log(newObj.allSongs);
-        // var ddl = "INSERT INTO playlist_owner (pid, oid) VALUES (" + id + ", liamahosey);";
-        // newObj.allSongs.forEach(element => 
-        //   ddl += "INSERT INTO table_name (sid, title, album, artists, energy, danceability, loudness, tempo, " + 
-        //   "acousticness, duration_ms, valnce) VALUES (" + 
-        //   element.id + " , " + 
-        //   element.album.name + " , " + 
-        //   element.artists[0].name + " , " + 
-        //   element.energy+ " , " + 
-
-        //   ");");
         songThumbs = data.allSongs.map((songObj, i) =>
           <SongThumbnail songObj={songObj}/>
         )
-        // for (var ind in data.items) {
-        //   var curr = data.items[ind];
-        //   console.log(curr)
-        //   console.log(curr.images)
-        //   playlists.push(<PlaylistThumbnail id={curr.id} name={curr.name} image={curr.images[0].url} owner={curr.owner.display_name} key={ind}/>)
-        // }
       }).finally(() => {
         this.setState({
           playlistObj: newObj,
@@ -60,6 +46,25 @@ export default class Playlist extends React.Component {
           id: id
         });
         this.checkQueue()
+        fetch('http://localhost:8081/duration/' + this.state.id).then(response => response.json()).then((data) => {
+          var result = data.rows[0];
+          if (data.rows[1] > 0) {
+            this.setState({
+              count:  "Song Count: " + result[0],
+              hours:  "Total Length: " + result[1] + " Hours, " + result[2] + " Minutes, " + result[3] + " Seconds.",
+              avg_min: "Average Song Length: " + result[4] + " Minutes, " + result[5] + " Seconds."
+            });
+          } else {
+            this.setState({
+              count:  "Song Count: " + result[0],
+              hours:  "Total Length: " + result[2] + " Minutes, " + result[3] + " Seconds.",
+              avg_min: "Average Song Length: " + result[4] + " Minutes, " + result[5] + " Seconds."
+            });
+          }
+        }).finally(() => {
+          this.checkQueue()
+        });
+        setTimeout(this.checkQueue, 2500)
       });
     }
 
@@ -84,26 +89,7 @@ export default class Playlist extends React.Component {
       
     }
     
-    //Nathan serves up the third edition of J&amp;G&#x27;s quarantunes with
-    //don&#x27;t mind me, i&#x27;m just patiently waiting for this band to blow up and take over the world nbd
     utf8_to_str(a) {
-      // if (a.search('&#x') != -1) {
-      //   console.log('found some decode')
-      // }
-      // while (a.search('&#xlkfj') ==  -1) {
-      //   var loc = a.search('&#x') + 1
-      //   a.replace('&#x', '%')
-      //   var loc2 = a.search(';')
-      //   var numstr = a.substring(loc, loc2)
-      //   var strnumstr = Number(numstr).toString(16)
-      //   console.log(strnumstr)
-      // }
-      
-      // for(var i=0, s=''; i<a.length; i++) {
-      //   var h = a[i].toString(16)
-      //   if(h.length < 2) h = '0' + h
-      //   s += '%' + h
-      // }
       return(a)
       // return decodeURIComponent(s)
     }
@@ -123,7 +109,13 @@ export default class Playlist extends React.Component {
                 </div>
                 <p>{this.utf8_to_str(this.state.playlistObj.description)}</p>
                 <div className="statdiv">
-                  {this.state.stats}
+                  {this.state.count}
+                </div>
+                <div className="statdiv">
+                 {this.state.hours}
+                </div>
+                <div className="statdiv">
+                {this.state.avg_min}
                 </div>
               </div>
             </div>

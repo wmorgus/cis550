@@ -28,6 +28,8 @@ app.get('/spotify/getUserPlaylists', routes.getUserPlaylists);
 app.get('/spotify/getPlaylist', function(req, res) {
 	routes.getPlaylist(req, res, app)
 });
+app.get('/spotify/getJustPlaylist', routes.onlyAPlaylist);
+
 app.get('/spotify/getSong', routes.getSong);
 app.get('/spotify/getUser', routes.getUser);
 
@@ -51,6 +53,7 @@ app.get('/acoustics', routes.getAcoustics);
 app.get('/playlistacoustics/:oid', routes.getPlaylistAcoustics);
 app.get('/playlistdance/:oid', routes.getPlaylistDance);
 app.get('/playlistenergy/:oid', routes.getPlaylistEnergy);
+app.get('/duration/:pid', routes.getDuration);
 
 
 var server = app.listen(8081, () => {

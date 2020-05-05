@@ -9,7 +9,7 @@ export default class PlaylistComparison extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      oid: 'million_playlist',
+      oid: '',
       playlists: [],
       columnName: "Score"
     };
@@ -22,7 +22,7 @@ export default class PlaylistComparison extends React.Component {
     fetch('http://localhost:8081/spotify/getUser?apikey=' + this.props.apikey).then(response => response.json()).then((data) => {
       console.log(data)
       oid = 'million_playlist'
-      //oid = data.id
+      oid = data.id
     }).finally(() => {
       this.setState({
         oid: oid
