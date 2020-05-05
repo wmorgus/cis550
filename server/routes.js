@@ -45,7 +45,7 @@ function login(req, res) {
 					var expires = res2.expires_in;
 					//here, set cookie for client with api token
           res.cookie('access_token', token, {maxAge: expires * 1000});
-					res.redirect('http://localhost:3000/')
+					res.redirect('http://ec2-54-89-146-102.compute-1.amazonaws.com:3000/')
 				} else {
 					console.log("error with accessing token")
 					console.log(res2.error_description)
@@ -55,7 +55,7 @@ function login(req, res) {
 			}});
   } else {
     var scopes = 'user-read-private user-read-email playlist-read-private user-library-read streaming';
-    var redirect_uri = "http://localhost:8081/storeCode"; //replace with address
+    var redirect_uri = "http://ec2-54-89-146-102.compute-1.amazonaws.com:8081/storeCode"; //replace with address
     res.redirect('https://accounts.spotify.com/authorize' +
       '?response_type=code' +
       '&client_id=' + encodeURIComponent(config.spotifyConfig.spotifyClientID) +
@@ -66,7 +66,7 @@ function login(req, res) {
 
 function storeCode(req, res) {
   if (req.query.code) {
-		var redirect_uri = "http://localhost:8081/storeCode";
+		var redirect_uri = "http://ec2-54-89-146-102.compute-1.amazonaws.com:8081/storeCode";
 		var formBody = 'grant_type=authorization_code&code=' + encodeURIComponent(req.query.code) + '&redirect_uri=' + encodeURIComponent(redirect_uri);
 		formBody = formBody + '&client_id=' + encodeURIComponent(config.spotifyConfig.spotifyClientID) + '&client_secret=' + encodeURIComponent(config.spotifyConfig.spotifyClientSecret);
 		var reqOps = {
@@ -86,7 +86,7 @@ function storeCode(req, res) {
 					var refresh = res2.refresh_token;
           res.cookie('access_token', token, {maxAge: expires * 1000});
           res.cookie('refresh_token', refresh)
-					res.redirect('http://localhost:3000/')
+					res.redirect('http://ec2-54-89-146-102.compute-1.amazonaws.com:3000/')
 				} else {
 					console.log("error with accessing token")
 					console.log(res2.error_description)
@@ -96,7 +96,7 @@ function storeCode(req, res) {
 			}});
 	} else {
 		console.log(error)
-		res.redirect('http://localhost:3000/login')
+		res.redirect('http://ec2-54-89-146-102.compute-1.amazonaws.com:3000/login')
 	}
 }
 
@@ -105,12 +105,12 @@ function totalRestart(req, res) {
   res.clearCookie('access_token');
   res.clearCookie('refresh_token');
   res.clearCookie('expires')
-  res.redirect('http://localhost:3000/landing');
+  res.redirect('http://ec2-54-89-146-102.compute-1.amazonaws.com:3000/landing');
 }
 
 function logout(req, res) {
   res.clearCookie('access_token');
-  res.redirect('http://localhost:3000/landing')
+  res.redirect('http://ec2-54-89-146-102.compute-1.amazonaws.com:3000/landing')
 }
 
 
