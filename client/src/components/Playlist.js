@@ -13,12 +13,9 @@ export default class Playlist extends React.Component {
         songThumbnails: <h5>Songs loading...</h5>,
         stats: <h5>Statistics loading...</h5>,
         statsReady: false,
-        count: 0,
-        hours: 0,
-        min: 0,
-        sec: 0,
-        avg_min: 0,
-        avg_sec: 0
+        count: "Loading data.",
+        hours: "One Moment Please.",
+        avg_min: "",
       }
       this.checkQueue = this.checkQueue.bind(this)
     }
@@ -52,12 +49,9 @@ export default class Playlist extends React.Component {
         fetch('http://localhost:8081/duration/' + this.state.id).then(response => response.json()).then((data) => {
           var result = data.rows[0];
           this.setState({
-            count: result[0],
-            hours: result[1],
-            min: result[2],
-            sec: result[3],
-            avg_min: result[4],
-            avg_sec: result[5]
+            count:  "Song Count: " + result[0],
+            hours:  "Total Length: " + result[1] + " Hours, " + result[2] + " Minutes, " + result[3] + " Seconds.",
+            avg_min: "Average Song Length: " + result[4] + " Minutes, " + result[5] + " Seconds."
           });
         }).finally(() => {
           this.checkQueue()
@@ -107,13 +101,13 @@ export default class Playlist extends React.Component {
                 </div>
                 <p>{this.utf8_to_str(this.state.playlistObj.description)}</p>
                 <div className="statdiv">
-                  Song Count: {this.state.count}
+                  {this.state.count}
                 </div>
                 <div className="statdiv">
-                  Total Length: {this.state.hours} Hours, {this.state.min} Minutes, {this.state.sec} Seconds.
+                 {this.state.hours}
                 </div>
                 <div className="statdiv">
-                  Average Song Length: {this.state.avg_min} Minutes, {this.state.avg_sec} Seconds.
+                {this.state.avg_min}
                 </div>
               </div>
             </div>
