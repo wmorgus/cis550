@@ -312,6 +312,7 @@ export default class RecPlaylist extends React.Component {
 
 
     render() {    
+      document.body.style = 'background: #bdeaef;';
       return (
         <div className="playlist">
           <PageNavbar active="yourPlaylists" apikey={this.props.apikey} />
@@ -350,6 +351,7 @@ export default class RecPlaylist extends React.Component {
             </div>
             </div>
             
+            
             <div className="years-container">
 			          <div className="dropdown-container">
                 <br></br>
@@ -367,7 +369,7 @@ export default class RecPlaylist extends React.Component {
             <br></br>
             <h5>{this.state.info}</h5>
             <br></br>
-            <Table bordered striped hover>
+            <Table style={{backgroundColor:"white"}} bordered striped hover>
                     {this.state.tableHeader}
                   <tbody>
                   {this.state.resultSongs}
