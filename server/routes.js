@@ -765,6 +765,8 @@ function newPlay(pid, oid, sids, infoMap, apiKey) {
                   insASRes()
                 })
               })
+            } else {
+              insASRes()
             }
           })
         })
