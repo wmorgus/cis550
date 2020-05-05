@@ -309,7 +309,7 @@ export default class RecPlaylist extends React.Component {
                 <Dropdown.Toggle variant="info" id="dropdown-basic" style={{borderColor: "#ffffff"}}>
                   Choose recommendation type
                 </Dropdown.Toggle>
-                <Dropdown.Menu style={{width: "75%"}}>
+                <Dropdown.Menu style={{width: "90%"}}>
                   {this.dropdownDivs(this.state.recTypes, this.state.recDescriptions)}
                 </Dropdown.Menu>
               </Dropdown>
