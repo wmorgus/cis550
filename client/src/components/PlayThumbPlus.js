@@ -8,14 +8,20 @@ export default class PlayThumbPlus extends React.Component {
 		super(props);
   }
 
-  routeChange = (id) => {
-    console.log('loading playlist id ' + id)
-    let path = '/playlist/' + id;
-    window.location.href = path
-  }
-
   componentDidMount() {
-
+    fetch('http://localhost:8081/spotify/getJustPlaylist?apikey=' + this.props.apikey + '&id=' + this.props.id).then(response => response.json()).then((data) => {
+      // console.log('dataobj')
+      // console.log(data)
+      newObj = data
+      songThumbs = data.allSongs.map((songObj, i) =>
+        <SongThumbnail songObj={songObj}/>
+      )
+    }).finally(() => {
+      this.setState({
+        playlistObj: newObj,
+        songThumbnails: songThumbs,
+        id: id
+    })})
   }
 
 	render() {
