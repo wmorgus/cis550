@@ -9,7 +9,6 @@ import {withCookies} from 'react-cookie';
 
 import YourPlaylists from './YourPlaylists';
 import Playlist from './Playlist'
-import Recommendations from './Recommendations';
 import RecPlaylist from './RecPlaylist';
 import DatabasePlaylist from './DatabasePlaylist';
 import Time from './Time';
@@ -51,7 +50,6 @@ class App extends React.Component {
 					<Switch>
 						<PrivateRoute path='/recommendations/results/:id' component={DatabasePlaylist} cookies={cookies} />
 						<PrivateRoute path='/recommendations/:id' component={RecPlaylist} cookies={cookies} />
-						<PrivateRoute path='/recommendations' component={Recommendations} cookies={cookies} />
 						<PrivateRoute path='/time' component={Time} cookies={cookies} />
 						<PrivateRoute path='/playlist/:id' component={Playlist} cookies={cookies} />
 						<PrivateRoute path='/monthlyartists' component={MonthlyArtists} cookies={cookies} />
