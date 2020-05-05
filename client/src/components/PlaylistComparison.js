@@ -54,7 +54,7 @@ export default class PlaylistComparison extends React.Component {
         console.log("result");
         console.log(result)
         var nails = result.map((songObj, i) =>
-          <PlayThumbPlus id={songObj[0]} score={songObj[1]} apikey={this.props.apikey}/>
+          <PlayThumbPlus id={songObj[0]} score={Math.round(songObj[1]*1000) / 1000} apikey={this.props.apikey}/>
         )
         this.setState({
           columnName: "Your playlists, ordered by acousticness",
@@ -75,7 +75,7 @@ export default class PlaylistComparison extends React.Component {
         var result = data.rows;
         console.log(result[0]);
         var nails = result.map((songObj, i) =>
-          <PlayThumbPlus id={songObj[0]} score={songObj[1]} apikey={this.props.apikey}/>
+          <PlayThumbPlus id={songObj[0]} score={Math.round(songObj[1]*1000) / 1000} apikey={this.props.apikey}/>
         )
         this.setState({
           columnName: "Your playlists, ordered by danceability",
@@ -96,7 +96,7 @@ export default class PlaylistComparison extends React.Component {
         var result = data.rows;
         console.log(result[0]);
         var nails = result.map((songObj, i) =>
-          <PlayThumbPlus id={songObj[0]} score={songObj[1]} apikey={this.props.apikey}/>
+          <PlayThumbPlus id={songObj[0]} score={Math.round(songObj[1]*1000) / 1000} apikey={this.props.apikey}/>
         )
         this.setState({
           columnName: "Your playlists, ordered by energy",

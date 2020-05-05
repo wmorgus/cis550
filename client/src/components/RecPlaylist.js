@@ -293,11 +293,11 @@ export default class RecPlaylist extends React.Component {
             </div>
             <div style={{gridColumn: '2 / 3', gridRow: '3/4'}}>
               <h4>Average attributes for this playlist: </h4>
-              <div>energy: {this.state.qualityObj.energy}</div>
-              <div>danceability: {this.state.qualityObj.danceability}</div>
-              <div>loudness: {this.state.qualityObj.loudness}</div>
-              <div>valence: {this.state.qualityObj.valence}</div>
-              <div>acousticness: {this.state.qualityObj.acousticness}</div>
+              <div>energy: {Math.round(this.state.qualityObj.energy * 1000) / 1000}</div>
+              <div>danceability: {Math.round(this.state.qualityObj.danceability * 1000) / 1000}</div>
+              <div>loudness: {Math.round(this.state.qualityObj.loudness * 1000) / 1000}</div>
+              <div>valence: {Math.round(this.state.qualityObj.valence * 1000) / 1000}</div>
+              <div>acousticness: {Math.round(this.state.qualityObj.acousticness* 1000) / 1000}</div>
             </div>
             <div style={{gridColumn: '3 / 4', gridRow: '3/4'}}>
               {/* <select value={this.state.selectedRecType} onChange={this.handleChange} className="dropdown" id="decadesDropdown">
