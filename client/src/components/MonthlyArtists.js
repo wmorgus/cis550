@@ -54,6 +54,7 @@ export default class MonthlyArtists extends React.Component {
     }
 
   render() {
+    document.body.style = 'background: #bdeaef;';
     return (
     <div className="BestGenres">
         <PageNavbar active="bestgenres" />

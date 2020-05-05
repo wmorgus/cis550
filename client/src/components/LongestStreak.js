@@ -112,6 +112,7 @@ export default class LongestStreak extends React.Component {
   }
 
   render() {
+    document.body.style = 'background: #bdeaef;';
     return (
       <div>
         <PageNavbar active="time" apikey={this.props.apikey}/>

@@ -51,13 +51,14 @@ export default class TopSongs extends React.Component {
     }
 
   render() {
+    document.body.style = 'background: #bdeaef;';
     return (
       <div className="topSongs">
         <PageNavbar active="time" apikey={this.props.apikey}/>
         <div className="Home">
           <div className="lander">
-            <h1>Songs Throughout Time</h1>
-            <p>Different analyses of top songs from 2017-2018</p>
+            <h1>Top of the Charts</h1>
+            <p>Find the top 100 songs on any day from 2017-2018</p>
             <form>
               <Button variant="btn btn-success" href="http://localhost:3000/time" style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Back</Button>
             </form>

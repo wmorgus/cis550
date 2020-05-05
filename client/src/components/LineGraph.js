@@ -107,6 +107,7 @@ class LineGraph extends React.Component {
   
 
   render() {
+    document.body.style = 'background: #bdeaef;';
     return (
         
       <MDBContainer>
