@@ -14,9 +14,10 @@ export default class RecPlaylist extends React.Component {
         selectedRecType: "song",
         recTypes: ['song', 'playlist', 'popular'],
         resultSongs: [],
-        qualityObj: {energy: '', danceability: '', loudness: '', acousticness: '', valence: ''},
+        qualityObj: {energy: 'loading...', danceability: 'loading...', loudness: 'loading...', acousticness: 'loading...', valence: 'loading...'},
         info: "",
-        tableHeader : []
+        tableHeader : [],
+        loaded: "false"
       }
 
       this.exampleRecRoute = this.exampleRecRoute.bind(this);
@@ -48,9 +49,8 @@ export default class RecPlaylist extends React.Component {
       });
 
       //calculate stats for the current playlist
-      var testPID = '1055milplay'
-     // fetch("http://localhost:8081/recommendations/avg/" + id,
-      fetch("http://localhost:8081/recommendations/avg/" + testPID,
+      
+      fetch("http://localhost:8081/recommendations/avg/" + id,
         {
           method: "GET"
         }).then(res => {
@@ -58,13 +58,21 @@ export default class RecPlaylist extends React.Component {
         }, err => {
           console.log(err);
         }).then(data => {
+          if(data.rows[0]) {
           console.log('averages found')
           //console.log('first val' + data.rows[0][0])
           console.log(data); //displays your JSON object in the console
           this.setState({
-            qualityObj : {energy: data.rows[0][0], danceability: data.rows[0][1], loudness: data.rows[0][2], acousticness: data.rows[0][3], valence: data.rows[0][4]}
+            qualityObj : {energy: data.rows[0][0], danceability: data.rows[0][1], loudness: data.rows[0][2], acousticness: data.rows[0][3], valence: data.rows[0][4]},
+            loaded: true
           });
-          console.log(this.state.qualityObj)
+          //console.log(this.state.qualityObj)
+        } else {
+          this.setState({
+            info: 'Looks like this playlist is still being uploaded. Please check back later.',
+            loaded: false
+          });
+        }
         });
     }
 
@@ -83,7 +91,9 @@ export default class RecPlaylist extends React.Component {
     submitRecType() {
       var selectedType = this.state.selectedRecType;
       if(selectedType) {
+        if(this.state.loaded) {
         this.exampleRecRoute(selectedType)
+        }
       }
     }
 
@@ -103,8 +113,8 @@ export default class RecPlaylist extends React.Component {
   
       //build fetch url string here to allow for custom attribute inclusion
       var songThumbs = []
-      var testPID = '1055milplay'
-      fetch("http://localhost:8081/recommendations/bysong?pid=" + testPID
+     
+      fetch("http://localhost:8081/recommendations/bysong?pid=" + this.state.playlistid
       + "&energy=" + this.state.qualityObj.energy + "&danceability=" + this.state.qualityObj.danceability
       + "&loudness=" + this.state.qualityObj.loudness + "&acousticness=" + this.state.qualityObj.acousticness
       + "&valence=" + this.state.qualityObj.valence,
@@ -119,10 +129,6 @@ export default class RecPlaylist extends React.Component {
           console.log('data: ')
           console.log(data); //displays your JSON object in the console
           
-
-          //todo? for every song in the result, get the spotify info to display 
-    
-
         songThumbs = data.rows.map((songObj, i) =>
         <tr key = {i}>
           <td>{songObj[0]}</td>
@@ -144,8 +150,8 @@ export default class RecPlaylist extends React.Component {
 
       
       case "popular":
-        var testPID = '1055milplay'
-        fetch("http://localhost:8081/recommendations/bypopular?pid=" + testPID
+ 
+        fetch("http://localhost:8081/recommendations/bypopular?pid=" + this.state.playlistid
         + "&energy=" + this.state.qualityObj.energy + "&danceability=" + this.state.qualityObj.danceability
         + "&loudness=" + this.state.qualityObj.loudness + "&acousticness=" + this.state.qualityObj.acousticness
         + "&valence=" + this.state.qualityObj.valence,
@@ -188,10 +194,8 @@ export default class RecPlaylist extends React.Component {
 
           var songThumbs = []
           var tempPlaylists = []
-          //fetch("http://localhost:8081/recommendations/byplaylist/" + this.state.playlistid,
-          var testPID = '1055milplay'
-
-          fetch("http://localhost:8081/recommendations/byplaylist/" + testPID,
+     
+          fetch("http://localhost:8081/recommendations/byplaylist/" + this.state.playlistid,
           {
             method: "GET"
           }).then(res => {
@@ -240,10 +244,7 @@ export default class RecPlaylist extends React.Component {
       //need to make this first fetch async 
       var songThumbs = []
       var tempPlaylists = []
-      //fetch("http://localhost:8081/recommendations/byplaylist/" + this.state.playlistid,
-      var testPID = '1055milplay'
-
-      const response = await fetch("http://localhost:8081/recommendations/byplaylist/" + testPID,
+      const response = await fetch("http://localhost:8081/recommendations/byplaylist/" + this.state.playlistid,
       {
         method: "GET"
       })
@@ -282,14 +283,13 @@ export default class RecPlaylist extends React.Component {
         });
       });
 */
-      console.log('outside')
-      console.log(this.state.playlistObjs)
+
       this.state.playlistObjs.forEach(resultPlaylist =>  this.lookupPlaylist(resultPlaylist, songThumbs))
  
     }
 
     lookupPlaylist(results, output) {
-      console.log('what the fuck is up')
+
       fetch('http://localhost:8081/spotify/getPlaylist?apikey=' + this.props.apikey + '&id=' + results[0],
         {
           method: "GET"

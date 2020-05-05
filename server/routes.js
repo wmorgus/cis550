@@ -226,7 +226,7 @@ async function completeRecursion(app, apiKey, id, res, obj, output) {
       currArtist += val.artists[ind].name + ', '
     }
     currArtist = currArtist.substring(0, currArtist.lastIndexOf(','))
-    infoMap.set(val.id, [val.name.split("'").join(''), val.album.name.split("'").join(''), currArtist.split("'").join('')])
+    infoMap.set(val.id, [val.name, val.album.name, currArtist])
     return(val.id)
   })
   // console.log(infoMap)
@@ -365,6 +365,7 @@ function getUser(req, res) {
 
 function getAverageFeatures(req, res) {
 
+  //req.params.pid
   query = "WITH PlaylistData AS (SELECT pid, sid FROM Playlist_Songs WHERE pid = '" + req.params.pid + "') " + 
   "SELECT AVG(energy) as energy, AVG(danceability) as danceability, AVG(loudness) as loudness, " +
   "AVG(acousticness) as acousticness, AVG(valence) as valence " +
@@ -404,13 +405,9 @@ console.log(query)
 //use Spotify audio features to generate a new playlist
 //by querying for songs with qualities similar to the selected user playlist
 function getRecsSimilarSongs(req, res) {
-  var testPID = '1055milplay'
-  var song = "4CUCBqTA74rmKu4mEgD6QH"
-  console.log('finding similar songs')
-  console.log(req.url)
-  const queryObject = url.parse(req.url,true).query;
-  console.log(queryObject);
 
+  const queryObject = url.parse(req.url,true).query;
+  console.log(queryObject)
 
   //build query
   var buildQuery = ""
@@ -437,7 +434,7 @@ function getRecsSimilarSongs(req, res) {
   }
   //console.log('buildquery ' + buildQuery)
   
-  query = "WITH basis AS (SELECT sid FROM Playlist_Songs WHERE pid = '" + testPID + "') " + 
+  query = "WITH basis AS (SELECT sid FROM Playlist_Songs WHERE pid = '" + queryObject.pid + "') " + 
   "SELECT distinct title, artists " + 
   "FROM all_songs " + 
   "WHERE all_songs.sid NOT IN (SELECT * FROM basis) " + buildQuery
@@ -483,7 +480,7 @@ function getRecsSimilarPlaylists(req, res) {
   where temp3.energy between temp2.energy - .1 AND temp2.energy + .1
   and temp3.danceability between temp2.danceability - .1 and temp2.danceability + .1
   and temp3.loudness between temp2.loudness - .1 and temp2.loudness +.1
-  AND rownum < 25`;
+  AND rownum < 101`;
 
   conn.execute(query, function(err, result) {
     if (err) {
@@ -672,12 +669,12 @@ function execute(conn, query) {
     conn.execute(query, function(err, result) {
       if (result) {
         if (result.rows) {
-          // console.log('result for: ' + query)
-          // console.log(result.rows)
+          console.log('result for: ' + query)
+          console.log(result.rows)
           resolve(result.rows)
         } else {
-          // console.log('result for: ' + query)
-          // console.log(result)
+          console.log('result for: ' + query)
+          console.log(result)
           resolve(result)
         }
       } else {
@@ -768,8 +765,6 @@ function newPlay(pid, oid, sids, infoMap, apiKey) {
                   insASRes()
                 })
               })
-            } else {
-              insASRes()
             }
           })
         })
