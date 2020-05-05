@@ -3,10 +3,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {useHistory} from 'react-router-dom'
 
 export default class SongThumbnail extends React.Component {
-	constructor(props) {
+  
+  constructor(props) {
     super(props);
     this.state = {
       artistsNames: ''
+      // audio: {},
+      // play: false
     }
   }
 
@@ -17,7 +20,8 @@ export default class SongThumbnail extends React.Component {
   // }
 
   componentDidMount() {
-    console.log(this.props.songObj.artists)
+    console.log(this.props.songObj)
+    // var aud = new Audio(this.props.songObj.previewUrl)
     var artists = ''
     for (var ind in this.props.songObj.artists) {
       artists += this.props.songObj.artists[ind].name + ', '
@@ -25,6 +29,7 @@ export default class SongThumbnail extends React.Component {
     artists = artists.substring(0, artists.lastIndexOf(','))
     this.setState({
       artistsNames: artists
+      // audio: aud
     })
   }
 

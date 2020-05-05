@@ -16,9 +16,8 @@ export default class YourPlaylists extends React.Component {
         uid: '',
         count: 0,
         loading: false,
-        statsReady: false,
-        statsDivs: []
       }
+
       this.onScroll = this.onScroll.bind(this);
     }
 

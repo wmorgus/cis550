@@ -7,7 +7,7 @@ var routes = require("./routes.js");
 
 
 
-const app = express();
+var app = express();
 
 app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
 app.use(bodyParser.json());
@@ -25,11 +25,14 @@ app.get('/totalRestart', routes.totalRestart);
 
 app.get('/spotify/getPlaylists', routes.getAllPlaylists);
 app.get('/spotify/getUserPlaylists', routes.getUserPlaylists);
-app.get('/spotify/getPlaylist', routes.getPlaylist);
+app.get('/spotify/getPlaylist', function(req, res) {
+	routes.getPlaylist(req, res, app)
+});
 app.get('/spotify/getSong', routes.getSong);
 app.get('/spotify/getUser', routes.getUser);
 
-app.get('/checkQueue', routes.checkQueue);
+// app.get('/checkQueue', routes.checkQueue);
+app.get('/queryTesterOut', routes.queryTesterOut);
 
 app.get('/recommendations/bysong/:pid', routes.getRecsSimilarSongs);
 app.get('/recommendations/byplaylist/:pid', routes.getRecsSimilarPlaylists);
@@ -46,7 +49,8 @@ app.get('/playlistenergy/:oid', routes.getPlaylistEnergy);
 
 
 var server = app.listen(8081, () => {
-	routes.initDB()
+	routes.initDB(app)
+	app.set('uploadQ', [])
 	console.log('Server listening on PORT 8081');
 });
 

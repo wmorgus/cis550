@@ -3,15 +3,13 @@ const request = require('request');
 var oracle = require('oracledb');
 
 var conn;
-
-var uploadQueue;
+var app;
 
 /****       oracle helper funcs          ****/
 
 async function initDB() {
   console.log('initingdb')
   conn = await oracle.getConnection(config.dbpool);
-  uploadQueue = [''];
   console.log('initdone')
 }
 
@@ -39,7 +37,7 @@ function login(req, res) {
 			}
 		}
 		request(reqOps, function (error, response){
-			if (response.body) {
+			if (response && response.body) {
 				var res2 = JSON.parse(response.body);
 				if (res2.access_token) {
 					var token = res2.access_token;
@@ -174,12 +172,12 @@ function getUserPlaylists(req, res) {
   }});
 }
 
-function recursiveReq(reqOps, addTo, cb) {
+async function recursiveReq(reqOps, addTo, cb) {
   request(reqOps, function (error, response){
     if (response && response.body) {
       var res2 = JSON.parse(response.body);
       if (res2) {
-        console.log(res2)
+        // console.log(res2)
         if (addTo.length == 0) {
           cb = partial(cb, res2)
         }
@@ -214,27 +212,55 @@ function recursiveReq(reqOps, addTo, cb) {
 
 }
 
-function completeRecursion(id, res, obj, output) {
+async function completeRecursion(app, apiKey, id, res, obj, output) {
   //call leems function here with id and output
   obj.allSongs = output
   res.send(obj)
   var sids = []
-  console.log()
-  sids = output.map((val, ind) => val.id)
-  // uploadQueue.push(id)
-  // playlistValidation(sids, id, obj.owner.id, partial(completeValidation, id))
+  var infoMap = new Map()
+  var q = app.get('uploadQ')
+  sids = output.map((val, ind) => {
+    var currArtist = ''
+    for (var ind in val.artists) {
+      currArtist += val.artists[ind].name + ', '
+    }
+    currArtist = currArtist.substring(0, currArtist.lastIndexOf(','))
+    infoMap.set(val.id, [val.name, val.album.name, currArtist])
+    return(val.id)
+  })
+  // console.log(infoMap)
+  
+  q.push(id)
+  app.set('uploadQ', q)
+  playlistValidation(sids, id, obj.owner.id, infoMap, apiKey, partial(completeValidation, app, id))
 }
 
-function completeValidation(id) {
-  uploadQueue.slice(uploadQueue.indexOf(id), 1)
+function completeValidation(app, id) {
+  var q = app.get('uploadQ')
+  q.slice(uploadQueue.indexOf(id), 1)
+  app.set('uploadQ', q)
+  var query = "COMMIT";
+  conn.execute(query, function(err, result) {
+    if (err) {
+      console.error(err.message);
+      return;
+    } 
+    console.log(result)
+  });
 }
 
 function checkQueue(req, res) {
-  if (uploadQueue.indexOf(req.query.id) != -1) {
-    res.json({status: 'uploading'})
-  } else {
-    res.json({status: 'done'})
-  }
+  // conn.execute("SELECT COUNT(*) FROM All_Songs", function(err, res) {
+  //   console.log(res.rows)
+  // }) 
+  // res.send('will')
+  // if (uploadQueue.indexOf(req.query.id) != -1) {
+  //   res.json({status: 'uploading'})
+  // } else {
+  //   res.json({status: 'done'})
+  // }
+
+
 }
 
 //thank god for the internet
@@ -246,7 +272,7 @@ function partial(f) {
   }
 }
 
-function getPlaylist(req, res) {
+function getPlaylist(req, res, app) {//thanks, i hate it!
   var reqOps = {
     uri: 'https://api.spotify.com/v1/playlists/' + req.query.id,
     method: 'GET',
@@ -254,7 +280,9 @@ function getPlaylist(req, res) {
         'Authorization': 'Bearer ' + req.query.apikey
     }
   }
-  recursiveReq(reqOps, [], partial(completeRecursion, req.query.id, res));
+  recursiveReq(reqOps, [], partial(completeRecursion, app, req.query.apikey, req.query.id, res)).then(() => {
+    console.log('did that work?')
+  })
 }
 
 function getSong(req, res) {
@@ -412,8 +440,8 @@ function getAcoustics(req, res) {
   "JOIN all_songs ON tops.sid = all_songs.sid), DataSum AS " +
   " (SELECT month, year, SUM(acousticness) as asums, SUM(energy) as esums, SUM(danceability) as dsums FROM info " +
   "JOIN top_songs ON info.sid = top_songs.sid  GROUP BY month, year ORDER BY YEAR ASC, MONTH ASC), " +
-"largestSum AS (SELECT MAX(asums) as maxasum, MAX(esums) as maxesum, MAX(dsums) as maxdsum FROM DataSum) " + 
-"SELECT (asums / maxasum) as asum, (dsums / maxdsum) as dsum, (esums / maxesum) as esum FROM DataSum, largestSum";
+  "largestSum AS (SELECT MAX(asums) as maxasum, MAX(esums) as maxesum, MAX(dsums) as maxdsum FROM DataSum) " + 
+  "SELECT (asums / maxasum) as asum, (dsums / maxdsum) as dsum, (esums / maxesum) as esum FROM DataSum, largestSum";
     
   console.log(query);
   conn.execute(query, function(err, result) {
@@ -426,136 +454,278 @@ function getAcoustics(req, res) {
   });
 };
 
-function playlistValidation(sids, pid, oid, cb) {
-  query = "SELECT COUNT(*) FROM Playlist_Owner WHERE pid = " + pid;
-  var ret = "";
-  conn.execute(query, function(err, result) { //check if there is a playlist with this id 
-    if (err) {
-      console.error(err.message);
-      return;
+function getAudioFeatures(sid, apiKey) { 
+  var reqOps = {
+    uri: 'https://api.spotify.com/v1/audio-features/' + sid,
+    method: 'GET',
+    headers: {
+        'Authorization': 'Bearer ' + apiKey
     }
-    console.log(result);
-    if (result == 0) {
-      //there is no playlist by that name, check each song in all_songs
-      query = "INSERT INTO playlist_owner(pid, oid) " + 
-      "VALUES (" + pid + ", " + oid + ")";
-      conn.execute(query, function(err, result) {
-          if (err) {
-            console.error(err.message);
-            return;
-          } 
-          sids.forEach(function(element) {
-            query = "SELECT COUNT(*) FROM All_Songs WHERE sid = " + element;
-              conn.execute(query, function(err, result) {
-              if (err) {
-                console.error(err.message);
-                return;
-              } 
-              console.log(result);
-              if (result == 0) {
-                // this is a new song for all_songs, wowwie 
-                query = "INSERT INTO all_songs (sid, title, album, artists, energy, danceability, loudness, tempo, acousticness, duration_ms, valence) " + 
-                "VALUES (" + "TODO" + ")";
-                conn.execute(query, function(err, result) {
-                  if (err) {
-                    console.error(err.message);
-                    return;
-                  } 
-                  console.log(result);
-                  query = "INSERT INTO playlist_songs(sid, pid) " + 
-                  "VALUES (" + element + ", " + pid + ")";
-                  //insert every song into our new playlist
-                  conn.execute(query, function(err, result) {
-                    if (err) {
-                      console.error(err.message);
-                      return;
-                    } 
-                    console.log(result);
-                  });
-                });
-            } else {
-              query = "INSERT INTO playlist_songs(sid, pid) " + 
-              "VALUES (" + element + ", " + pid + ")";
-              //insert every song into our new playlist
-              conn.execute(query, function(err, result) {
-                if (err) {
-                  console.error(err.message);
-                  return;
-                } 
-                console.log(result);
-              });
+  }
+  return new Promise(function(resolve, reject){
+    request(reqOps, function (error, response){
+      if (response && response.body) {
+        var res2 = JSON.parse(response.body);
+        if (res2) {
+          resolve(res2)
+        } else {
+          console.log("error with accessing song")
+          reject(res2.error_description)
+        }
+      } else {
+        console.log("error with song request")
+        reject(error)
+    }});
+  });
+}
+
+function commit() {
+  conn.execute("COMMIT", function(err, result) { //check if there is a playlist with this id 
+    if (err) {
+      console.log('commit failed:')
+      console.error(err);
+    }
+  })
+}
+
+function execute(conn, query) { 
+  console.log('executing: ' + query)
+  return new Promise(function(resolve, reject){
+    conn.execute(query, function(err, result) {
+      if (result) {
+        if (result.rows) {
+          console.log('result for: ' + query)
+          console.log(result.rows)
+          resolve(result.rows)
+        } else {
+          console.log('result for: ' + query)
+          console.log(result)
+          resolve(result)
+        }
+      } else {
+        console.log("error with query: " + query)
+        console.log(err)
+        reject(err)
+    }});
+  });
+}
+
+
+function testPromiseAudioFeatures(req, res) {
+  var prom = getAudioFeatures('1gmarFWgSwb4SWlmqDjWka', req.query.apikey)
+  console.log('prom date')
+  console.log(prom)
+  prom.then((resObj) => {
+    console.log('pinky promise')
+    console.log(resObj)
+  })
+  res.send(200)
+}
+
+function queryTesterOut(req, res) {
+  deleteitall(conn, res)
+  // var q = 'SELECT COUNT(*) FROM all_songs'
+
+  // execute(conn, q).then((rows) => {
+  //   console.log(rows)
+  //   conn.execute("COMMIT", function(err, result) {
+  //     if (err) {
+  //       console.log('commit failed:')
+  //       console.error(err);
+  //     }
+  //     res.send(rows)
+  //   })
+  //   return(rows)
+  // })
+}
+
+function deleteitall(conn, res) {
+  var q = 'DELETE FROM playlist_songs'
+  execute(conn, q).then(() => {
+    q = 'DELETE FROM all_songs'
+    execute(conn, q).then(() => {
+      q = 'DELETE FROM playlist_owner'
+      execute(conn, q).then(() => {
+        q = 'COMMIT'
+        execute(conn, q).then(() => {
+          res.send('it is done.')
+        })
+      })
+    })
+  })
+}
+
+function newPlay(pid, oid, sids, infoMap, apiKey) {
+  return new Promise((finalResolve, reject) => {
+    query = "INSERT INTO playlist_owner(pid, oid) VALUES ('" + pid + "', '" + oid + "')";
+    console.log(query);
+    execute(conn, query).then((rows) => {
+      Promise.all(sids.map((element) => {
+        console.log('p1 starting for ' + element)
+        query = "SELECT COUNT(*) FROM All_Songs WHERE sid = '" + element + "'";
+        return new Promise((insASRes, rej) => {
+          execute(conn, query).then((rows) => {
+            if (rows[0][0] == 0) {
+              var sQuery = "INSERT INTO all_songs (sid, title, album, artists, energy, danceability, loudness, tempo, acousticness, duration_ms, valence) VALUES ("
+              var valsToAdd = []
+              var currVals = infoMap.get(element)
+              //energy, danceability, loudness, tempo, acousticness, duration_ms, valence
+              valsToAdd.push("'" + element + "'")
+              valsToAdd.push("'" + currVals[0] + "'")
+              valsToAdd.push("'" + currVals[1] + "'")
+              valsToAdd.push("'" + currVals[2] + "'")
+              getAudioFeatures(element, apiKey).then((featureObj) => {
+                valsToAdd.push(featureObj.energy)
+                valsToAdd.push(featureObj.danceability)
+                valsToAdd.push(featureObj.loudness)
+                valsToAdd.push(featureObj.tempo)
+                valsToAdd.push(featureObj.acousticness)
+                valsToAdd.push(featureObj.duration_ms)
+                valsToAdd.push(featureObj.valence)
+                for (ind in valsToAdd) {
+                  if (ind != valsToAdd.length - 1){
+                    sQuery += valsToAdd[ind] + ", "
+                  } else {
+                    sQuery += valsToAdd[ind] + ")"
+                  }
+                }
+                return execute(conn, sQuery).then((insertres) => {
+                  console.log('insertetres')
+                  console.log(insertres)
+                  insASRes()
+                })
+              })
             }
-          });
-        });
-      });
-    } else {
-      //this playlist is already in the system
-      query = "SELECT * FROM Playlist_Songs WHERE pid = " + pid;
-      conn.execute(query, function(err, result) {
-          if (err) {
-            console.error(err.message);
-            return;
-          } 
-          sids.forEach(function(element) {
-            if (!result.includes(element)) {
-              // this song is new to the playlist
-              query = "SELECT COUNT(*) FROM All_Songs WHERE sid = " + element;
-              conn.execute(query, function(err, result) {
-              if (err) {
-                console.error(err.message);
-                return;
-              } 
-              console.log(result);
-              if (result == 0) {
+          })
+        })
+      })).then(() => {
+        Promise.all(sids.map((element) => { 
+          query = "INSERT INTO playlist_songs(pid, sid) VALUES ('" + pid + "', '" + element + "')";
+          //insert every song into our new playlist
+          console.log(query);
+          return new Promise((insPSRes, rej) => {
+            execute(conn, query).then(async (rows) => {
+              console.log(rows);
+              insPSRes()
+            })
+          })
+        })).then(() => {
+          console.log('reached the end of case 1')
+          finalResolve()
+        })
+      })
+    });
+  })
+}
+
+function notNewPlay(pid, sids, infoMap, apiKey) {
+  return new Promise((finalResolve, reject) => {
+    query = "SELECT * FROM Playlist_Songs WHERE pid = '" + pid + "'";
+    console.log(query);
+    execute(conn, query).then((rows) => {
+      Promise.all(sids.map((element) => {
+        return new Promise((checkPSRes, rej) => {
+          var checkFlag = false
+          for (var x in rows) {
+            if (rows[x][1] == element) {
+              checkFlag = true
+            }
+          }
+          if (!checkFlag) {//new to playlist
+            query = "SELECT COUNT(*) FROM All_Songs WHERE sid = '" + element + "'";
+            console.log(query);
+            execute(conn, query).then((rows) => {
+              if (rows[0][0] == 0) {
                 //new song is not in all_songs
-                query = "INSERT INTO all_songs (sid, title, album, artists, energy, danceability, loudness, tempo, acousticness, duration_ms, valence) " + 
-                "VALUES (" + "TODO" + ")";
-                conn.execute(query, function(err, result) {
-                  if (err) {
-                    console.error(err.message);
-                    return;
-                  } 
-                  console.log(result);
-                  query = "INSERT INTO playlist_songs(sid, pid) " + 
-                  "VALUES (" + element + ", " + pid + ")";
-                  //insert every song into our new playlist
-                  conn.execute(query, function(err, result) {
-                    if (err) {
-                      console.error(err.message);
-                      return;
-                    } 
-                    console.log(result);
+                query = "INSERT INTO all_songs (sid, title, album, artists, energy, danceability, loudness, tempo, acousticness, duration_ms, valence) VALUES (" 
+                var valsToAdd = []
+                var currVals = infoMap.get(element)
+                //energy, danceability, loudness, tempo, acousticness, duration_ms, valence
+                valsToAdd.push("'" + element + "'")
+                valsToAdd.push("'" + currVals[0] + "'")
+                valsToAdd.push("'" + currVals[1] + "'")
+                valsToAdd.push("'" + currVals[2] + "'")
+                getAudioFeatures(element, apiKey).then((featureObj) => {
+                  valsToAdd.push(featureObj.energy)
+                  valsToAdd.push(featureObj.danceability)
+                  valsToAdd.push(featureObj.loudness)
+                  valsToAdd.push(featureObj.tempo)
+                  valsToAdd.push(featureObj.acousticness)
+                  valsToAdd.push(featureObj.duration_ms)
+                  valsToAdd.push(featureObj.valence)
+                  for (ind in valsToAdd) {
+                    if (ind != valsToAdd.length - 1){
+                      query += valsToAdd[ind] + ", "
+                    } else {
+                      query += valsToAdd[ind] + ")"
+                    }
+                  }
+                  console.log(query);
+                  execute(conn, query).then(async (rows) => {
+                    query = "INSERT INTO playlist_songs(pid, sid) " + 
+                    "VALUES ('" + pid + "', '" + element + "')";
+                    //insert every song into our new playlist
+                    console.log(query);
+                    execute(conn, query).then(async (rows) => {
+                      checkPSRes()
+                    });
                   });
+                })
+              } else {
+                query = "INSERT INTO playlist_songs(pid, sid) VALUES ('" + pid + "', '" + sid + "')";
+                //insert every song into our new playlist
+                console.log(query);
+                execute(conn, query).then((rows) => {
+                  checkPSRes()
                 });
-            } else {
-              query = "INSERT INTO playlist_songs(sid, pid) " + 
-              "VALUES (" + element + ", " + pid + ")";
-              //insert every song into our new playlist
-              conn.execute(query, function(err, result) {
-                if (err) {
-                  console.error(err.message);
-                  return;
-                } 
-                console.log(result);
-              });
-            }
+              }
             });
-            }
-          });
-          result.forEach(function(element) {
+          } else {
+            checkPSRes()
+          }
+        })
+      })).then(() => {
+        var currplaysids = []
+        for (var x in rows) {
+          currplaysids.push(rows[x][1])
+        }
+        Promise.all(sids.map((element) => {
+          return new Promise((checkDelRes, rej) => {
             if (!sids.includes(element)) {
               // if element not in sids, we must delete
-              query = "DELETE playlist_songs WHERE sid = " + element +  " AND pid = " + pid;
-              conn.execute(query, function(err, result) {
-                if (err) {
-                  console.error(err.message);
-                  return;
-                } 
-                console.log(result);
+              query = "DELETE playlist_songs WHERE sid = '" + element +  "' AND pid = '" + pid + "'";
+              console.log(query);
+              execute(conn, query).then((rows) => { 
+                checkDelRes()
               });
+            } else {
+              checkDelRes()
             }
-          });
-      });
+          })
+        })).then(() => {
+          console.log('reached the end of case 2')
+          finalResolve()
+        })
+      })
+      //print done here
+    })
+  })
+}
+
+
+async function playlistValidation(sids, pid, oid, infoMap, apiKey, cb) {
+  console.log('time to validate:')
+  query = "SELECT COUNT(*) FROM Playlist_Owner WHERE pid = '" + pid + "'";
+  console.log(query)
+  execute(conn, query).then((rows) => {
+    if (rows[0][0] == 0) {
+      newPlay(pid, oid, sids, infoMap, apiKey).then(() => {
+        console.log('finished newplay')
+      })
+    } else {
+      notNewPlay(pid, sids, infoMap, apiKey).then(() =>{
+        console.log('finished notnewplay')
+      })
     }
   });
 };
@@ -640,5 +810,7 @@ module.exports = {
   getAcoustics,
   getPlaylistAcoustics,
   getPlaylistDance,
-  getPlaylistEnergy
+  getPlaylistEnergy,
+  testPromiseAudioFeatures,
+  queryTesterOut
 }

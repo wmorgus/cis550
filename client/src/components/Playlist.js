@@ -18,13 +18,17 @@ export default class Playlist extends React.Component {
     }
 
     componentDidMount() {
+      fetch('http://localhost:8081/testAudioFeatures?apikey=' + this.props.apikey).then((data) => {console.log('nada')})
+
       //the react gods hate me right now.
       var id = window.location.href.split('/')[window.location.href.split('/').length - 1]
-      console.log(this.props.apikey)
+      // console.log(this.props.apikey)
       var playlists = []
       var newObj = {}
       var songThumbs = []
-      console.log(id)
+      // console.log(id)
+      
+
       fetch('http://localhost:8081/spotify/getPlaylist?apikey=' + this.props.apikey + '&id=' + id).then(response => response.json()).then((data) => {
         // console.log('dataobj')
         // console.log(data)
@@ -106,7 +110,7 @@ export default class Playlist extends React.Component {
                   <h5>{this.state.playlistObj.owner.display_name}</h5>
                 </div>
                 <p>{this.utf8_to_str(this.state.playlistObj.description)}</p>
-                <div class="statdiv">
+                <div className="statdiv">
                   {this.state.stats}
                 </div>
               </div>
