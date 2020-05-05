@@ -3,15 +3,15 @@ import '../style/Time.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Table } from 'react-bootstrap';
 import PageNavbar from './PageNavbar';
-import TopSongRow from './TopSongRow';
+import PlayThumbPlus from './PlayThumbPlus';
 
 export default class PlaylistComparison extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       oid: '',
-      playlists: [],
-      columnName: "Score"
+      columnName: "",
+      thumbs: []
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -50,15 +50,12 @@ export default class PlaylistComparison extends React.Component {
         console.log(data.rows)
         var result = data.rows;
         console.log("result" + result);
-        let songDivs = result.map((songObj, i) =>
-          <tr key={i}>
-            <td>{songObj[0]}</td>
-            <td>{songObj[1]}</td>
-          </tr>
-        );
+        var nails = result.map((songObj, i) =>
+          <PlayThumbPlus id={songObj[0]} score={songObj[1]} apikey={this.props.apikey}/>
+        )
         this.setState({
-          playlists: songDivs,
-          columnName: "Acousticness"
+          columnName: "Your playlists, ordered by acousticness",
+          thumbs: nails
         });
       });
   }
@@ -73,15 +70,12 @@ export default class PlaylistComparison extends React.Component {
         console.log(data.rows)
         var result = data.rows;
         console.log(result[0]);
-        let songDivs = result.map((songObj, i) =>
-          <tr key={i}>
-            <td>{songObj[0]}</td>
-            <td>{songObj[1]}</td>
-          </tr>
-        );
+        var nails = result.map((songObj, i) =>
+          <PlayThumbPlus id={songObj[0]} score={songObj[1]} apikey={this.props.apikey}/>
+        )
         this.setState({
-          playlists: songDivs,
-          columnName: "Danceability"
+          columnName: "Your playlists, ordered by danceability",
+          thumbs: nails
         });
       });
   }
@@ -96,15 +90,12 @@ export default class PlaylistComparison extends React.Component {
         console.log(data.rows)
         var result = data.rows;
         console.log(result[0]);
-        let songDivs = result.map((songObj, i) =>
-          <tr key={i}>
-            <td>{songObj[0]}</td>
-            <td>{songObj[1]}</td>
-          </tr>
-        );
+        var nails = result.map((songObj, i) =>
+          <PlayThumbPlus id={songObj[0]} score={songObj[1]} apikey={this.props.apikey}/>
+        )
         this.setState({
-          playlists: songDivs,
-          columnName: "Energy"
+          columnName: "Your playlists, ordered by energy",
+          thumbs: nails
         });
       });
   }
@@ -120,10 +111,6 @@ export default class PlaylistComparison extends React.Component {
               <h1>Compare Your Playlists</h1>
               <p>Choose from the options below to rank your playlists</p>
               <form>
-                <Button variant="btn btn-success" href="http://localhost:3000">Back</Button>
-              </form>
-              <br></br>
-              <form>
                 <div className="container">
                   <div className="row">    
                   <div class="col-sm center-block">
@@ -137,33 +124,17 @@ export default class PlaylistComparison extends React.Component {
                   </div>
                   </div>
                 </div>
-                
-                
-                
-              </form>
-              <form>
-
-              </form>
-              <form>
-
               </form>
             </div>
           </div>
           <br></br>
           <br></br>
           <div className="container">
-            <div className="table">
-              <Table bordered striped hover>
-                <thead>
-                  <tr>
-                    <th>PID</th>
-                    <th>{this.state.columnName}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {this.state.playlists}
-                </tbody>
-              </Table>
+            <div className="thumbs">
+              <div className="thumbshead">
+                <h5>{this.state.columnName}</h5>  
+                {this.state.thumbs}
+              </div>
             </div>
           </div>
         </div>

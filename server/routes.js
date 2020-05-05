@@ -826,17 +826,17 @@ function notNewPlay(pid, sids, infoMap, apiKey) {
                       query += valsToAdd[ind] + ")"
                     }
                   }
-                  execute(conn, query).then(async (rows) => {
+                  execute(conn, query).then((rows) => {
                     query = "INSERT INTO playlist_songs(pid, sid) " + 
                     "VALUES ('" + pid + "', '" + element + "')";
                     //insert every song into our new playlist
-                    execute(conn, query).then(async (rows) => {
+                    execute(conn, query).then((rows) => {
                       checkPSRes()
                     });
                   });
                 })
               } else {
-                query = "INSERT INTO playlist_songs(pid, sid) VALUES ('" + pid + "', '" + sid + "')";
+                query = "INSERT INTO playlist_songs(pid, sid) VALUES ('" + pid + "', '" + element + "')";
                 //insert every song into our new playlist
                 execute(conn, query).then((rows) => {
                   checkPSRes()
