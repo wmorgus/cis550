@@ -350,13 +350,8 @@ console.log(query)
 //use Spotify audio features to generate a new playlist
 //by querying for songs with qualities similar to the selected user playlist
 function getRecsSimilarSongs(req, res) {
-  var testPID = '1055milplay'
-  var song = "4CUCBqTA74rmKu4mEgD6QH"
-  console.log('finding similar songs')
-  console.log(req.url)
-  const queryObject = url.parse(req.url,true).query;
-  console.log(queryObject);
 
+  const queryObject = url.parse(req.url,true).query;
 
   //build query
   var buildQuery = ""
@@ -429,7 +424,7 @@ function getRecsSimilarPlaylists(req, res) {
   where temp3.energy between temp2.energy - .1 AND temp2.energy + .1
   and temp3.danceability between temp2.danceability - .1 and temp2.danceability + .1
   and temp3.loudness between temp2.loudness - .1 and temp2.loudness +.1
-  AND rownum < 25`;
+  AND rownum < 101`;
 
   conn.execute(query, function(err, result) {
     if (err) {
