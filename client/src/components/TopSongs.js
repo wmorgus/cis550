@@ -95,7 +95,7 @@ export default class TopSongs extends React.Component {
           <input type="submit" value="Submit" />
         </form>
         
-        <div className="jumbotron">
+        <div className="jumbotron" style = {{backgroundColor:"#bdeaef"}}>
             <div className="movies-container">
 			          <div className="table">
                   <Table bordered striped hover>
