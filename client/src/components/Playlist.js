@@ -31,11 +31,13 @@ export default class Playlist extends React.Component {
       var songThumbs = []
       // console.log(id)
       
-
       fetch('http://localhost:8081/spotify/getPlaylist?apikey=' + this.props.apikey + '&id=' + id).then(response => response.json()).then((data) => {
-        // console.log('dataobj')
-        // console.log(data)
+        console.log('dataobj')
+        console.log(data)
         newObj = data
+        if (!newObj.images[0]) {
+          newObj.images = [{url: 'https://tidal.com/browse/assets/images/defaultImages/defaultPlaylistImage.png'}]
+        }
         songThumbs = data.allSongs.map((songObj, i) =>
           <SongThumbnail songObj={songObj}/>
         )
