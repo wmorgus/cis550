@@ -112,6 +112,7 @@ class LineGraph extends React.Component {
     <div>
        <PageNavbar active="time" apikey={this.props.apikey}/>
       <MDBContainer>
+        <br></br>
           <form>
               <Button variant="btn btn-success" href="http://localhost:3000/time" style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Back</Button>
         </form>
