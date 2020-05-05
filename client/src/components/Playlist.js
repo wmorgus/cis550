@@ -47,6 +47,27 @@ export default class Playlist extends React.Component {
           songThumbnails: songThumbs,
           id: id
         });
+        this.checkQueue()
+        fetch('http://localhost:8081/duration/' + this.state.id).then(response => response.json()).then((data) => {
+          var result = data.rows[0];
+         
+          if(result[1] !== null) {
+          if (data.rows[1] > 0) {
+            this.setState({
+              count:  "Song Count: " + result[0],
+              hours:  "Total Length: " + result[1] + " Hours, " + result[2] + " Minutes, " + result[3] + " Seconds.",
+              avg_min: "Average Song Length: " + result[4] + " Minutes, " + result[5] + " Seconds."
+            });
+          } else {
+            this.setState({
+              count:  "Song Count: " + result[0],
+              hours:  "Total Length: " + result[2] + " Minutes, " + result[3] + " Seconds.",
+              avg_min: "Average Song Length: " + result[4] + " Minutes, " + result[5] + " Seconds."
+            });
+          } }
+        }).finally(() => {
+          this.checkQueue()
+        });
         setTimeout(this.checkQueue, 2500)
       });
     }

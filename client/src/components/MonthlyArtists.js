@@ -3,7 +3,6 @@ import '../style/Time.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Button, Table} from 'react-bootstrap';
 import PageNavbar from './PageNavbar';
-import TopArtistRow from './TopArtistRow';
 
 
 export default class MonthlyArtists extends React.Component {

@@ -3,8 +3,6 @@ import '../style/Time.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Button, Dropdown, Table} from 'react-bootstrap';
 import PageNavbar from './PageNavbar';
-import TopSidRow from './TopSidRow';
-import TopSongRow from './TopSongRow';
 import CustomDropdown from './CustomDropdown';
 // import { MDBForm, MDBSelectInput, MDBSelect, MDBSelectOptions, MDBSelectOption } from "mdbreact";
 
