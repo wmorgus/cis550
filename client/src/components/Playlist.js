@@ -75,10 +75,10 @@ export default class Playlist extends React.Component {
             this.checkQueue()
           } else {
             console.log('uploading')
-            setTimeout(this.checkQueue, 2500)
+            setTimeout(this.checkQueue, 5000)
           }
         })
-      } else {
+      } else { //here make requests for length, time, arguably avg stats
         console.log('she ready')
       }
       

@@ -226,7 +226,7 @@ async function completeRecursion(app, apiKey, id, res, obj, output) {
       currArtist += val.artists[ind].name + ', '
     }
     currArtist = currArtist.substring(0, currArtist.lastIndexOf(','))
-    infoMap.set(val.id, [val.name, val.album.name, currArtist])
+    infoMap.set(val.id, [val.name.split("'").join(''), val.album.name.split("'").join(''), currArtist.split("'").join('')])
     return(val.id)
   })
   // console.log(infoMap)
@@ -639,12 +639,12 @@ function execute(conn, query) {
     conn.execute(query, function(err, result) {
       if (result) {
         if (result.rows) {
-          console.log('result for: ' + query)
-          console.log(result.rows)
+          // console.log('result for: ' + query)
+          // console.log(result.rows)
           resolve(result.rows)
         } else {
-          console.log('result for: ' + query)
-          console.log(result)
+          // console.log('result for: ' + query)
+          // console.log(result)
           resolve(result)
         }
       } else {
@@ -668,20 +668,20 @@ function testPromiseAudioFeatures(req, res) {
 }
 
 function queryTesterOut(req, res) {
-  deleteitall(conn, res)
-  // var q = 'SELECT COUNT(*) FROM all_songs'
+  // deleteitall(conn, res)
+  var q = 'SELECT COUNT(*) FROM all_songs'
 
-  // execute(conn, q).then((rows) => {
-  //   console.log(rows)
-  //   conn.execute("COMMIT", function(err, result) {
-  //     if (err) {
-  //       console.log('commit failed:')
-  //       console.error(err);
-  //     }
-  //     res.send(rows)
-  //   })
-  //   return(rows)
-  // })
+  execute(conn, q).then((rows) => {
+    console.log(rows)
+    // conn.execute("COMMIT", function(err, result) {
+    //   if (err) {
+    //     console.log('commit failed:')
+    //     console.error(err);
+    //   }
+      res.send(rows)
+    // })
+    // return(rows)
+  })
 }
 
 function deleteitall(conn, res) {
@@ -734,12 +734,13 @@ function newPlay(pid, oid, sids, infoMap, apiKey) {
                     sQuery += valsToAdd[ind] + ")"
                   }
                 }
-                return execute(conn, sQuery).then((insertres) => {
-                  console.log('insertetres')
+                execute(conn, sQuery).then((insertres) => {
                   console.log(insertres)
                   insASRes()
                 })
               })
+            } else {
+              insASRes()
             }
           })
         })
