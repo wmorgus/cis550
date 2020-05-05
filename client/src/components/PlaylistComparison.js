@@ -20,7 +20,7 @@ export default class PlaylistComparison extends React.Component {
   componentDidMount() {
     document.body.style = 'background: #bdeaef;';
     var oid = '';
-    fetch('http://localhost:8081/spotify/getUser?apikey=' + this.props.apikey).then(response => response.json()).then((data) => {
+    fetch('http://ec2-54-89-146-102.compute-1.amazonaws.com:8081/spotify/getUser?apikey=' + this.props.apikey).then(response => response.json()).then((data) => {
       console.log(data)
       oid = 'million_playlist'
       oid = data.id
@@ -45,7 +45,7 @@ export default class PlaylistComparison extends React.Component {
     event.preventDefault();
     this.setState({thumbs: []})
 
-    fetch("http://localhost:8081/playlistacoustics/" + this.state.oid,
+    fetch("http://ec2-54-89-146-102.compute-1.amazonaws.com:8081/playlistacoustics/" + this.state.oid,
       {
         method: 'GET' // The type of HTTP request.
       }).then(response => response.json()).then((data) => {
@@ -54,7 +54,7 @@ export default class PlaylistComparison extends React.Component {
         console.log("result");
         console.log(result)
         var nails = result.map((songObj, i) =>
-          <PlayThumbPlus id={songObj[0]} score={Math.round(songObj[1]*1000) / 1000} apikey={this.props.apikey}/>
+          <PlayThumbPlus id={songObj[0]} score={songObj[1]} apikey={this.props.apikey}/>
         )
         this.setState({
           columnName: "Your playlists, ordered by acousticness",
@@ -67,7 +67,7 @@ export default class PlaylistComparison extends React.Component {
     event.preventDefault();
     this.setState({thumbs: []})
 
-    fetch("http://localhost:8081/playlistdance/" + this.state.oid,
+    fetch("http://ec2-54-89-146-102.compute-1.amazonaws.com:8081/playlistdance/" + this.state.oid,
       {
         method: 'GET' // The type of HTTP request.
       }).then(response => response.json()).then((data) => {
@@ -75,7 +75,7 @@ export default class PlaylistComparison extends React.Component {
         var result = data.rows;
         console.log(result[0]);
         var nails = result.map((songObj, i) =>
-          <PlayThumbPlus id={songObj[0]} score={Math.round(songObj[1]*1000) / 1000} apikey={this.props.apikey}/>
+          <PlayThumbPlus id={songObj[0]} score={songObj[1]} apikey={this.props.apikey}/>
         )
         this.setState({
           columnName: "Your playlists, ordered by danceability",
@@ -88,7 +88,7 @@ export default class PlaylistComparison extends React.Component {
     event.preventDefault();
     this.setState({thumbs: []})
 
-    fetch("http://localhost:8081/playlistenergy/" + this.state.oid,
+    fetch("http://ec2-54-89-146-102.compute-1.amazonaws.com:8081/playlistenergy/" + this.state.oid,
       {
         method: 'GET' // The type of HTTP request.
       }).then(response => response.json()).then((data) => {
@@ -96,7 +96,7 @@ export default class PlaylistComparison extends React.Component {
         var result = data.rows;
         console.log(result[0]);
         var nails = result.map((songObj, i) =>
-          <PlayThumbPlus id={songObj[0]} score={Math.round(songObj[1]*1000) / 1000} apikey={this.props.apikey}/>
+          <PlayThumbPlus id={songObj[0]} score={songObj[1]} apikey={this.props.apikey}/>
         )
         this.setState({
           columnName: "Your playlists, ordered by energy",

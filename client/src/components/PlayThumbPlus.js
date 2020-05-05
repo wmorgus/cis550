@@ -15,7 +15,7 @@ export default class PlayThumbPlus extends React.Component {
   componentDidMount() {
     var img = ''
     var nme = ''
-    fetch('http://localhost:8081/spotify/getJustPlaylist?apikey=' + this.props.apikey + '&id=' + this.props.id).then(response => response.json()).then((data) => {
+    fetch('http://ec2-54-89-146-102.compute-1.amazonaws.com:8081/spotify/getJustPlaylist?apikey=' + this.props.apikey + '&id=' + this.props.id).then(response => response.json()).then((data) => {
       console.log('heres some data')
       console.log(data)
       if (!data.images[0]) {

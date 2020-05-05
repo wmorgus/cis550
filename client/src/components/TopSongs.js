@@ -29,7 +29,7 @@ export default class TopSongs extends React.Component {
     handleSubmit = (event) => {
       event.preventDefault();
 
-		fetch("http://localhost:8081/topsongsfrom/" + this.state.month + "_" + this.state.day + "_" + this.state.year,
+		fetch("http://ec2-54-89-146-102.compute-1.amazonaws.com:8081/topsongsfrom/" + this.state.month + "_" + this.state.day + "_" + this.state.year,
 		{
 		  method: 'GET' // The type of HTTP request.
 		}).then(response => response.json()).then((data) => {
@@ -61,7 +61,7 @@ export default class TopSongs extends React.Component {
             <h1>Top of the Charts</h1>
             <p>Find the top 100 songs on any day from 2017-2018</p>
             <form>
-              <Button variant="btn btn-success" href="http://localhost:3000/time" style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Back</Button>
+              <Button variant="btn btn-success" href="http://ec2-54-89-146-102.compute-1.amazonaws.com:3000/time" style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Back</Button>
             </form>
         <br></br>
         <form onSubmit = {this.handleSubmit} className="inputForm">

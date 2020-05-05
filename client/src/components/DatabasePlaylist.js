@@ -19,7 +19,7 @@ export default class DatabasePlaylist extends React.Component {
       //the react gods hate me right now.
       var id = window.location.href.split('/')[window.location.href.split('/').length - 1]
       var songThumbs = []
-       fetch("http://localhost:8081/recommendations/tracks/" + id,
+       fetch("http://ec2-54-89-146-102.compute-1.amazonaws.com:8081/recommendations/tracks/" + id,
          {
            method: "GET"
          }).then(res => {

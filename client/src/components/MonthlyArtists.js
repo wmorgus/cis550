@@ -32,7 +32,7 @@ export default class MonthlyArtists extends React.Component {
       console.log("WE OUT HEREeEeE");
       event.preventDefault();
 
-		fetch("http://localhost:8081/monthlyartists/" + this.state.month + "_" + this.state.year,
+		fetch("http://ec2-54-89-146-102.compute-1.amazonaws.com:8081/monthlyartists/" + this.state.month + "_" + this.state.year,
 		{
 		  method: 'GET' // The type of HTTP request.
 		}).then(response => response.json()).then((data) => {
@@ -65,7 +65,7 @@ export default class MonthlyArtists extends React.Component {
             <div className="h1">Top Monthly Artists</div>
             <p>Top 10 Artists of Each Month, 2017 - 2018</p>
             <form>
-              <Button variant="btn btn-success" href="http://localhost:3000/time" style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Back</Button>
+              <Button variant="btn btn-success" href="http://ec2-54-89-146-102.compute-1.amazonaws.com:3000/time" style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Back</Button>
             </form>
             <form onSubmit = {this.handleSubmit} className="inputForm" >
              <br />

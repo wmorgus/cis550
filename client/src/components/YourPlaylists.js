@@ -26,7 +26,7 @@ export default class YourPlaylists extends React.Component {
       // console.log(this)
       // console.log(this.props.apikey)
       var playlists = []
-      fetch('http://localhost:8081/spotify/getPlaylists?apikey=' + this.props.apikey).then(response => response.json()).then((data) => {
+      fetch('http://ec2-54-89-146-102.compute-1.amazonaws.com:8081/spotify/getPlaylists?apikey=' + this.props.apikey).then(response => response.json()).then((data) => {
         console.log(data)
         if (data.next) {
           nxt = data.next
@@ -54,7 +54,7 @@ export default class YourPlaylists extends React.Component {
         var ct = this.state.count;
         var playlists = this.state.playlists
         // console.log(this.state.next)
-        fetch('http://localhost:8081/spotify/getUserPlaylists?apikey=' + this.props.apikey + '&offset=' + this.state.count + '&user=' + this.state.uid).then(response => response.json()).then((data) => {
+        fetch('http://ec2-54-89-146-102.compute-1.amazonaws.com:8081/spotify/getUserPlaylists?apikey=' + this.props.apikey + '&offset=' + this.state.count + '&user=' + this.state.uid).then(response => response.json()).then((data) => {
           // console.log(data)
           if (data.next) {
             nxt = data.next

@@ -17,7 +17,7 @@ export default class Landing extends React.Component {
             <h5 style={{textAlign: "center"}}>Login to Spotify.Smarter to see all of your playlists and to find out more about your songs and playlists</h5>
           </div>
           <div className="buttonWrap">
-            <Button className="border border-dark" style={{borderRadius: '15px', width: '200px', backgroundColor: '#1DB954'}} size="lg" href="http://localhost:8081/login">
+            <Button className="border border-dark" style={{borderRadius: '15px', width: '200px', backgroundColor: '#1DB954'}} size="lg" href="http://ec2-54-89-146-102.compute-1.amazonaws.com:8081/login">
               Login with Spotify
             </Button>
           </div>

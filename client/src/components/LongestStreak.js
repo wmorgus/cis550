@@ -28,7 +28,7 @@ export default class LongestStreak extends React.Component {
   componentDidMount() {
     // Send an HTTP request to the server.
     var songObjs = []
-    fetch("http://localhost:8081/streaksids",
+    fetch("http://ec2-54-89-146-102.compute-1.amazonaws.com:8081/streaksids",
     {
       method: 'GET' // The type of HTTP request.
     }).then(response => response.json()).then((data) => {
@@ -77,7 +77,7 @@ export default class LongestStreak extends React.Component {
 
   handleSubmit = (result) => {
     console.log(result);
-		fetch("http://localhost:8081/longeststreak/" + result, {
+		fetch("http://ec2-54-89-146-102.compute-1.amazonaws.com:8081/longeststreak/" + result, {
 		  method: 'GET' // The type of HTTP request.
 		}).then(response => response.json()).then((data) => {
       console.log("rows vals: " + data.rows)
@@ -122,7 +122,7 @@ export default class LongestStreak extends React.Component {
           <div className="h1">Longest Song Streaks</div>
           <p>How Many Consecutive Days a Song Has Stayed on the Charts</p>
           <form>
-            <Button variant="btn btn-success" href="http://localhost:3000/time" style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Back</Button>
+            <Button variant="btn btn-success" href="http://ec2-54-89-146-102.compute-1.amazonaws.com:3000/time" style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Back</Button>
         </form>
         <br></br>
           <div style={{display: "flex"}}>

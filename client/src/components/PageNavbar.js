@@ -38,7 +38,7 @@ export default class PageNavbar extends React.Component {
 		var name = 'defaultname'
 		var picUrl = 'https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1-744x744.jpg'
 		
-		fetch('http://localhost:8081/spotify/getUser?apikey=' + this.props.apikey).then(response => response.json()).then((data) => {
+		fetch('http://ec2-54-89-146-102.compute-1.amazonaws.com:8081/spotify/getUser?apikey=' + this.props.apikey).then(response => response.json()).then((data) => {
 			console.log(data)
 			name = data.display_name
 			if(data.images) {
@@ -86,7 +86,7 @@ export default class PageNavbar extends React.Component {
 						</Dropdown.Toggle>
 					
 						<Dropdown.Menu style={{color: "#ff00ff", width: '100%'}}>
-							<Dropdown.Item href="http://localhost:8081/logout">Logout</Dropdown.Item>
+							<Dropdown.Item href="http://ec2-54-89-146-102.compute-1.amazonaws.com:8081/logout">Logout</Dropdown.Item>
 						</Dropdown.Menu>
 					</Dropdown>
 						{/* <Dropdown.Toggle split variant="success" id="dropdown-split-basic" /> */}

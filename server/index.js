@@ -9,7 +9,7 @@ var routes = require("./routes.js");
 
 var app = express();
 
-app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
+app.use(cors({credentials: true, origin: 'http://ec2-54-89-146-102.compute-1.amazonaws.com:3000'}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());

@@ -85,7 +85,7 @@ class LineGraph extends React.Component {
         var dan = [];
         var eng = [];
 
-        fetch("http://localhost:8081/acoustics/", {
+        fetch("http://ec2-54-89-146-102.compute-1.amazonaws.com:8081/acoustics/", {
             method: 'GET' // The type of HTTP request.
         }).then(response => response.json()).then((data) => {
           console.log(data.rows)
@@ -114,7 +114,7 @@ class LineGraph extends React.Component {
       <MDBContainer>
         <br></br>
           <form>
-              <Button variant="btn btn-success" href="http://localhost:3000/time" style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Back</Button>
+              <Button variant="btn btn-success" href="http://ec2-54-89-146-102.compute-1.amazonaws.com:3000/time" style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Back</Button>
         </form>
         <div style = {{backgroundColor: "white"}}>
         <h3 className="mt-5">Top 100 Song Qualities, 2017-2018</h3>

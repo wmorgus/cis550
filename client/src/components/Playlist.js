@@ -21,7 +21,7 @@ export default class Playlist extends React.Component {
     }
 
     componentDidMount() {
-      // fetch('http://localhost:8081/testAudioFeatures?apikey=' + this.props.apikey).then((data) => {console.log('nada')})
+      // fetch('http://ec2-54-89-146-102.compute-1.amazonaws.com:8081/testAudioFeatures?apikey=' + this.props.apikey).then((data) => {console.log('nada')})
 
       //the react gods hate me right now.
       var id = window.location.href.split('/')[window.location.href.split('/').length - 1]
@@ -31,7 +31,7 @@ export default class Playlist extends React.Component {
       var songThumbs = []
       // console.log(id)
       
-      fetch('http://localhost:8081/spotify/getPlaylist?apikey=' + this.props.apikey + '&id=' + id).then(response => response.json()).then((data) => {
+      fetch('http://ec2-54-89-146-102.compute-1.amazonaws.com:8081/spotify/getPlaylist?apikey=' + this.props.apikey + '&id=' + id).then(response => response.json()).then((data) => {
         newObj = data
         if (!newObj.images[0]) {
           newObj.images = [{url: 'https://tidal.com/browse/assets/images/defaultImages/defaultPlaylistImage.png'}]
@@ -51,7 +51,7 @@ export default class Playlist extends React.Component {
 
     checkQueue() {
       if (!this.state.statsReady) {
-        fetch('http://localhost:8081/checkQueue?id=' + this.state.id).then(response => response.json()).then((data) => {
+        fetch('http://ec2-54-89-146-102.compute-1.amazonaws.com:8081/checkQueue?id=' + this.state.id).then(response => response.json()).then((data) => {
           console.log(data)
           if (data.status == 'done') {
             console.log('done')
@@ -65,7 +65,7 @@ export default class Playlist extends React.Component {
           }
         })
       } else { //here make requests for length, time, arguably avg stats
-        fetch('http://localhost:8081/duration/' + this.state.id).then(response => response.json()).then((data) => {
+        fetch('http://ec2-54-89-146-102.compute-1.amazonaws.com:8081/duration/' + this.state.id).then(response => response.json()).then((data) => {
           var result = data.rows[0];
           if (result[1] === 1) {
             this.setState({

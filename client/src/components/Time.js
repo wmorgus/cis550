@@ -30,7 +30,7 @@ export default class Time extends React.Component {
                 <br></br>
                   <br></br>
 
-                  <Button variant="btn btn-success" href="http://localhost:3000/monthlyartists" style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Monthly Top Artists</Button>
+                  <Button variant="btn btn-success" href="http://ec2-54-89-146-102.compute-1.amazonaws.com:3000/monthlyartists" style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Monthly Top Artists</Button>
                 </div>
                 <div className="col-lg-6">
                   <div className="photo2"></div>
@@ -50,7 +50,7 @@ export default class Time extends React.Component {
                   <br></br>
                   <br></br>
 
-                  <Button variant="btn btn-success" href="http://localhost:3000/topsongs" style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Top Songs</Button>
+                  <Button variant="btn btn-success" href="http://ec2-54-89-146-102.compute-1.amazonaws.com:3000/topsongs" style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Top Songs</Button>
                 </div>
               </div>
               <br></br>
@@ -62,7 +62,7 @@ export default class Time extends React.Component {
                  <br></br>
                   <br></br>
 
-                  <Button variant="btn btn-success" href="http://localhost:3000/longeststreak" style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Longest Streak</Button>
+                  <Button variant="btn btn-success" href="http://ec2-54-89-146-102.compute-1.amazonaws.com:3000/longeststreak" style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Longest Streak</Button>
                 </div>
                 <div className="col-lg-6">
                   <div className="photo"></div>
@@ -80,7 +80,7 @@ export default class Time extends React.Component {
                 <br></br>
                   <br></br>
 
-                  <Button variant="btn btn-success" href="http://localhost:3000/graphs" style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Graphs</Button>
+                  <Button variant="btn btn-success" href="http://ec2-54-89-146-102.compute-1.amazonaws.com:3000/graphs" style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Graphs</Button>
                 </div>
 
 
