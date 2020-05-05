@@ -94,10 +94,10 @@ export default class Playlist extends React.Component {
 
     render() {    
       return (
-        <div className="playlist">
+        <div className="playlist" style={{background: 'linear-gradient(120deg,#EC8BDA,#22C3DD)'}}>
           <PageNavbar active="yourPlaylists" apikey={this.props.apikey} />
-          <div className="playlistHeader" style={{backgroundColor: "#e9e9e9"}}>
-            <div className="container" style={{display: "flex", padding:"10px 10px"}}>
+          <div className="playlistHeader" style = {{backgroundColor: 'rgba(250, 250, 250, .4)'}}>
+            <div className="container" style={{display: "flex", padding:"10px 10px",}}>
               <img src={this.state.playlistObj.images[0].url} className="imgThumbnail" style={{height: "300px", width: "300px", objectFit: "cover", overflow: "none"}}/>
               <div className="namediv" style={{marginLeft: "10px", width: "80%"}}>
                 <div style={{display: "flex", justifyContent: "space-between"}}>

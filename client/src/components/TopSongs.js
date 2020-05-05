@@ -55,15 +55,15 @@ export default class TopSongs extends React.Component {
     return (
       <div className="topSongs">
         <PageNavbar active="time" apikey={this.props.apikey}/>
-        <div className="Home">
-          <div className="lander">
+        <br></br>
+          <div className="container bestgenres-container" >
+            <div className="jumbotron" style = {{backgroundColor: 'rgba(250, 250, 250, .4)'}}>
             <h1>Top of the Charts</h1>
             <p>Find the top 100 songs on any day from 2017-2018</p>
             <form>
               <Button variant="btn btn-success" href="http://localhost:3000/time" style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Back</Button>
             </form>
-          </div>
-        </div>
+        <br></br>
         <form onSubmit = {this.handleSubmit} className="inputForm">
           <br />
           <label>
@@ -94,8 +94,10 @@ export default class TopSongs extends React.Component {
           </label>
           <input type="submit" value="Submit" />
         </form>
-        
-        <div className="jumbotron" style = {{backgroundColor:"#bdeaef"}}>
+        <br></br>
+        </div>
+        </div>
+        <div className="jumbotron" style = {{backgroundColor: 'rgba(250, 250, 250, .4)'}}>
             <div className="movies-container">
 			          <div className="table">
                   <Table bordered striped hover>
