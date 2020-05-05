@@ -2,7 +2,7 @@ import React from 'react';
 import '../style/RecPlaylist.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import PageNavbar from './PageNavbar';
-import {Button, Table} from 'react-bootstrap';
+import {Button, Table, Dropdown} from 'react-bootstrap';
 
 export default class RecPlaylist extends React.Component {
     constructor(props) {
@@ -13,6 +13,7 @@ export default class RecPlaylist extends React.Component {
         playlistObjs: [],
         selectedRecType: "song",
         recTypes: ['song', 'playlist', 'popular'],
+        recDescriptions: ['Find any similar songs', 'Find similar playlists', 'Find similar popular songs'],
         resultSongs: [],
         qualityObj: {energy: 'loading...', danceability: 'loading...', loudness: 'loading...', acousticness: 'loading...', valence: 'loading...'},
         info: "",
@@ -80,19 +81,17 @@ export default class RecPlaylist extends React.Component {
       return(a)
     }
 
-    dropdownDivs(types) {
-		//	console.log(types);
+    dropdownDivs(types, descriptions) {
       let typesDivs = types.map((typeStr, i) =>
-      <option key={i} value={typeStr}>{typeStr}</option>
-      );  
+        <Dropdown.Item onClick={this.submitRecType} id={typeStr}>{descriptions[i]}</Dropdown.Item>
+      );
       return typesDivs; 
     }
 
-    submitRecType() {
-      var selectedType = this.state.selectedRecType;
-      if(selectedType) {
-        if(this.state.loaded) {
-        this.exampleRecRoute(selectedType)
+    submitRecType(event) {
+      if (event.target.id) {
+        if (this.state.loaded) {
+         this.exampleRecRoute(event.target.id)
         }
       }
     }
@@ -188,51 +187,41 @@ export default class RecPlaylist extends React.Component {
 
         break;
 
-
-        case "playlist":   
+      case "playlist":   
+      
+        var songThumbs = []
+        var tempPlaylists = []
+    
+        fetch("http://localhost:8081/recommendations/byplaylist/" + this.state.playlistid,
+        {
+          method: "GET"
+        }).then(res => {
+          return res.json();
+        }, err => {
+          console.log(err);
+        }).then(data => {
         
+          tempPlaylists = data.rows
+          console.log(tempPlaylists)
 
-          var songThumbs = []
-          var tempPlaylists = []
-     
-          fetch("http://localhost:8081/recommendations/byplaylist/" + this.state.playlistid,
-          {
-            method: "GET"
-          }).then(res => {
-            return res.json();
-          }, err => {
-            console.log(err);
-          }).then(data => {
+          var header = <thead><tr><th>Playlist ID</th><th>Track List</th></tr></thead>
           
-            tempPlaylists = data.rows
-            console.log(tempPlaylists)
-
-            var header = <thead><tr><th>Playlist ID</th><th>Track List</th></tr></thead>
-            
-            
-            songThumbs = data.rows.map((songObj, i) =>
+          songThumbs = data.rows.map((songObj, i) =>
             <tr key = {i}>
               <td>{songObj[0]}</td>
               <td><Button variant="btn btn-info"  href={"http://localhost:3000/recommendations/results/" + songObj[0]}>Go to Tracklist</Button></td>
-            </tr> )
-            
+            </tr> 
+          )
 
-            /*
-            data.rows.forEach(row => {
-              var linkAddress = "http://localhost:3000/results/" + row[0]
-              songThumbs.push(null)
-            })
-*/
-
-            this.setState({ 
-              resultSongs: songThumbs, 
-              tableHeader: header,
-              info : "Find existing playlists similar to this one."  
-            });
+          this.setState({ 
+            resultSongs: songThumbs, 
+            tableHeader: header,
+            info : "Find existing playlists similar to this one."  
           });
-            
-       
-         break;
+        });
+          
+      
+        break;
 
       default:
         console.log('selected type not recognized');
@@ -254,35 +243,12 @@ export default class RecPlaylist extends React.Component {
 
         var header = <thead><tr><th>Playlist Title</th></tr></thead>
 
-
-
         this.setState({ 
           playlistObjs: tempPlaylists, 
           tableHeader: header,
           info : "Find existing playlists similar to this one."  
         });
-      
-      /*
-      .then(res => {
-        return res.json();
-      }, err => {
-        console.log(err);
-      }).then(data => {
-      
-        tempPlaylists = data.rows
-        console.log(tempPlaylists)
 
-        var header = <thead><tr><th>Playlist Title</th></tr></thead>
-
-
-
-        this.setState({ 
-          playlistObjs: tempPlaylists, 
-          tableHeader: header,
-          info : "Find existing playlists similar to this one."  
-        });
-      });
-*/
 
       this.state.playlistObjs.forEach(resultPlaylist =>  this.lookupPlaylist(resultPlaylist, songThumbs))
  
@@ -300,12 +266,6 @@ export default class RecPlaylist extends React.Component {
         }).then(data => {
           console.log('here in lookupPlaylist')
           console.log(data)
-            /*
-        songThumbs = data.rows.map((songObj, i) =>
-        <tr key = {i}>
-          <td>{songObj[0]}</td>
-        </tr> )
-        */
           
         });
       }
@@ -314,68 +274,60 @@ export default class RecPlaylist extends React.Component {
     render() {    
       document.body.style = 'background: linear-gradient(120deg,#EC8BDA,#22C3DD);'
       return (
-        <div className="playlist">
+        <div className="playlist" style={{
+          background: 'linear-gradient(120deg,#EC8BDA,#22C3DD)',
+        }}>
           <PageNavbar active="yourPlaylists" apikey={this.props.apikey} />
 
    
-        <div class="pageHeader"  style={{margin: "30px", display: "flex"}}>
-          <div class="namediv" >
-      
-            <br></br>
-            <h2> Basing Recommendations On: </h2>
-           
-            <img src={this.state.playlistObj.images[0].url}  width="100" height="100"/>
-              <div class = "descriptiondiv">
-              <h4>{this.state.playlistObj.name}</h4>
-              <h5>By {this.state.playlistObj.owner.display_name}</h5>
+        <div className="container">
+          <div className="header-container">
+            <div style={{gridColumn: '1 / 2', gridRow: '1/4'}}>
+              <img src={this.state.playlistObj.images[0].url}  style={{height: "300px", width: "300px", objectFit: "cover", overflow: "none"}}/>
+            </div>
+            <div style={{gridColumn: '2 / 4', gridRow: '1/2'}}>
+              <h2> Basing recommendations on: <b>{this.state.playlistObj.name}</b></h2>
+            </div>
+            <div style={{gridColumn: '2 / 4', gridRow: '2/2'}}>
               <p>{this.utf8_to_str(this.state.playlistObj.description)}</p>
-              </div>
-        
-         
-          </div>
-          <div class="header" style={{margin: "30px", display: "flex"}}>
-          
-          
-    
-            <div class="stat div">
-              <h2>Average attributes for this playlist: </h2>
-               <div>energy: {this.state.qualityObj.energy}</div>
+            </div>
+            <div style={{gridColumn: '2 / 3', gridRow: '3/4'}}>
+              <h4>Average attributes for this playlist: </h4>
+              <div>energy: {this.state.qualityObj.energy}</div>
               <div>danceability: {this.state.qualityObj.danceability}</div>
               <div>loudness: {this.state.qualityObj.loudness}</div>
               <div>valence: {this.state.qualityObj.valence}</div>
               <div>acousticness: {this.state.qualityObj.acousticness}</div>
             </div>
+            <div style={{gridColumn: '3 / 4', gridRow: '3/4'}}>
+              {/* <select value={this.state.selectedRecType} onChange={this.handleChange} className="dropdown" id="decadesDropdown">
+                
+              </select>
+              <Button variant="btn btn-success" onClick={this.submitRecType} style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Submit</Button> */}
+
+              <Dropdown style={{display: 'flex', justifyContent: 'center'}}>
+                <Dropdown.Toggle variant="info" id="dropdown-basic" style={{borderColor: "#ffffff"}}>
+                  Choose recommendation type
+                </Dropdown.Toggle>
+                <Dropdown.Menu style={{width: "75%"}}>
+                  {this.dropdownDivs(this.state.recTypes, this.state.recDescriptions)}
+                </Dropdown.Menu>
+              </Dropdown>
             </div>
-            
-            
-            <div className="years-container">
-			          <div className="dropdown-container">
-                <br></br>
-                <br></br>
-			            <select value={this.state.selectedRecType} onChange={this.handleChange} className="dropdown" id="decadesDropdown">
-			            	{this.dropdownDivs(this.state.recTypes)}
-			            </select>
-                  <br></br>
-                  <br></br>
-                  <Button variant="btn btn-success" onClick={this.submitRecType} style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Submit</Button>
-			          </div>
-			  
-            </div>
-            </div>
+          </div>
      
-          <div className="container">
+          <div className="container" style={{paddingBottom: '10px'}}>
             <br></br>
             <h5>{this.state.info}</h5>
             <br></br>
             <Table style={{backgroundColor:"white"}} bordered striped hover>
                     {this.state.tableHeader}
-                  <tbody>
+                <tbody>
                   {this.state.resultSongs}
-                  </tbody>
-              </Table>
-        
+                </tbody>
+            </Table>
           </div>
-          </div>
-      
+        </div>
+      </div>
     )};
 }

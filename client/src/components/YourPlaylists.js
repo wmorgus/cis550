@@ -87,8 +87,7 @@ export default class YourPlaylists extends React.Component {
 
     render() {    
       return (
-      <div
-      style={{
+      <div style={{
         background: 'linear-gradient(120deg,#EC8BDA,#22C3DD)',
       }}>
         <div className="yourPlaylists">
