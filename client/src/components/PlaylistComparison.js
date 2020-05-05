@@ -42,6 +42,7 @@ export default class PlaylistComparison extends React.Component {
 
   handleAcousticSubmit = (event) => {
     event.preventDefault();
+    this.setState({thumbs: []})
 
     fetch("http://localhost:8081/playlistacoustics/" + this.state.oid,
       {
@@ -49,7 +50,8 @@ export default class PlaylistComparison extends React.Component {
       }).then(response => response.json()).then((data) => {
         console.log(data.rows)
         var result = data.rows;
-        console.log("result" + result);
+        console.log("result");
+        console.log(result)
         var nails = result.map((songObj, i) =>
           <PlayThumbPlus id={songObj[0]} score={songObj[1]} apikey={this.props.apikey}/>
         )
@@ -62,6 +64,7 @@ export default class PlaylistComparison extends React.Component {
 
   handleDanceSubmit = (event) => {
     event.preventDefault();
+    this.setState({thumbs: []})
 
     fetch("http://localhost:8081/playlistdance/" + this.state.oid,
       {
@@ -82,6 +85,7 @@ export default class PlaylistComparison extends React.Component {
 
   handleEnergySubmit = (event) => {
     event.preventDefault();
+    this.setState({thumbs: []})
 
     fetch("http://localhost:8081/playlistenergy/" + this.state.oid,
       {
