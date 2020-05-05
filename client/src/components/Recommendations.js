@@ -55,7 +55,9 @@ export default class Recommendations extends React.Component {
       render() {   
         
         return (
-          <div className="Recommendations">
+          <div className="Recommendations"style={{
+            background: 'linear-gradient(120deg,#EC8BDA,#22C3DD)',
+          }}>
     
             <PageNavbar active="yourPlaylists" apikey={this.props.apikey}/>
     

@@ -54,8 +54,11 @@ export default class DatabasePlaylist extends React.Component {
    
 
     render() {    
+      document.body.style = 'background: linear-gradient(120deg,#EC8BDA,#22C3DD);'
       return (
-        <div className="playlist">
+        <div className="playlist" style={{
+        background: 'linear-gradient(120deg,#EC8BDA,#22C3DD)',
+      }}>
           <PageNavbar active="recommendations" apikey={this.props.apikey} />
           <h2>Track List for Recommended Playlist {this.state.pid}</h2> 
           <div className="container">

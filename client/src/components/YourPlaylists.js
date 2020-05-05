@@ -89,7 +89,7 @@ export default class YourPlaylists extends React.Component {
       return (
       <div
       style={{
-        backgroundColor: '#bdeaef',
+        background: 'linear-gradient(120deg,#EC8BDA,#22C3DD)',
       }}>
         <div className="yourPlaylists">
           <PageNavbar active="yourPlaylists" apikey={this.props.apikey}/>

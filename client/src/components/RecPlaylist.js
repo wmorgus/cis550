@@ -312,21 +312,17 @@ export default class RecPlaylist extends React.Component {
 
 
     render() {    
-      document.body.style = 'background: #bdeaef;';
+      document.body.style = 'background: linear-gradient(120deg,#EC8BDA,#22C3DD);'
       return (
         <div className="playlist">
           <PageNavbar active="yourPlaylists" apikey={this.props.apikey} />
 
    
         <div class="pageHeader"  style={{margin: "30px", display: "flex"}}>
-         
-           
-         
-        
           <div class="namediv" >
       
             <br></br>
-          <h2> Basing Recommendations On: </h2>
+            <h2> Basing Recommendations On: </h2>
            
             <img src={this.state.playlistObj.images[0].url}  width="100" height="100"/>
               <div class = "descriptiondiv">

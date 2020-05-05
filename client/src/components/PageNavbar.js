@@ -59,7 +59,7 @@ export default class PageNavbar extends React.Component {
 
 	render() {
 		return (
-			<Navbar bg="secondary" expand="lg" sticky="top">
+			<Navbar expand="lg" sticky="top" style={{backgroundColor: 'rgba(200,200,200,0.95)'}}>
 				<Navbar.Brand><b>Spotify.<span style={{color: "#22c3dd"}}>Smarter</span></b></Navbar.Brand>
 				<Navbar.Toggle aria-controls="basic-navbar-nav" />
 				<Navbar.Collapse id="basic-navbar-nav">

@@ -47,27 +47,6 @@ export default class Playlist extends React.Component {
           songThumbnails: songThumbs,
           id: id
         });
-        this.checkQueue()
-        fetch('http://localhost:8081/duration/' + this.state.id).then(response => response.json()).then((data) => {
-          var result = data.rows[0];
-         
-          if(result[1] !== null) {
-          if (data.rows[1] > 0) {
-            this.setState({
-              count:  "Song Count: " + result[0],
-              hours:  "Total Length: " + result[1] + " Hours, " + result[2] + " Minutes, " + result[3] + " Seconds.",
-              avg_min: "Average Song Length: " + result[4] + " Minutes, " + result[5] + " Seconds."
-            });
-          } else {
-            this.setState({
-              count:  "Song Count: " + result[0],
-              hours:  "Total Length: " + result[2] + " Minutes, " + result[3] + " Seconds.",
-              avg_min: "Average Song Length: " + result[4] + " Minutes, " + result[5] + " Seconds."
-            });
-          } }
-        }).finally(() => {
-          this.checkQueue()
-        });
         setTimeout(this.checkQueue, 2500)
       });
     }
@@ -105,7 +84,6 @@ export default class Playlist extends React.Component {
           }
         })
       }
-      
     }
     
     utf8_to_str(a) {
@@ -114,13 +92,12 @@ export default class Playlist extends React.Component {
     }
 
 
-    render() {  
-      document.body.style = 'background: #bdeaef;';  
+    render() {    
       return (
         <div className="playlist">
           <PageNavbar active="yourPlaylists" apikey={this.props.apikey} />
-          <div className="playlistHeader" style={{backgroundColor: "#22C3DD"}}>
-            <div className="container" style={{display: "flex", padding:"10px 10px", backgroundColor: "#22C3DD"}}>
+          <div className="playlistHeader" style={{backgroundColor: "#e9e9e9"}}>
+            <div className="container" style={{display: "flex", padding:"10px 10px"}}>
               <img src={this.state.playlistObj.images[0].url} className="imgThumbnail" style={{height: "300px", width: "300px", objectFit: "cover", overflow: "none"}}/>
               <div className="namediv" style={{marginLeft: "10px", width: "80%"}}>
                 <div style={{display: "flex", justifyContent: "space-between"}}>

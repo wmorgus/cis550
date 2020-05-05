@@ -106,36 +106,28 @@ export default class PlaylistComparison extends React.Component {
   }
 
   render() {
+    document.body.style = 'background: linear-gradient(120deg,#EC8BDA,#22C3DD);'
     return (
       <div
       style={{
-        backgroundColor: '#bdeaef',
+        background: 'linear-gradient(120deg,#EC8BDA,#22C3DD)',
       }}>
       <div>
-        <PageNavbar active="time" apikey={this.props.apikey} />
+        <PageNavbar active="comparePlaylists" apikey={this.props.apikey} />
         <div className="container songtable-container">
           <div className="Home">
-            <div className="lander">
+            <div className="lander" style={{marginTop: '10px', marginBottom: '20px'}}>
               <h1>Compare Your Playlists</h1>
               <p>Choose from the options below to rank your playlists</p>
-              <form>
-                <div className="container">
-                  <div className="row">    
-                  <div class="col-sm center-block">
-                  <Button variant="btn btn-success" onClick={this.handleAcousticSubmit} style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Acousticness</Button>
-                  </div>
-                  <div class="col-sm center-block">
-                  <Button variant="btn btn-success" onClick={this.handleDanceSubmit} style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Danceability</Button>
-                  </div>
-                  <div class="col-sm center-block">
-                  <Button variant="btn btn-success" onClick={this.handleEnergySubmit} style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Energy</Button>
-                  </div>
-                  </div>
-                </div>
-              </form>
+            </div>
+            <div className="container" style={{backgroundColor: 'rgba(200,200,200,0.95)', paddingTop: '10px', paddingBottom: '10px'}}>
+              <div className="row" style={{display: "flex", justifyContent: "space-around"}}>   
+                <Button variant="btn btn-success" onClick={this.handleAcousticSubmit} style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Acousticness</Button>
+                <Button variant="btn btn-success" onClick={this.handleDanceSubmit} style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Danceability</Button>
+                <Button variant="btn btn-success" onClick={this.handleEnergySubmit} style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Energy</Button>
+              </div>
             </div>
           </div>
-          <br></br>
           <br></br>
           <div className="container">
             <div className="thumbs">
