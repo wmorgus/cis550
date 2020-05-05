@@ -18,6 +18,7 @@ export default class PlaylistComparison extends React.Component {
   }
 
   componentDidMount() {
+    document.body.style = 'background: #bdeaef;';
     var oid = '';
     fetch('http://localhost:8081/spotify/getUser?apikey=' + this.props.apikey).then(response => response.json()).then((data) => {
       console.log(data)
@@ -106,10 +107,13 @@ export default class PlaylistComparison extends React.Component {
 
   render() {
     return (
+      <div
+      style={{
+        backgroundColor: '#bdeaef',
+      }}>
       <div>
         <PageNavbar active="time" apikey={this.props.apikey} />
         <div className="container songtable-container">
-
           <div className="Home">
             <div className="lander">
               <h1>Compare Your Playlists</h1>
@@ -142,6 +146,7 @@ export default class PlaylistComparison extends React.Component {
             </div>
           </div>
         </div>
+      </div>
       </div>
     );
   }

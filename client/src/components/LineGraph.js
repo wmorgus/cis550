@@ -111,7 +111,7 @@ class LineGraph extends React.Component {
         
       <MDBContainer>
           <form>
-              <Button variant="btn btn-success" href="http://localhost:3000/time">Back</Button>
+              <Button variant="btn btn-success" href="http://localhost:3000/time" style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Back</Button>
         </form>
         <h3 className="mt-5">Line chart</h3>
         <Line data={this.state.dataLine} options={{ responsive: true }} />

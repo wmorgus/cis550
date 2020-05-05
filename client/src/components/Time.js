@@ -13,6 +13,7 @@ export default class Time extends React.Component {
 
 
   render() {
+    document.body.style = 'background: #bdeaef;';
     return (
 
       <div className="Time">
