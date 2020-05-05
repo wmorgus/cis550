@@ -37,7 +37,7 @@ export default class RecPlaylist extends React.Component {
       console.log(id)
       
       //request info about the current playlist
-      fetch('http://localhost:8081/spotify/getPlaylist?apikey=' + this.props.apikey + '&id=' + id).then(response => response.json()).then((data) => {
+      fetch('http://ec2-54-89-146-102.compute-1.amazonaws.com:8081/spotify/getPlaylist?apikey=' + this.props.apikey + '&id=' + id).then(response => response.json()).then((data) => {
 
         newObj = data
       //  console.log(data)
@@ -51,7 +51,7 @@ export default class RecPlaylist extends React.Component {
 
       //calculate stats for the current playlist
       
-      fetch("http://localhost:8081/recommendations/avg/" + id,
+      fetch("http://ec2-54-89-146-102.compute-1.amazonaws.com:8081/recommendations/avg/" + id,
         {
           method: "GET"
         }).then(res => {
@@ -113,7 +113,7 @@ export default class RecPlaylist extends React.Component {
       //build fetch url string here to allow for custom attribute inclusion
       var songThumbs = []
      
-      fetch("http://localhost:8081/recommendations/bysong?pid=" + this.state.playlistid
+      fetch("http://ec2-54-89-146-102.compute-1.amazonaws.com:8081/recommendations/bysong?pid=" + this.state.playlistid
       + "&energy=" + this.state.qualityObj.energy + "&danceability=" + this.state.qualityObj.danceability
       + "&loudness=" + this.state.qualityObj.loudness + "&acousticness=" + this.state.qualityObj.acousticness
       + "&valence=" + this.state.qualityObj.valence,
@@ -150,7 +150,7 @@ export default class RecPlaylist extends React.Component {
       
       case "popular":
  
-        fetch("http://localhost:8081/recommendations/bypopular?pid=" + this.state.playlistid
+        fetch("http://ec2-54-89-146-102.compute-1.amazonaws.com:8081/recommendations/bypopular?pid=" + this.state.playlistid
         + "&energy=" + this.state.qualityObj.energy + "&danceability=" + this.state.qualityObj.danceability
         + "&loudness=" + this.state.qualityObj.loudness + "&acousticness=" + this.state.qualityObj.acousticness
         + "&valence=" + this.state.qualityObj.valence,
@@ -192,7 +192,7 @@ export default class RecPlaylist extends React.Component {
         var songThumbs = []
         var tempPlaylists = []
     
-        fetch("http://localhost:8081/recommendations/byplaylist/" + this.state.playlistid,
+        fetch("http://ec2-54-89-146-102.compute-1.amazonaws.com:8081/recommendations/byplaylist/" + this.state.playlistid,
         {
           method: "GET"
         }).then(res => {
@@ -209,7 +209,7 @@ export default class RecPlaylist extends React.Component {
           songThumbs = data.rows.map((songObj, i) =>
             <tr key = {i}>
               <td>{songObj[0]}</td>
-              <td><Button variant="btn btn-info"  href={"http://localhost:3000/recommendations/results/" + songObj[0]}>Go to Tracklist</Button></td>
+              <td><Button variant="btn btn-info"  href={"http://ec2-54-89-146-102.compute-1.amazonaws.com:3000/recommendations/results/" + songObj[0]}>Go to Tracklist</Button></td>
             </tr> 
           )
 
@@ -233,7 +233,7 @@ export default class RecPlaylist extends React.Component {
       //need to make this first fetch async 
       var songThumbs = []
       var tempPlaylists = []
-      const response = await fetch("http://localhost:8081/recommendations/byplaylist/" + this.state.playlistid,
+      const response = await fetch("http://ec2-54-89-146-102.compute-1.amazonaws.com:8081/recommendations/byplaylist/" + this.state.playlistid,
       {
         method: "GET"
       })
@@ -256,7 +256,7 @@ export default class RecPlaylist extends React.Component {
 
     lookupPlaylist(results, output) {
 
-      fetch('http://localhost:8081/spotify/getPlaylist?apikey=' + this.props.apikey + '&id=' + results[0],
+      fetch('http://ec2-54-89-146-102.compute-1.amazonaws.com:8081/spotify/getPlaylist?apikey=' + this.props.apikey + '&id=' + results[0],
         {
           method: "GET"
         }).then(res => {
