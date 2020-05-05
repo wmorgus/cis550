@@ -37,8 +37,8 @@ export default class PlaylistThumbnail extends React.Component {
           </div>
         </div>
         <div className="col align-middle" style={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "space-around"}}>
-            <Button href={"/playlist/" + this.props.id} style={{height: "25%", width: "100%"}}>Go to Playlist</Button>
-            <Button href={"/recommendations/" + this.props.id} style={{height: "25%", width: "100%"}}>Get Recs</Button>
+            <Button href={"/playlist/" + this.props.id} style={{height: "25%", width: "100%", backgroundColor: '#08a1b3', borderColor: '#08a1b3'}}>Go to Playlist</Button>
+            <Button href={"/recommendations/" + this.props.id} style={{height: "25%", width: "100%", backgroundColor: '#08a1b3', borderColor: '#08a1b3'}}>Get Recs</Button>
         </div>
       </div>
 		);

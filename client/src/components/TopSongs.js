@@ -59,7 +59,7 @@ export default class TopSongs extends React.Component {
             <h1>Songs Throughout Time</h1>
             <p>Different analyses of top songs from 2017-2018</p>
             <form>
-              <Button variant="btn btn-success" href="http://localhost:3000/time">Back</Button>
+              <Button variant="btn btn-success" href="http://localhost:3000/time" style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Back</Button>
             </form>
           </div>
         </div>

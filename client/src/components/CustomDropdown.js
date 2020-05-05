@@ -56,10 +56,10 @@ export default class CustomDropdown extends React.Component {
 
   render(){
     return (
-      <Dropdown as={ButtonGroup}>
-      <Dropdown.Toggle split variant="success" id="dropdown-split-basic">
+      <Dropdown as={ButtonGroup} style={{maxHeight: '30%', marginRight: '10px', backgroundColor: '#08a1b3', borderColor: '#08a1b3'}}>
+      <Dropdown.Toggle split variant="success" id="dropdown-split-basic" style={{maxHeight: '30%', marginRight: '10px', backgroundColor: '#08a1b3', borderColor: '#08a1b3'}}>
         View All Songs
-      </Dropdown.Toggle>
+      </Dropdown.Toggle >
     
       <Dropdown.Menu as={CustomMenu}>
        {this.props.dropdownjerns}

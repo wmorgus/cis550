@@ -87,11 +87,16 @@ export default class YourPlaylists extends React.Component {
 
     render() {    
       return (
+      <div
+      style={{
+        backgroundColor: '#bdeaef',
+      }}>
         <div className="yourPlaylists">
           <PageNavbar active="yourPlaylists" apikey={this.props.apikey}/>
           <div className="container">
             {this.state.playlists}
           </div>
+        </div>
         </div>
     )};
 }

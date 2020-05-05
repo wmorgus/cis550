@@ -116,16 +116,16 @@ export default class LongestStreak extends React.Component {
       <div>
         <PageNavbar active="time" apikey={this.props.apikey}/>
         <form>
-            <Button variant="btn btn-success" href="http://localhost:3000/time">Back</Button>
+            <Button variant="btn btn-success" href="http://localhost:3000/time" style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Back</Button>
         </form>
         <div style={{margin: "10px 10px"}}>
           <div className="h5">Longest Song Streaks</div>
           <p>How Many Consecutive Days a Song Has Stayed on the Charts</p>
           <div style={{display: "flex"}}>
-            <div style={{maxHeight: '30%', marginRight: '10px'}}>
-              <CustomDropdown dropdownjerns={this.state.dropdownjerns}/>
+            <div style={{maxHeight: '30%', marginRight: '10px', backgroundColor: '#08a1b3', borderColor: '#08a1b3'}}>
+              <CustomDropdown dropdownjerns={this.state.dropdownjerns} style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}/>
             </div>
-            <Button variant="danger" onClick={this.handleClear}>Clear Table</Button>
+            <Button variant="danger" onClick={this.handleClear} style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Clear Table</Button>
           </div>
         </div>
         <div className="jumbotron">

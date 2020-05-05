@@ -58,7 +58,7 @@ export default class MonthlyArtists extends React.Component {
     <div className="BestGenres">
         <PageNavbar active="bestgenres" />
         <form>
-            <Button variant="btn btn-success" href="http://localhost:3000/time">Back</Button>
+            <Button variant="btn btn-success" href="http://localhost:3000/time" style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Back</Button>
         </form>
         <div className="container bestgenres-container">
             <div className="jumbotron">

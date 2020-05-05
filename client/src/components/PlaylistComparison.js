@@ -118,13 +118,13 @@ export default class PlaylistComparison extends React.Component {
                 <div className="container">
                   <div className="row">    
                   <div class="col-sm center-block">
-                  <Button variant="btn btn-success" onClick={this.handleAcousticSubmit}>Acousticness</Button>
+                  <Button variant="btn btn-success" onClick={this.handleAcousticSubmit} style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Acousticness</Button>
                   </div>
                   <div class="col-sm center-block">
-                  <Button variant="btn btn-success" onClick={this.handleDanceSubmit}>Danceability</Button>
+                  <Button variant="btn btn-success" onClick={this.handleDanceSubmit} style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Danceability</Button>
                   </div>
                   <div class="col-sm center-block">
-                  <Button variant="btn btn-success" onClick={this.handleEnergySubmit}>Energy</Button>
+                  <Button variant="btn btn-success" onClick={this.handleEnergySubmit} style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Energy</Button>
                   </div>
                   </div>
                 </div>
