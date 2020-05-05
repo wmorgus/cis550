@@ -116,12 +116,15 @@ export default class LongestStreak extends React.Component {
     return (
       <div>
         <PageNavbar active="time" apikey={this.props.apikey}/>
-        <form>
+        <br></br>
+        <div className="container bestgenres-container" >
+            <div className="jumbotron" style = {{backgroundColor: 'rgba(250, 250, 250, .4)'}}>
+          <div className="h1">Longest Song Streaks</div>
+          <p>How Many Consecutive Days a Song Has Stayed on the Charts</p>
+          <form>
             <Button variant="btn btn-success" href="http://localhost:3000/time" style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Back</Button>
         </form>
-        <div style={{margin: "10px 10px"}}>
-          <div className="h5">Longest Song Streaks</div>
-          <p>How Many Consecutive Days a Song Has Stayed on the Charts</p>
+        <br></br>
           <div style={{display: "flex"}}>
             <div style={{maxHeight: '30%', marginRight: '10px', backgroundColor: '#08a1b3', borderColor: '#08a1b3'}}>
               <CustomDropdown dropdownjerns={this.state.dropdownjerns} style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}/>
@@ -129,7 +132,9 @@ export default class LongestStreak extends React.Component {
             <Button variant="danger" onClick={this.handleClear} style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Clear Table</Button>
           </div>
         </div>
-        <div className="jumbotron">
+        </div>
+        <br></br>
+        <div className="jumbotron" style = {{backgroundColor: 'rgba(250, 250, 250, .4)'}}>
         <div className="table">
                   <Table bordered striped hover>
                     <thead>

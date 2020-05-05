@@ -58,14 +58,16 @@ export default class MonthlyArtists extends React.Component {
     return (
     <div className="BestGenres">
         <PageNavbar active="bestgenres" />
-        <form>
-            <Button variant="btn btn-success" href="http://localhost:3000/time" style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Back</Button>
-        </form>
-        <div className="container bestgenres-container">
-            <div className="jumbotron">
-            <div className="h5">Top Monthly Artists</div>
+        <br></br>
+        <div className="container bestgenres-container" >
+            <div className="jumbotron" style = {{backgroundColor: 'rgba(250, 250, 250, .4)'}}>
+            <br></br>
+            <div className="h1">Top Monthly Artists</div>
             <p>Top 10 Artists of Each Month, 2017 - 2018</p>
-            <form onSubmit = {this.handleSubmit} className="inputForm">
+            <form>
+              <Button variant="btn btn-success" href="http://localhost:3000/time" style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Back</Button>
+            </form>
+            <form onSubmit = {this.handleSubmit} className="inputForm" >
              <br />
                     <label>
                     Year:
@@ -88,8 +90,8 @@ export default class MonthlyArtists extends React.Component {
             </form>
           </div>
 
-            <div className="jumbotron">
-            <div className="movies-container">
+            <div className="jumbotron" style = {{backgroundColor: 'rgba(250, 250, 250, .4)'}}>
+            <div className="movies-container" >
 			          <div className="table">
                   <Table bordered striped hover>
                     <thead>
