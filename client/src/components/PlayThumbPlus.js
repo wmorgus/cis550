@@ -5,22 +5,30 @@ import {Button} from 'react-bootstrap';
 export default class PlayThumbPlus extends React.Component {
 	constructor(props) {
     // console.log(props)
-		super(props);
+    super(props);
+    this.state = {
+      image: '',
+      name: ''
+    }
   }
 
   componentDidMount() {
+    var img = ''
+    var nme = ''
     fetch('http://localhost:8081/spotify/getJustPlaylist?apikey=' + this.props.apikey + '&id=' + this.props.id).then(response => response.json()).then((data) => {
-      // console.log('dataobj')
-      // console.log(data)
-      newObj = data
-      songThumbs = data.allSongs.map((songObj, i) =>
-        <SongThumbnail songObj={songObj}/>
-      )
+      console.log('heres some data')
+      console.log(data)
+      if (!data.images[0]) {
+        img = 'https://tidal.com/browse/assets/images/defaultImages/defaultPlaylistImage.png'
+      } else {
+        img = data.images[0].url
+      }
+      nme = data.name
+
     }).finally(() => {
       this.setState({
-        playlistObj: newObj,
-        songThumbnails: songThumbs,
-        id: id
+        image: img,
+        name: nme
     })})
   }
 
@@ -38,14 +46,14 @@ export default class PlayThumbPlus extends React.Component {
             <img className="" src={this.state.image} style={{height: "175px", width: "175px", objectFit: "cover", overflow: "none"}}/>
           </div>
         </div>
-        <div className="col-8" style={{display: "flex", alignItems: "center"}}>
+        <div className="col-7" style={{display: "flex", alignItems: "center"}}>
           <div>
             <h2>{this.state.name}</h2>
             <h3>{this.props.score}</h3>
           </div>
         </div>
-        <div className="col" style={{}}>
-          <Button href={"/playlist/" + this.props.id}>View Playlist</Button>
+        <div className="col" style={{display: "flex", alignItems: "center"}}>
+          <Button href={"/playlist/" + this.props.id} style={{height: "30%", display: "flex", alignItems: "center"}}>Go to playlist</Button>
         </div>
       </div>
 		);
