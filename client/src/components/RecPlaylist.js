@@ -213,7 +213,7 @@ export default class RecPlaylist extends React.Component {
             songThumbs = data.rows.map((songObj, i) =>
             <tr key = {i}>
               <td>{songObj[0]}</td>
-              <td><Button variant="btn btn-success"  href={"http://localhost:3000/recommendations/results/" + songObj[0]}>Go to Tracklist</Button></td>
+              <td><Button variant="btn btn-info"  href={"http://localhost:3000/recommendations/results/" + songObj[0]}>Go to Tracklist</Button></td>
             </tr> )
             
 
@@ -359,7 +359,9 @@ export default class RecPlaylist extends React.Component {
 			            <select value={this.state.selectedRecType} onChange={this.handleChange} className="dropdown" id="decadesDropdown">
 			            	{this.dropdownDivs(this.state.recTypes)}
 			            </select>
-			            <button className="submit-btn" id="decadesSubmitBtn" onClick={this.submitRecType}>Submit</button>
+                  <br></br>
+                  <br></br>
+                  <Button variant="btn btn-success" onClick={this.submitRecType} style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Submit</Button>
 			          </div>
 			  
             </div>
