@@ -7,8 +7,7 @@ export default class SongThumbnail extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      artistsNames: '',
-      image: ''
+      artistsNames: ''
       // audio: {},
       // play: false
     }
@@ -21,23 +20,16 @@ export default class SongThumbnail extends React.Component {
   // }
 
   componentDidMount() {
+    console.log('songobj')
     console.log(this.props.songObj)
     // var aud = new Audio(this.props.songObj.previewUrl)
     var artists = ''
-    var img = ''
     for (var ind in this.props.songObj.artists) {
       artists += this.props.songObj.artists[ind].name + ', '
     }
     artists = artists.substring(0, artists.lastIndexOf(','))
-    
-    if (!this.props.songObj.album.images[0]) {
-      img = 'https://tidal.com/browse/assets/images/defaultImages/defaultPlaylistImage.png'
-    } else {
-      img = this.props.songObj.album.images[0]
-    }
     this.setState({
-      artistsNames: artists,
-      image: img
+      artistsNames: artists
       // audio: aud
     })
   }
@@ -47,7 +39,7 @@ export default class SongThumbnail extends React.Component {
       <div className="row" id={this.props.songObj.id} style={{maxHeight: "175px", marginTop: "5px"}}>
         <div className="col">
           <div>
-            <img className="" src={this.state.image} style={{maxHeight: "175px"}}/>
+            <img className="" src={this.props.songObj.album.images[0].url} style={{maxHeight: "175px"}}/>
           </div>
         </div>
         <div className="col-9" style={{display: "flex", alignItems: "center"}}>
