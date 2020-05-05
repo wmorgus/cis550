@@ -44,7 +44,7 @@ export default class SongThumbnail extends React.Component {
       <div className="row" id={this.props.songObj.id} style={{maxHeight: "175px", marginTop: "5px"}}>
         <div className="col">
           <div>
-            <img className="" src={} style={{maxHeight: "175px"}}/>
+            <img className="" src={this.state.image} style={{maxHeight: "175px"}}/>
           </div>
         </div>
         <div className="col-9" style={{display: "flex", alignItems: "center"}}>
