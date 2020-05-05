@@ -1,39 +1,45 @@
+@font-face {
+    font-family: Circular;
+    src: url(/fonts/CircularSpotifyText-Medium.otf);
+    font-weight: 500
+}
+
+@font-face {
+    font-family: Circular;
+    src: url(/fonts/fonts/CircularSpotifyHead-Bold.otf);
+    font-weight: 600
+}
+
+
 body, html {
     height: 100%;
+    color: #1e3264;
 }
+
 .landing {
-    background-image: url("../assets/palmyboi.jpg");
+    overflow: hidden;
+    background: linear-gradient(145deg,#EC8BDA,#22C3DD);
     height: 100vh;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    position: relative;
+    font-family: Circular,"Helvetica Neue",Helvetica,Arial,sans-serif;
+   
 }
 
 .spotifyWords {
-    display: block;
-    text-align: "center";
-    position: absolute;
-    top: 200px;
-    left: 23%;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    margin: 12%;
+    color: #1e3264;
 }
 
-.centerVal {
-    display:block;
-    position: absolute;
-    top: 350px;
-    border-radius: '15px';
-    width: 200px;
-  }
-
-.centerVal2 {
-    display:block;
-    position: absolute;
-    top: 425px;
+.buttonWrap {
+    display: flex;
+    margin-top: 10%;
+    justify-content: center;
 }
 
-.centerTheseButtonsPlease {
-    display: block;
+.absolutelySucks {
     position: absolute;
-    left: 41%;
+    bottom: 0px;
+    right: 10px;
 }

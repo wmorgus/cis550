@@ -9,26 +9,20 @@ export default class Landing extends React.Component {
   render() {
     return (
       <div className="landing">
-        <div className="spotifyWords">
-        <h1 style={{color: "white", textAlign: "center"}}> Welcome to Spotify.<span style={{color: "#22c3dd"}}>Smarter</span> </h1>
-        <p style={{color: "white", textAlign: "center"}}> Learn more about the music you listen to and get recommendations to expand your musical options. </p> 
-        <p style={{color: "white", textAlign: "center"}}>Login to Spotify.Smarter to see all of your playlists and to find out fun statistics about your songs</p>
+        <div className="container midddle">
+          <div className="spotifyWords">
+            <h1 style={{textAlign: "center"}}> Welcome to <b>Spotify.Smarter</b></h1>
+            <br></br>
+            <h5 style={{textAlign: "center"}}> Learn more about the music you listen to and get recommendations to expand your musical options. </h5> 
+            <h5 style={{textAlign: "center"}}>Login to Spotify.Smarter to see all of your playlists and to find out more about your songs and playlists</h5>
+          </div>
+          <div className="buttonWrap">
+            <Button className="border border-dark" style={{borderRadius: '15px', width: '200px', backgroundColor: '#1DB954'}} size="lg" href="http://localhost:8081/login">
+              Login with Spotify
+            </Button>
+          </div>
         </div>
-        <div className="centerTheseButtonsPlease">
-        <div className="mb-2 centerVal">
-          <Button style={{borderRadius: '15px', width: '200px', margin: '0 auto', position: 'absolute'}} size="lg" href="http://localhost:8081/login">
-            Login
-          </Button>
-        </div>
-        <br></br>
-        <br></br>
-        <br></br>
-        <div className="mb-2 centerVal2">
-          <Button style={{borderRadius: '15px', width: '200px', margin: '0 auto'}} size="lg" href="http://localhost:8081/totalRestart">
-            Nuke
-          </Button>
-        </div>
-        </div>
+        <p className="absolutelySucks">Made by Liam Hosey, Will Morgus, Lynne Raynor, and Anjali Mahwhhsswheri for CIS 450, Spring 2020</p>
       </div>
     );
   }
