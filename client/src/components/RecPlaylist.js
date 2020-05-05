@@ -17,7 +17,7 @@ export default class RecPlaylist extends React.Component {
         qualityObj: {energy: 'loading...', danceability: 'loading...', loudness: 'loading...', acousticness: 'loading...', valence: 'loading...'},
         info: "",
         tableHeader : [],
-        loaded: "true"
+        loaded: "false"
       }
 
       this.exampleRecRoute = this.exampleRecRoute.bind(this);
