@@ -32,8 +32,6 @@ export default class Playlist extends React.Component {
       // console.log(id)
       
       fetch('http://localhost:8081/spotify/getPlaylist?apikey=' + this.props.apikey + '&id=' + id).then(response => response.json()).then((data) => {
-        console.log('dataobj')
-        console.log(data)
         newObj = data
         if (!newObj.images[0]) {
           newObj.images = [{url: 'https://tidal.com/browse/assets/images/defaultImages/defaultPlaylistImage.png'}]
@@ -69,7 +67,13 @@ export default class Playlist extends React.Component {
       } else { //here make requests for length, time, arguably avg stats
         fetch('http://localhost:8081/duration/' + this.state.id).then(response => response.json()).then((data) => {
           var result = data.rows[0];
-          if (data.rows[1] > 0) {
+          if (result[1] === 1) {
+            this.setState({
+              count:  "Song Count: " + result[0],
+              hours:  "Total Length: " + result[1] + " Hour, " + result[2] + " Minutes, " + result[3] + " Seconds.",
+              avg_min: "Average Song Length: " + result[4] + " Minutes, " + result[5] + " Seconds."
+            });
+          } else if (result[1] > 0) {
             this.setState({
               count:  "Song Count: " + result[0],
               hours:  "Total Length: " + result[1] + " Hours, " + result[2] + " Minutes, " + result[3] + " Seconds.",

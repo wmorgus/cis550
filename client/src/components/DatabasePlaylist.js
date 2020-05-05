@@ -64,7 +64,9 @@ export default class DatabasePlaylist extends React.Component {
           <div className="container">
 
          <br></br>
-         <Table bordered striped hover>
+         <Table bordered striped hover style={{
+        backgroundColor: 'white',
+      }}>
                  {this.state.tableHeader}
                <tbody>
                {this.state.resultSongs}
