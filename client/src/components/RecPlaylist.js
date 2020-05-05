@@ -213,7 +213,7 @@ export default class RecPlaylist extends React.Component {
             songThumbs = data.rows.map((songObj, i) =>
             <tr key = {i}>
               <td>{songObj[0]}</td>
-              <td><Button variant="btn btn-success"  href={"http://localhost:3000/recommendations/results/" + songObj[0]}>Go to Tracklist</Button></td>
+              <td><Button variant="btn btn-info"  href={"http://localhost:3000/recommendations/results/" + songObj[0]}>Go to Tracklist</Button></td>
             </tr> )
             
 
@@ -312,6 +312,7 @@ export default class RecPlaylist extends React.Component {
 
 
     render() {    
+      document.body.style = 'background: #bdeaef;';
       return (
         <div className="playlist">
           <PageNavbar active="yourPlaylists" apikey={this.props.apikey} />
@@ -350,6 +351,7 @@ export default class RecPlaylist extends React.Component {
             </div>
             </div>
             
+            
             <div className="years-container">
 			          <div className="dropdown-container">
                 <br></br>
@@ -357,7 +359,9 @@ export default class RecPlaylist extends React.Component {
 			            <select value={this.state.selectedRecType} onChange={this.handleChange} className="dropdown" id="decadesDropdown">
 			            	{this.dropdownDivs(this.state.recTypes)}
 			            </select>
-			            <button className="submit-btn" id="decadesSubmitBtn" onClick={this.submitRecType}>Submit</button>
+                  <br></br>
+                  <br></br>
+                  <Button variant="btn btn-success" onClick={this.submitRecType} style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Submit</Button>
 			          </div>
 			  
             </div>
@@ -367,7 +371,7 @@ export default class RecPlaylist extends React.Component {
             <br></br>
             <h5>{this.state.info}</h5>
             <br></br>
-            <Table bordered striped hover>
+            <Table style={{backgroundColor:"white"}} bordered striped hover>
                     {this.state.tableHeader}
                   <tbody>
                   {this.state.resultSongs}

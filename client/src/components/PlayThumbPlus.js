@@ -53,7 +53,7 @@ export default class PlayThumbPlus extends React.Component {
           </div>
         </div>
         <div className="col" style={{display: "flex", alignItems: "center"}}>
-          <Button href={"/playlist/" + this.props.id} style={{height: "30%", display: "flex", alignItems: "center"}}>Go to playlist</Button>
+          <Button href={"/playlist/" + this.props.id} style={{height: "30%", display: "flex", alignItems: "center", backgroundColor: '#08a1b3', borderColor: '#08a1b3'}}>Go to playlist</Button>
         </div>
       </div>
 		);

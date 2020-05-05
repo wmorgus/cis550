@@ -2,7 +2,7 @@ import React from "react";
 import { Line } from "react-chartjs-2";
 import { MDBContainer } from "mdbreact";
 import {Button} from 'react-bootstrap';
-
+import PageNavbar from './PageNavbar';
 class LineGraph extends React.Component {
     constructor(props) {
         super(props);
@@ -107,16 +107,20 @@ class LineGraph extends React.Component {
   
 
   render() {
-    document.body.style = 'background: #bdeaef;';
+    document.body.style = 'background: white;';
     return (
-        
+    <div>
+       <PageNavbar active="time" apikey={this.props.apikey}/>
       <MDBContainer>
           <form>
               <Button variant="btn btn-success" href="http://localhost:3000/time" style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Back</Button>
         </form>
+        <div style = {{backgroundColor: "white"}}>
         <h3 className="mt-5">Line chart</h3>
         <Line data={this.state.dataLine} options={{ responsive: true }} />
+        </div>
       </MDBContainer>
+      </div>
     );
   }
 }

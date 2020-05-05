@@ -38,7 +38,7 @@ export default class GenreButton extends React.Component {
           <div>
             <h2>{this.props.name}</h2>
             <h4>{this.props.owner}</h4>
-            <Button variant="dark" href= {this.props.generate}  >Generate Recommendations</Button>
+            <Button variant="info" href= {this.props.generate}  >Generate Recommendations</Button>
           </div>
           
         </div>
