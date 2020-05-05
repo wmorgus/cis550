@@ -53,7 +53,7 @@ app.get('/acoustics', routes.getAcoustics);
 app.get('/playlistacoustics/:oid', routes.getPlaylistAcoustics);
 app.get('/playlistdance/:oid', routes.getPlaylistDance);
 app.get('/playlistenergy/:oid', routes.getPlaylistEnergy);
-// app.get('/duration/:pid', routes.getDuration);
+app.get('/duration/:pid', routes.getDuration);
 
 
 var server = app.listen(8081, () => {

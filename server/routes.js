@@ -954,6 +954,28 @@ function getPlaylistEnergy(req, res) {
     res.send(JSON.stringify(result));
   });
 };
+
+function getDuration(req, res) {
+
+  query = `WITH temp AS (SELECT sid FROM Playlist_Songs WHERE pid = '` + req.params.pid + `'),
+  vals AS (SELECT SUM(duration_ms) / 1000 as duration, COUNT(*) AS count FROM temp 
+      JOIN All_Songs ON temp.sid = all_songs.sid)
+  SELECT count, FLOOR(duration / 3600) as hours, FLOOR(MOD(duration, 3600) / 60) as minutes, 
+      CEIL(MOD(duration, 60)) as seconds, FLOOR(duration/count / 60) as avg_min,  CEIL(MOD(duration/count, 60)) as avg_sec
+  FROM vals`;
+  
+    
+  console.log(query);
+  conn.execute(query, function(err, result) {
+    if (err) {
+      console.error(err.message);
+      return;
+    } 
+    console.log(result);
+    res.send(JSON.stringify(result));
+  });
+};
+
 // The exported functions, which can be accessed in index.js.
 module.exports = {
   initDB,
@@ -983,5 +1005,6 @@ module.exports = {
   getPlaylistDance,
   getPlaylistEnergy,
   testPromiseAudioFeatures,
-  queryTesterOut
+  queryTesterOut,
+  getDuration
 }
