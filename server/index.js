@@ -34,7 +34,9 @@ app.get('/spotify/getUser', routes.getUser);
 
 app.get('/recommendations/avg/:pid', routes.getAverageFeatures);
 app.get('/recommendations/tracks/:pid', routes.getTracklist);
-app.get('/checkQueue', routes.checkQueue);
+app.get('/checkQueue', function(req, res) {
+	routes.checkQueue(req, res, app)
+});
 app.get('/queryTesterOut', routes.queryTesterOut);
 
 app.get('/recommendations/bysong', routes.getRecsSimilarSongs);

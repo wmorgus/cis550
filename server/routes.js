@@ -238,30 +238,28 @@ async function completeRecursion(app, apiKey, id, res, obj, output) {
 
 function completeValidation(app, id) {
   var q = app.get('uploadQ')
-  q.slice(uploadQueue.indexOf(id), 1)
+  q.splice(q.indexOf(id), 1)
   app.set('uploadQ', q)
+  console.log(app.get('uploadQ'))
   var query = "COMMIT";
   conn.execute(query, function(err, result) {
     if (err) {
       console.error(err.message);
       return;
     } 
+    console.log('committing')
     console.log(result)
   });
 }
 
-function checkQueue(req, res) {
-  // conn.execute("SELECT COUNT(*) FROM All_Songs", function(err, res) {
-  //   console.log(res.rows)
-  // }) 
-  // res.send('will')
-  // if (uploadQueue.indexOf(req.query.id) != -1) {
-  //   res.json({status: 'uploading'})
-  // } else {
-  //   res.json({status: 'done'})
-  // }
-
-
+function checkQueue(req, res, app) {
+  // console.log(app)
+  var q = app.get('uploadQ')
+  if (q.indexOf(req.query.id) != -1) {
+    res.json({status: 'uploading'})
+  } else {
+    res.json({status: 'done'})
+  }
 }
 
 //thank god for the internet
@@ -873,10 +871,12 @@ async function playlistValidation(sids, pid, oid, infoMap, apiKey, cb) {
     if (rows[0][0] == 0) {
       newPlay(pid, oid, sids, infoMap, apiKey).then(() => {
         console.log('finished newplay')
+        cb()
       })
     } else {
       notNewPlay(pid, sids, infoMap, apiKey).then(() =>{
         console.log('finished notnewplay')
+        cb()
       })
     }
   });

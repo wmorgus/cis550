@@ -66,6 +66,7 @@ export default class Playlist extends React.Component {
     checkQueue() {
       if (!this.state.statsReady) {
         fetch('http://localhost:8081/checkQueue?id=' + this.state.id).then(response => response.json()).then((data) => {
+          console.log(data)
           if (data.status == 'done') {
             console.log('done')
             this.setState({
