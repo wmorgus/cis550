@@ -120,7 +120,7 @@ export default class PlaylistComparison extends React.Component {
               <h1>Compare Your Playlists</h1>
               <p>Choose from the options below to rank your playlists</p>
             </div>
-            <div className="container" style={{backgroundColor: 'rgba(200,200,200,0.95)', paddingTop: '10px', paddingBottom: '10px'}}>
+            <div className="container" style={{ paddingTop: '10px', paddingBottom: '10px'}}>
               <div className="row" style={{display: "flex", justifyContent: "space-around"}}>   
                 <Button variant="btn btn-success" onClick={this.handleAcousticSubmit} style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Acousticness</Button>
                 <Button variant="btn btn-success" onClick={this.handleDanceSubmit} style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Danceability</Button>

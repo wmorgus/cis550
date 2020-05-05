@@ -129,7 +129,7 @@ export default class LongestStreak extends React.Component {
             <Button variant="danger" onClick={this.handleClear} style={{backgroundColor: '#08a1b3', borderColor: '#08a1b3',}}>Clear Table</Button>
           </div>
         </div>
-        <div className="jumbotron">
+        <div className="jumbotron" style = {{backgroundColor: "#bdeaef"}}>
         <div className="table">
                   <Table bordered striped hover>
                     <thead>
